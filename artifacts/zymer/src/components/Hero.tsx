@@ -78,6 +78,8 @@ const mobileStats = [
   { label: 'Lighthouse', value: '100/100', color: 'text-[#00c4f0]', bg: 'bg-[#00c4f0]/10', border: 'border-[#00c4f0]/20' },
 ];
 
+const marqueeItems = ['50+ Projects Delivered', '20+ Countries Served', '4.9★ Client Rating', '48h Turnaround', '$0 Hidden Fees'];
+
 export default function Hero() {
   const { trackEvent } = useAnalytics();
 
@@ -87,7 +89,7 @@ export default function Hero() {
   };
 
   return (
-    <section className="relative min-h-[100svh] flex flex-col justify-center overflow-hidden pt-20 md:pt-0">
+    <section className="relative min-h-[100svh] flex flex-col overflow-hidden">
       {/* Background mesh */}
       <div className="absolute inset-0 z-0 pointer-events-none">
         <div className="absolute top-0 right-[-10%] w-[500px] md:w-[700px] h-[500px] md:h-[700px] bg-primary/[0.14] rounded-full blur-[100px] md:blur-[130px] animate-aurora" />
@@ -102,263 +104,268 @@ export default function Hero() {
         />
       </div>
 
-      <div className="container mx-auto px-5 sm:px-8 md:px-12 relative z-10 py-10 md:py-0">
-        <div className="grid lg:grid-cols-2 gap-10 lg:gap-8 items-center">
+      {/* Main centered content */}
+      <div className="flex-1 flex items-center relative z-10">
+        <div className="container mx-auto px-5 sm:px-8 md:px-12 pt-24 pb-8 md:pt-28 md:pb-12">
+          <div className="grid lg:grid-cols-2 gap-10 lg:gap-8 items-center">
 
-          {/* Left Content */}
-          <div className="flex flex-col items-start gap-5 md:gap-6">
+            {/* Left Content */}
+            <div className="flex flex-col items-start gap-5 md:gap-6">
 
-            {/* Trust badge */}
-            <motion.div
-              initial={{ opacity: 0, y: 16 }}
-              animate={{ opacity: 1, y: 0 }}
-              transition={{ duration: 0.5, delay: 0.1 }}
-              className="flex items-center gap-3 glass-light px-4 py-2.5 rounded-full border border-white/10"
-            >
-              <div className="flex -space-x-1.5">
-                {[
-                  { src: 'https://randomuser.me/api/portraits/men/32.jpg', alt: 'Aziz M.' },
-                  { src: 'https://randomuser.me/api/portraits/women/44.jpg', alt: 'Elena K.' },
-                  { src: 'https://randomuser.me/api/portraits/men/67.jpg', alt: 'Murad B.' },
-                ].map((av, i) => (
-                  <HeroAvatar key={i} src={av.src} alt={av.alt} index={i} />
-                ))}
-              </div>
-              <div className="flex items-center gap-1">
-                {[1,2,3,4,5].map(s => <StarIcon key={s} size={10} className="text-amber-400" />)}
-              </div>
-              <span className="text-[11px] sm:text-[12px] font-medium text-muted-foreground">
-                Trusted by <span className="text-foreground font-semibold">50+</span> businesses
-              </span>
-            </motion.div>
+              {/* Trust badge */}
+              <motion.div
+                initial={{ opacity: 0, y: 16 }}
+                animate={{ opacity: 1, y: 0 }}
+                transition={{ duration: 0.5, delay: 0.1 }}
+                className="flex items-center gap-3 glass-light px-4 py-2.5 rounded-full border border-white/10"
+              >
+                <div className="flex -space-x-1.5">
+                  {[
+                    { src: 'https://randomuser.me/api/portraits/men/32.jpg', alt: 'Aziz M.' },
+                    { src: 'https://randomuser.me/api/portraits/women/44.jpg', alt: 'Elena K.' },
+                    { src: 'https://randomuser.me/api/portraits/men/67.jpg', alt: 'Murad B.' },
+                  ].map((av, i) => (
+                    <HeroAvatar key={i} src={av.src} alt={av.alt} index={i} />
+                  ))}
+                </div>
+                <div className="flex items-center gap-1">
+                  {[1,2,3,4,5].map(s => <StarIcon key={s} size={10} className="text-amber-400" />)}
+                </div>
+                <span className="text-[11px] sm:text-[12px] font-medium text-muted-foreground">
+                  Trusted by <span className="text-foreground font-semibold">50+</span> businesses
+                </span>
+              </motion.div>
 
-            {/* Main headline */}
-            <div>
-              <h1 className="text-[2.15rem] sm:text-[2.8rem] md:text-[3.4rem] lg:text-[3rem] xl:text-[3.75rem] font-display font-bold leading-[1.06] tracking-tight">
-                {["We Don't", "Build Websites.", "We Build"].map((line, i) => (
+              {/* Main headline */}
+              <div>
+                <h1 className="text-[2.15rem] sm:text-[2.8rem] md:text-[3.4rem] lg:text-[3rem] xl:text-[3.75rem] font-display font-bold leading-[1.06] tracking-tight">
+                  {["We Don't", "Build Websites.", "We Build"].map((line, i) => (
+                    <motion.div
+                      key={i}
+                      initial={{ opacity: 0, y: 24 }}
+                      animate={{ opacity: 1, y: 0 }}
+                      transition={{ duration: 0.55, delay: 0.2 + i * 0.1, ease: [0.22, 1, 0.36, 1] }}
+                      className="block text-foreground"
+                    >
+                      {line}
+                    </motion.div>
+                  ))}
                   <motion.div
-                    key={i}
                     initial={{ opacity: 0, y: 24 }}
                     animate={{ opacity: 1, y: 0 }}
-                    transition={{ duration: 0.55, delay: 0.2 + i * 0.1, ease: [0.22, 1, 0.36, 1] }}
-                    className="block text-foreground"
+                    transition={{ duration: 0.55, delay: 0.5, ease: [0.22, 1, 0.36, 1] }}
+                    className="block gradient-text"
                   >
-                    {line}
+                    Digital Empires.
                   </motion.div>
+                </h1>
+              </div>
+
+              <motion.p
+                initial={{ opacity: 0, y: 20 }}
+                animate={{ opacity: 1, y: 0 }}
+                transition={{ duration: 0.5, delay: 0.7 }}
+                className="text-sm sm:text-base md:text-lg text-muted-foreground max-w-lg leading-relaxed"
+              >
+                Zymer crafts high-performance, visually breathtaking web experiences for businesses ready to dominate their market — globally.
+              </motion.p>
+
+              {/* Key proof points */}
+              <motion.div
+                initial={{ opacity: 0, y: 16 }}
+                animate={{ opacity: 1, y: 0 }}
+                transition={{ duration: 0.5, delay: 0.55 }}
+                className="flex flex-wrap gap-x-4 gap-y-2"
+              >
+                {['Delivered in days, not months', '100/100 Lighthouse score', '24/7 support included'].map((point, i) => (
+                  <span key={i} className="flex items-center gap-2 text-xs sm:text-sm text-muted-foreground">
+                    <span className="text-emerald-400 shrink-0"><CheckSmall /></span>
+                    {point}
+                  </span>
                 ))}
-                <motion.div
-                  initial={{ opacity: 0, y: 24 }}
-                  animate={{ opacity: 1, y: 0 }}
-                  transition={{ duration: 0.55, delay: 0.5, ease: [0.22, 1, 0.36, 1] }}
-                  className="block gradient-text"
+              </motion.div>
+
+              {/* CTAs */}
+              <motion.div
+                initial={{ opacity: 0, y: 20 }}
+                animate={{ opacity: 1, y: 0 }}
+                transition={{ duration: 0.5, delay: 0.65 }}
+                className="flex flex-col sm:flex-row gap-3 w-full sm:w-auto"
+              >
+                <button
+                  onClick={() => {
+                    trackEvent('cta_click', { button: 'hero_primary' });
+                    scrollTo('contact');
+                  }}
+                  className="group relative overflow-hidden gradient-bg text-white px-7 py-4 rounded-full font-semibold text-sm sm:text-base glow-violet transition-all duration-300 w-full sm:w-auto outline-none flex items-center justify-center gap-2 active:scale-[0.98] hover:scale-[1.03]"
                 >
-                  Digital Empires.
-                </motion.div>
-              </h1>
+                  <span className="relative z-10 flex items-center gap-2">
+                    Start Your Project
+                    <span className="transition-transform duration-200 group-hover:translate-x-0.5">
+                      <ArrowRight />
+                    </span>
+                  </span>
+                </button>
+                <button
+                  onClick={() => {
+                    trackEvent('cta_click', { button: 'hero_secondary' });
+                    scrollTo('pricing');
+                  }}
+                  className="glass text-foreground px-7 py-4 rounded-full font-semibold text-sm sm:text-base hover:bg-white/[0.06] active:scale-[0.98] transition-all duration-200 w-full sm:w-auto outline-none hover:border-primary/30"
+                >
+                  See Our Packages
+                </button>
+              </motion.div>
+
+              {/* Mobile Stats Grid — visible only on mobile */}
+              <motion.div
+                initial={{ opacity: 0, y: 16 }}
+                animate={{ opacity: 1, y: 0 }}
+                transition={{ duration: 0.6, delay: 0.75 }}
+                className="grid grid-cols-4 gap-2 w-full lg:hidden"
+              >
+                {mobileStats.map((stat, i) => (
+                  <div
+                    key={i}
+                    className={`flex flex-col items-center justify-center gap-1 py-3 px-2 rounded-2xl border ${stat.bg} ${stat.border}`}
+                  >
+                    <span className={`text-sm sm:text-base font-bold ${stat.color} tabular-nums`}>{stat.value}</span>
+                    <span className="text-[9px] sm:text-[10px] text-muted-foreground font-medium tracking-wide text-center">{stat.label}</span>
+                  </div>
+                ))}
+              </motion.div>
             </div>
 
-            <motion.p
-              initial={{ opacity: 0, y: 20 }}
-              animate={{ opacity: 1, y: 0 }}
-              transition={{ duration: 0.5, delay: 0.7 }}
-              className="text-sm sm:text-base md:text-lg text-muted-foreground max-w-lg leading-relaxed"
-            >
-              Zymer crafts high-performance, visually breathtaking web experiences for businesses ready to dominate their market — globally.
-            </motion.p>
+            {/* Right Floating Scene — desktop only */}
+            <div className="relative h-[500px] lg:h-[580px] hidden lg:block">
+              <div className="absolute top-12 left-12 w-28 h-28 rounded-full bg-primary/30 blur-2xl animate-float" />
+              <div className="absolute bottom-16 right-8 w-44 h-44 rounded-full bg-[#00c4f0]/20 blur-3xl animate-float-slow" />
+              <div className="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 w-64 h-64 rounded-full bg-primary/[0.06] blur-3xl" />
 
-            {/* Key proof points */}
-            <motion.div
-              initial={{ opacity: 0, y: 16 }}
-              animate={{ opacity: 1, y: 0 }}
-              transition={{ duration: 0.5, delay: 0.55 }}
-              className="flex flex-wrap gap-x-4 gap-y-2"
-            >
-              {['Delivered in days, not months', '100/100 Lighthouse score', '24/7 support included'].map((point, i) => (
-                <span key={i} className="flex items-center gap-2 text-xs sm:text-sm text-muted-foreground">
-                  <span className="text-emerald-400 shrink-0"><CheckSmall /></span>
-                  {point}
-                </span>
-              ))}
-            </motion.div>
-
-            {/* CTAs */}
-            <motion.div
-              initial={{ opacity: 0, y: 20 }}
-              animate={{ opacity: 1, y: 0 }}
-              transition={{ duration: 0.5, delay: 0.65 }}
-              className="flex flex-col sm:flex-row gap-3 w-full sm:w-auto"
-            >
-              <button
-                onClick={() => {
-                  trackEvent('cta_click', { button: 'hero_primary' });
-                  scrollTo('contact');
-                }}
-                className="group relative overflow-hidden gradient-bg text-white px-7 py-4 rounded-full font-semibold text-sm sm:text-base glow-violet transition-all duration-300 w-full sm:w-auto outline-none flex items-center justify-center gap-2 active:scale-[0.98] hover:scale-[1.03]"
+              {/* Card 1: Traffic Stat */}
+              <motion.div
+                initial={{ opacity: 0, scale: 0.85, y: 16 }}
+                animate={{ opacity: 1, scale: 1, y: 0 }}
+                transition={{ delay: 0.5, duration: 0.7, ease: [0.22, 1, 0.36, 1] }}
+                className="absolute top-16 right-8 glass p-5 rounded-2xl animate-float shadow-2xl"
+                style={{ width: '220px' }}
               >
-                <span className="relative z-10 flex items-center gap-2">
-                  Start Your Project
-                  <span className="transition-transform duration-200 group-hover:translate-x-0.5">
-                    <ArrowRight />
-                  </span>
-                </span>
-              </button>
-              <button
-                onClick={() => {
-                  trackEvent('cta_click', { button: 'hero_secondary' });
-                  scrollTo('pricing');
-                }}
-                className="glass text-foreground px-7 py-4 rounded-full font-semibold text-sm sm:text-base hover:bg-white/[0.06] active:scale-[0.98] transition-all duration-200 w-full sm:w-auto outline-none hover:border-primary/30"
-              >
-                See Our Packages
-              </button>
-            </motion.div>
-
-            {/* Mobile Stats Grid — visible only on mobile */}
-            <motion.div
-              initial={{ opacity: 0, y: 16 }}
-              animate={{ opacity: 1, y: 0 }}
-              transition={{ duration: 0.6, delay: 0.75 }}
-              className="grid grid-cols-4 gap-2 w-full lg:hidden"
-            >
-              {mobileStats.map((stat, i) => (
-                <div
-                  key={i}
-                  className={`flex flex-col items-center justify-center gap-1 py-3 px-2 rounded-2xl border ${stat.bg} ${stat.border}`}
-                >
-                  <span className={`text-sm sm:text-base font-bold ${stat.color} tabular-nums`}>{stat.value}</span>
-                  <span className="text-[9px] sm:text-[10px] text-muted-foreground font-medium tracking-wide text-center">{stat.label}</span>
+                <div className="flex items-center gap-3 mb-4">
+                  <div className="w-10 h-10 rounded-xl bg-emerald-500/15 flex items-center justify-center text-emerald-400 border border-emerald-500/20 shrink-0">
+                    <TrendUpIcon />
+                  </div>
+                  <div>
+                    <div className="text-[10px] text-muted-foreground font-semibold uppercase tracking-[0.1em]">Traffic Growth</div>
+                    <div className="text-2xl font-bold text-foreground leading-tight">+340%</div>
+                  </div>
                 </div>
-              ))}
-            </motion.div>
+                <div className="flex items-end gap-1 h-8 mb-2">
+                  {[30, 45, 35, 60, 50, 75, 65, 85].map((h, i) => (
+                    <motion.div
+                      key={i}
+                      initial={{ scaleY: 0 }}
+                      animate={{ scaleY: 1 }}
+                      transition={{ delay: 1.0 + i * 0.07, duration: 0.35 }}
+                      className="flex-1 rounded-sm origin-bottom"
+                      style={{
+                        height: `${h}%`,
+                        background: i === 7 ? 'linear-gradient(to top, #10b981, #34d399)' : 'rgba(16,185,129,0.25)'
+                      }}
+                    />
+                  ))}
+                </div>
+                <div className="text-[10px] text-emerald-400 font-medium">↑ After Zymer redesign</div>
+              </motion.div>
 
-            {/* Marquee ticker */}
-            <motion.div
-              initial={{ opacity: 0 }}
-              animate={{ opacity: 1 }}
-              transition={{ duration: 0.8, delay: 0.85 }}
-              className="w-full overflow-hidden border-y border-white/[0.06] py-3"
-            >
-              <div className="inline-flex items-center whitespace-nowrap animate-[marquee_24s_linear_infinite]">
-                {[...Array(2)].map((_, loop) => (
-                  <span key={loop} className="inline-flex items-center">
-                    {['50+ Projects Delivered', '20+ Countries Served', '4.9★ Client Rating', '48h Turnaround', '$0 Hidden Fees'].map((item, j) => (
-                      <span key={`${loop}-${j}`} className="inline-flex items-center">
-                        <span className="text-[11px] font-medium text-muted-foreground tracking-wide">{item}</span>
-                        <DiamondSep />
-                      </span>
-                    ))}
-                  </span>
-                ))}
-              </div>
-            </motion.div>
-          </div>
+              {/* Card 2: Code Snippet */}
+              <motion.div
+                initial={{ opacity: 0, scale: 0.85, y: 16 }}
+                animate={{ opacity: 1, scale: 1, y: 0 }}
+                transition={{ delay: 0.65, duration: 0.7, ease: [0.22, 1, 0.36, 1] }}
+                className="absolute top-[45%] left-0 -translate-y-1/2 glass p-5 rounded-2xl animate-float-slow shadow-2xl border border-primary/15 z-10"
+                style={{ width: '260px' }}
+              >
+                <div className="flex items-center gap-2 mb-4">
+                  <div className="w-2.5 h-2.5 rounded-full bg-rose-500/80" />
+                  <div className="w-2.5 h-2.5 rounded-full bg-amber-500/80" />
+                  <div className="w-2.5 h-2.5 rounded-full bg-emerald-500/80" />
+                  <span className="ml-2 text-[10px] font-mono text-muted-foreground/60">zymer.config.ts</span>
+                </div>
+                <pre className="text-[11px] font-mono leading-[1.8] text-muted-foreground overflow-hidden">
+                  <code>
+                    <span className="text-[#c792ea]">const</span> <span className="text-[#a09eff]">empire</span> = <span className="text-[#89ddf7]">new</span> <span className="text-foreground/90">Zymer</span>();{'\n'}
+                    <span className="text-[#c792ea]">await</span> empire.<span className="text-[#89ddf7]">build</span>{'({' + '\n'}
+                    {'  '}quality: <span className="text-emerald-400">'world-class'</span>,{'\n'}
+                    {'  '}speed: <span className="text-emerald-400">'unmatched'</span>,{'\n'}
+                    {'  '}design: <span className="text-emerald-400">'breathtaking'</span>{'\n'}
+                    {'}'});
+                  </code>
+                </pre>
+              </motion.div>
 
-          {/* Right Floating Scene — desktop only */}
-          <div className="relative h-[500px] lg:h-[580px] hidden lg:block">
-            <div className="absolute top-12 left-12 w-28 h-28 rounded-full bg-primary/30 blur-2xl animate-float" />
-            <div className="absolute bottom-16 right-8 w-44 h-44 rounded-full bg-[#00c4f0]/20 blur-3xl animate-float-slow" />
-            <div className="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 w-64 h-64 rounded-full bg-primary/[0.06] blur-3xl" />
-
-            {/* Card 1: Traffic Stat */}
-            <motion.div
-              initial={{ opacity: 0, scale: 0.85, y: 16 }}
-              animate={{ opacity: 1, scale: 1, y: 0 }}
-              transition={{ delay: 0.5, duration: 0.7, ease: [0.22, 1, 0.36, 1] }}
-              className="absolute top-16 right-8 glass p-5 rounded-2xl animate-float shadow-2xl"
-              style={{ width: '220px' }}
-            >
-              <div className="flex items-center gap-3 mb-4">
-                <div className="w-10 h-10 rounded-xl bg-emerald-500/15 flex items-center justify-center text-emerald-400 border border-emerald-500/20 shrink-0">
-                  <TrendUpIcon />
+              {/* Card 3: Speed score */}
+              <motion.div
+                initial={{ opacity: 0, scale: 0.85, y: 16 }}
+                animate={{ opacity: 1, scale: 1, y: 0 }}
+                transition={{ delay: 0.8, duration: 0.7, ease: [0.22, 1, 0.36, 1] }}
+                className="absolute top-8 left-[30%] glass p-3.5 rounded-2xl flex items-center gap-3 shadow-xl animate-float z-10"
+                style={{ animationDelay: '-3s' }}
+              >
+                <div className="w-9 h-9 rounded-xl bg-amber-500/15 flex items-center justify-center text-amber-400 border border-amber-500/20">
+                  <SpeedIcon />
                 </div>
                 <div>
-                  <div className="text-[10px] text-muted-foreground font-semibold uppercase tracking-[0.1em]">Traffic Growth</div>
-                  <div className="text-2xl font-bold text-foreground leading-tight">+340%</div>
+                  <div className="text-[10px] text-muted-foreground font-medium">Lighthouse Score</div>
+                  <div className="text-base font-bold text-foreground">100 / 100</div>
                 </div>
-              </div>
-              <div className="flex items-end gap-1 h-8 mb-2">
-                {[30, 45, 35, 60, 50, 75, 65, 85].map((h, i) => (
-                  <motion.div
-                    key={i}
-                    initial={{ scaleY: 0 }}
-                    animate={{ scaleY: 1 }}
-                    transition={{ delay: 1.0 + i * 0.07, duration: 0.35 }}
-                    className="flex-1 rounded-sm origin-bottom"
-                    style={{
-                      height: `${h}%`,
-                      background: i === 7 ? 'linear-gradient(to top, #10b981, #34d399)' : 'rgba(16,185,129,0.25)'
-                    }}
-                  />
-                ))}
-              </div>
-              <div className="text-[10px] text-emerald-400 font-medium">↑ After Zymer redesign</div>
-            </motion.div>
+              </motion.div>
 
-            {/* Card 2: Code Snippet */}
-            <motion.div
-              initial={{ opacity: 0, scale: 0.85, y: 16 }}
-              animate={{ opacity: 1, scale: 1, y: 0 }}
-              transition={{ delay: 0.65, duration: 0.7, ease: [0.22, 1, 0.36, 1] }}
-              className="absolute top-[45%] left-0 -translate-y-1/2 glass p-5 rounded-2xl animate-float-slow shadow-2xl border border-primary/15 z-10"
-              style={{ width: '260px' }}
-            >
-              <div className="flex items-center gap-2 mb-4">
-                <div className="w-2.5 h-2.5 rounded-full bg-rose-500/80" />
-                <div className="w-2.5 h-2.5 rounded-full bg-amber-500/80" />
-                <div className="w-2.5 h-2.5 rounded-full bg-emerald-500/80" />
-                <span className="ml-2 text-[10px] font-mono text-muted-foreground/60">zymer.config.ts</span>
-              </div>
-              <pre className="text-[11px] font-mono leading-[1.8] text-muted-foreground overflow-hidden">
-                <code>
-                  <span className="text-[#c792ea]">const</span> <span className="text-[#a09eff]">empire</span> = <span className="text-[#89ddf7]">new</span> <span className="text-foreground/90">Zymer</span>();{'\n'}
-                  <span className="text-[#c792ea]">await</span> empire.<span className="text-[#89ddf7]">build</span>{'({' + '\n'}
-                  {'  '}quality: <span className="text-emerald-400">'world-class'</span>,{'\n'}
-                  {'  '}speed: <span className="text-emerald-400">'unmatched'</span>,{'\n'}
-                  {'  '}design: <span className="text-emerald-400">'breathtaking'</span>{'\n'}
-                  {'}'});
-                </code>
-              </pre>
-            </motion.div>
-
-            {/* Card 3: Speed score */}
-            <motion.div
-              initial={{ opacity: 0, scale: 0.85, y: 16 }}
-              animate={{ opacity: 1, scale: 1, y: 0 }}
-              transition={{ delay: 0.8, duration: 0.7, ease: [0.22, 1, 0.36, 1] }}
-              className="absolute top-8 left-[30%] glass p-3.5 rounded-2xl flex items-center gap-3 shadow-xl animate-float z-10"
-              style={{ animationDelay: '-3s' }}
-            >
-              <div className="w-9 h-9 rounded-xl bg-amber-500/15 flex items-center justify-center text-amber-400 border border-amber-500/20">
-                <SpeedIcon />
-              </div>
-              <div>
-                <div className="text-[10px] text-muted-foreground font-medium">Lighthouse Score</div>
-                <div className="text-base font-bold text-foreground">100 / 100</div>
-              </div>
-            </motion.div>
-
-            {/* Card 4: Lead Notification */}
-            <motion.div
-              initial={{ opacity: 0, scale: 0.85, y: 16 }}
-              animate={{ opacity: 1, scale: 1, y: 0 }}
-              transition={{ delay: 0.95, duration: 0.7, ease: [0.22, 1, 0.36, 1] }}
-              className="absolute bottom-10 right-12 glass p-4 rounded-2xl flex items-center gap-3.5 animate-float shadow-xl z-20"
-              style={{ animationDelay: '-2s' }}
-            >
-              <div className="relative">
-                <div className="w-11 h-11 rounded-xl gradient-bg flex items-center justify-center text-white glow-sm shrink-0">
-                  <LeadIcon />
+              {/* Card 4: Lead Notification */}
+              <motion.div
+                initial={{ opacity: 0, scale: 0.85, y: 16 }}
+                animate={{ opacity: 1, scale: 1, y: 0 }}
+                transition={{ delay: 0.95, duration: 0.7, ease: [0.22, 1, 0.36, 1] }}
+                className="absolute bottom-10 right-12 glass p-4 rounded-2xl flex items-center gap-3.5 animate-float shadow-xl z-20"
+                style={{ animationDelay: '-2s' }}
+              >
+                <div className="relative">
+                  <div className="w-11 h-11 rounded-xl gradient-bg flex items-center justify-center text-white glow-sm shrink-0">
+                    <LeadIcon />
+                  </div>
+                  <span className="absolute -top-1 -right-1 w-3 h-3 bg-emerald-500 rounded-full border-2 border-background" />
                 </div>
-                <span className="absolute -top-1 -right-1 w-3 h-3 bg-emerald-500 rounded-full border-2 border-background" />
-              </div>
-              <div>
-                <div className="text-sm font-semibold text-foreground">New Lead Received</div>
-                <div className="text-xs text-muted-foreground mt-0.5">Enterprise Package · $15k+</div>
-              </div>
-            </motion.div>
+                <div>
+                  <div className="text-sm font-semibold text-foreground">New Lead Received</div>
+                  <div className="text-xs text-muted-foreground mt-0.5">Enterprise Package · $15k+</div>
+                </div>
+              </motion.div>
+            </div>
           </div>
         </div>
       </div>
+
+      {/* Full-width marquee ticker — pinned to bottom of section */}
+      <motion.div
+        initial={{ opacity: 0 }}
+        animate={{ opacity: 1 }}
+        transition={{ duration: 0.8, delay: 0.85 }}
+        className="relative z-10 w-full border-t border-white/[0.06] py-3.5 bg-background/30 backdrop-blur-sm"
+      >
+        <div className="overflow-hidden w-full">
+          <div className="inline-flex items-center whitespace-nowrap animate-[marquee_28s_linear_infinite]">
+            {[...Array(2)].map((_, loop) => (
+              <span key={loop} className="inline-flex items-center">
+                {marqueeItems.map((item, j) => (
+                  <span key={`${loop}-${j}`} className="inline-flex items-center">
+                    <span className="text-[11px] font-medium text-muted-foreground tracking-wide">{item}</span>
+                    <DiamondSep />
+                  </span>
+                ))}
+              </span>
+            ))}
+          </div>
+        </div>
+      </motion.div>
 
       <style>{`
         @keyframes marquee {
