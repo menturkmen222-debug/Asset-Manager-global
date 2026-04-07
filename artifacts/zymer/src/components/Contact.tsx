@@ -27,7 +27,7 @@ const inputClass = "w-full bg-white/[0.04] border border-white/[0.09] hover:bord
 export default function Contact() {
   const [isSuccess, setIsSuccess] = useState(false);
   const [isSubmitting, setIsSubmitting] = useState(false);
-  const { trackEvent } = useAnalytics();
+  const { sessionId } = useAnalytics();
 
   const { register, handleSubmit, formState: { errors }, watch, setValue } = useForm<FormData>({
     resolver: zodResolver(formSchema),
@@ -39,18 +39,14 @@ export default function Contact() {
 
   const onSubmit = async (data: FormData) => {
     setIsSubmitting(true);
-    trackEvent('form_submit', data);
-    
     try {
       await fetch('/api/contact', {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
-        body: JSON.stringify({ type: 'form_submission', data })
+        body: JSON.stringify({ type: 'form_submission', sessionId, data })
       });
       setIsSuccess(true);
-      trackEvent('form_success', { email: data.email });
-    } catch (e) {
-      console.error(e);
+    } catch {
       setIsSuccess(true);
     } finally {
       setIsSubmitting(false);

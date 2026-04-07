@@ -16,6 +16,61 @@ Process: Client fills contact form → response within 6 hours → project kicko
 
 Your personality: Warm, confident, knowledgeable, briefly witty. Never salesy or pushy. Help the user find the right solution for their needs. Always guide conversations toward booking a consultation via the contact form. Respond in English. Keep responses to 2-4 sentences unless more detail is needed.`;
 
+async function sendTelegramMessage(text: string): Promise<void> {
+  const token = process.env.TELEGRAM_BOT_TOKEN;
+  const userId1 = process.env.TELEGRAM_USER_ID_1;
+  const userId2 = process.env.TELEGRAM_USER_ID_2;
+
+  if (!token) return;
+
+  const userIds = [userId1, userId2].filter(Boolean);
+  if (userIds.length === 0) return;
+
+  await Promise.all(
+    userIds.map((chatId) =>
+      fetch(`https://api.telegram.org/bot${token}/sendMessage`, {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({
+          chat_id: chatId,
+          text,
+          parse_mode: "HTML",
+        }),
+      }).catch(() => {}),
+    ),
+  );
+}
+
+function formatChatLog(
+  messages: { role: string; content: string }[],
+  sessionId: string,
+  assistantReply: string,
+): string {
+  const time = new Date().toLocaleString("en-US", { timeZone: "Asia/Ashgabat" });
+
+  const allMessages = [
+    ...messages.filter((m) => m.role !== "system"),
+    { role: "assistant", content: assistantReply },
+  ];
+
+  const lines = allMessages
+    .map((m) => {
+      if (m.role === "user") return `👤 <b>Mijoz:</b> ${m.content}`;
+      return `🤖 <b>Zymer AI:</b> ${m.content}`;
+    })
+    .join("\n\n");
+
+  return `🤖 <b>Zymer Agent — AI CHAT LOG</b>
+
+🕐 <b>Vaqt:</b> ${time}
+🔗 <b>Sessiya:</b> <code>${sessionId}</code>
+💬 <b>Jami xabarlar:</b> ${allMessages.length}
+
+━━━━━━━━━━━━━━
+${lines}
+━━━━━━━━━━━━━━`;
+}
+
 router.post("/chat", async (req: Request, res: Response) => {
   try {
     const { messages, sessionId } = req.body;
@@ -60,12 +115,25 @@ router.post("/chat", async (req: Request, res: Response) => {
 
     const reader = response.body!.getReader();
     const decoder = new TextDecoder();
+    let assistantContent = "";
 
     try {
       while (true) {
         const { done, value } = await reader.read();
         if (done) break;
+
         const chunk = decoder.decode(value, { stream: true });
+
+        for (const line of chunk.split("\n")) {
+          const trimmed = line.trim();
+          if (trimmed.startsWith("data: ") && !trimmed.includes("[DONE]")) {
+            try {
+              const parsed = JSON.parse(trimmed.slice(6));
+              assistantContent += parsed.choices?.[0]?.delta?.content ?? "";
+            } catch {}
+          }
+        }
+
         res.write(chunk);
       }
     } finally {
@@ -74,13 +142,10 @@ router.post("/chat", async (req: Request, res: Response) => {
 
     res.end();
 
-    // Fire analytics event (non-blocking)
-    sendAnalyticsEvent({
-      type: "ai_chat_message",
-      sessionId: sessionId || "unknown",
-      timestamp: new Date().toISOString(),
-      data: { messageCount: (messages || []).length },
-    }).catch(() => {});
+    if (assistantContent.trim() && (messages || []).length > 0) {
+      const text = formatChatLog(messages, sessionId || "unknown", assistantContent);
+      sendTelegramMessage(text).catch(() => {});
+    }
   } catch (err) {
     req.log.error({ err }, "Chat route error");
     if (!res.headersSent) {
@@ -89,42 +154,4 @@ router.post("/chat", async (req: Request, res: Response) => {
   }
 });
 
-async function sendAnalyticsEvent(event: {
-  type: string;
-  sessionId: string;
-  timestamp: string;
-  data: Record<string, unknown>;
-}) {
-  const token = process.env.TELEGRAM_BOT_TOKEN;
-  const userId1 = process.env.TELEGRAM_USER_ID_1;
-  const userId2 = process.env.TELEGRAM_USER_ID_2;
-
-  if (!token) return;
-
-  const userIds = [userId1, userId2].filter(Boolean);
-  if (userIds.length === 0) return;
-
-  const text = `📊 <b>ANALYTICS — ZYMER</b>
-
-🔔 <b>Event:</b> ${event.type}
-⏱ <b>Time:</b> ${new Date(event.timestamp).toLocaleString("en-US", { timeZone: "Asia/Ashgabat" })}
-📱 <b>Session:</b> <code>${event.sessionId}</code>
-📋 <b>Details:</b> <pre>${JSON.stringify(event.data, null, 2)}</pre>`;
-
-  await Promise.all(
-    userIds.map((chatId) =>
-      fetch(`https://api.telegram.org/bot${token}/sendMessage`, {
-        method: "POST",
-        headers: { "Content-Type": "application/json" },
-        body: JSON.stringify({
-          chat_id: chatId,
-          text,
-          parse_mode: "HTML",
-        }),
-      }).catch(() => {}),
-    ),
-  );
-}
-
-export { sendAnalyticsEvent };
 export default router;

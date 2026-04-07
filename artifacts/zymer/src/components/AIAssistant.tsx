@@ -57,8 +57,6 @@ export default function AIAssistant() {
     setMessages(newMessages);
     setIsLoading(true);
 
-    trackEvent('ai_chat_message', { message: userMessage });
-
     try {
       const response = await fetch('/api/chat', {
         method: 'POST',

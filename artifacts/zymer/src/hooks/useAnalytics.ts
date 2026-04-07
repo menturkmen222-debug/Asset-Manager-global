@@ -1,4 +1,4 @@
-import { useEffect, useRef } from 'react';
+import { useRef } from 'react';
 
 function generateSessionId() {
   if (typeof window === 'undefined') return 'unknown';
@@ -13,12 +13,12 @@ function generateSessionId() {
 export function useAnalytics() {
   const sessionId = useRef(generateSessionId());
 
-  const trackEvent = (type: string, data?: any) => {
+  const trackEvent = (type: string, data?: Record<string, unknown>) => {
     const payload = {
       type,
       sessionId: sessionId.current,
       timestamp: new Date().toISOString(),
-      data
+      data,
     };
 
     try {
@@ -29,13 +29,13 @@ export function useAnalytics() {
           method: 'POST',
           headers: { 'Content-Type': 'application/json' },
           body: JSON.stringify(payload),
-          keepalive: true
+          keepalive: true,
         }).catch(() => {});
       }
-    } catch (e) {
+    } catch {
       // Ignore
     }
   };
 
-  return { trackEvent };
+  return { trackEvent, sessionId: sessionId.current };
 }

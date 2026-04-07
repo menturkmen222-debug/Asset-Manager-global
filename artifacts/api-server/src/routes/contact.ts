@@ -3,14 +3,6 @@ import type { Request, Response } from "express";
 
 const router = Router();
 
-// Only these events are worth sending to Telegram
-const TELEGRAM_WORTHY_EVENTS = new Set([
-  "form_submission",
-  "ai_chat_open",
-  "social_click",
-  "cta_click",
-]);
-
 async function sendTelegramMessage(text: string): Promise<void> {
   const token = process.env.TELEGRAM_BOT_TOKEN;
   const userId1 = process.env.TELEGRAM_USER_ID_1;
@@ -36,66 +28,32 @@ async function sendTelegramMessage(text: string): Promise<void> {
   );
 }
 
-function formatLeadMessage(data: Record<string, string>): string {
-  return `🚀 <b>NEW LEAD — ZYMER</b>
+function formatLeadMessage(data: Record<string, string>, sessionId: string): string {
+  const time = new Date().toLocaleString("en-US", { timeZone: "Asia/Ashgabat" });
 
-👤 <b>Name:</b> ${data.name || "N/A"}
-🏢 <b>Business:</b> ${data.businessName || "N/A"}
-📞 <b>Phone:</b> ${data.phone || "N/A"}
-📧 <b>Email:</b> ${data.email || "N/A"}
+  const lines = [
+    `🚀 <b>Zymer Agent — YANGI MIJOZ</b>`,
+    ``,
+    `👤 <b>Ism:</b> ${data.name || "N/A"}`,
+    `🏢 <b>Biznes:</b> ${data.business || data.businessName || "N/A"}`,
+    `📞 <b>Telefon:</b> ${data.phone || "N/A"}`,
+    `📧 <b>Email:</b> ${data.email || "N/A"}`,
+    ``,
+    `📦 <b>Paket:</b> ${data.package || data.plan || "N/A"}`,
+    `🎨 <b>Dizayn stili:</b> ${data.style || data.designStyle || "N/A"}`,
+    `💬 <b>Xabar:</b> ${data.message || "N/A"}`,
+  ];
 
-📦 <b>Package:</b> ${data.plan || "N/A"}
-🎨 <b>Design Style:</b> ${data.designStyle || "N/A"}
-💬 <b>Message:</b> ${data.message || "N/A"}
+  if (data.url || data.website) lines.push(`🌐 <b>Joriy sayt:</b> ${data.url || data.website}`);
+  if (data.budget) lines.push(`💰 <b>Byudjet:</b> ${data.budget}`);
+  if (data.deadline) lines.push(`⏱ <b>Muddat:</b> ${data.deadline}`);
+  if (data.source) lines.push(`📣 <b>Qayerdan topdi:</b> ${data.source}`);
 
-${data.website ? `🌐 <b>Current Site:</b> ${data.website}` : ""}
-${data.budget ? `💰 <b>Budget:</b> ${data.budget}` : ""}
-${data.deadline ? `⏱ <b>Deadline:</b> ${data.deadline}` : ""}
-${data.source ? `📣 <b>Found us via:</b> ${data.source}` : ""}
+  lines.push(``);
+  lines.push(`🕐 <b>Vaqt:</b> ${time}`);
+  lines.push(`🔗 <b>Sessiya:</b> <code>${sessionId || "unknown"}</code>`);
 
-🕐 <b>Time:</b> ${new Date().toLocaleString("en-US", { timeZone: "Asia/Ashgabat" })}
-🔗 <b>Session:</b> <code>${data.sessionId || "unknown"}</code>`;
-}
-
-function formatEventMessage(event: {
-  type: string;
-  sessionId: string;
-  timestamp: string;
-  data: Record<string, unknown>;
-}): string {
-  const time = new Date(event.timestamp).toLocaleString("en-US", {
-    timeZone: "Asia/Ashgabat",
-  });
-
-  if (event.type === "ai_chat_open") {
-    return `🤖 <b>AI Assistant Opened — ZYMER</b>
-
-⏱ <b>Time:</b> ${time}
-🔗 <b>Session:</b> <code>${event.sessionId}</code>`;
-  }
-
-  if (event.type === "social_click") {
-    const platform = (event.data?.platform as string) || "unknown";
-    return `📲 <b>Social Click — ZYMER</b>
-
-🔗 <b>Platform:</b> ${platform}
-⏱ <b>Time:</b> ${time}
-🔗 <b>Session:</b> <code>${event.sessionId}</code>`;
-  }
-
-  if (event.type === "cta_click") {
-    const label = (event.data?.label as string) || "unknown";
-    return `👆 <b>CTA Clicked — ZYMER</b>
-
-🔘 <b>Button:</b> ${label}
-⏱ <b>Time:</b> ${time}
-🔗 <b>Session:</b> <code>${event.sessionId}</code>`;
-  }
-
-  return `📊 <b>${event.type.replace(/_/g, " ").toUpperCase()} — ZYMER</b>
-
-⏱ <b>Time:</b> ${time}
-🔗 <b>Session:</b> <code>${event.sessionId}</code>`;
+  return lines.join("\n");
 }
 
 router.post("/contact", async (req: Request, res: Response) => {
@@ -117,33 +75,17 @@ router.post("/contact", async (req: Request, res: Response) => {
       return;
     }
 
-    const { type, sessionId, timestamp, data } = parsedBody as {
+    const { type, sessionId, data } = parsedBody as {
       type: string;
       sessionId: string;
-      timestamp: string;
       data: Record<string, unknown>;
     };
 
     if (type === "form_submission") {
-      const leadData = {
-        ...(data as Record<string, string>),
-        sessionId,
-      };
-      const text = formatLeadMessage(leadData);
+      const text = formatLeadMessage(data as Record<string, string>, sessionId);
       await sendTelegramMessage(text);
       res.json({ success: true, message: "Lead submitted successfully" });
-    } else if (TELEGRAM_WORTHY_EVENTS.has(type)) {
-      // Only send important interaction events — skip page_view, section_view, etc.
-      const text = formatEventMessage({
-        type,
-        sessionId,
-        timestamp: timestamp || new Date().toISOString(),
-        data: data || {},
-      });
-      sendTelegramMessage(text).catch(() => {});
-      res.json({ success: true });
     } else {
-      // Silently acknowledge noisy/low-value events without forwarding to Telegram
       res.json({ success: true });
     }
   } catch (err) {
