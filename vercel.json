@@ -1,0 +1,12 @@
+{
+  "buildCommand": "pnpm install && pnpm --filter @workspace/zymer run build",
+  "outputDirectory": "artifacts/zymer/dist/public",
+  "rewrites": [
+    { "source": "/((?!api/).*)", "destination": "/index.html" }
+  ],
+  "functions": {
+    "api/contact.ts": {
+      "runtime": "@vercel/node@5"
+    }
+  }
+}
