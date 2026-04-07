@@ -10,6 +10,7 @@ import WhyZymer from '@/components/WhyZymer';
 import Contact from '@/components/Contact';
 import AIAssistant from '@/components/AIAssistant';
 import Footer from '@/components/Footer';
+import ParticleField from '@/components/ParticleField';
 import { useAnalytics } from '@/hooks/useAnalytics';
 
 export default function Home() {
@@ -18,7 +19,6 @@ export default function Home() {
   useEffect(() => {
     trackEvent('page_view', { page: 'home' });
 
-    // Section view tracking
     const observer = new IntersectionObserver((entries) => {
       entries.forEach(entry => {
         if (entry.isIntersecting) {
@@ -33,18 +33,21 @@ export default function Home() {
   }, []);
 
   return (
-    <main className="bg-background text-foreground min-h-[100dvh] overflow-x-hidden">
-      <Nav />
-      <Hero />
-      <FloatingWidget />
-      <Services />
-      <Pricing />
-      <Testimonials />
-      <TechStack />
-      <WhyZymer />
-      <Contact />
-      <AIAssistant />
-      <Footer />
+    <main className="bg-background text-foreground min-h-[100dvh] overflow-x-hidden relative">
+      <ParticleField />
+      <div className="relative z-10">
+        <Nav />
+        <Hero />
+        <FloatingWidget />
+        <Services />
+        <Pricing />
+        <Testimonials />
+        <TechStack />
+        <WhyZymer />
+        <Contact />
+        <AIAssistant />
+        <Footer />
+      </div>
     </main>
   );
 }
