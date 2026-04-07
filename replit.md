@@ -29,12 +29,17 @@ pnpm workspace monorepo using TypeScript. Each package manages its own dependenc
 ### Zymer — Premium Web Agency (`artifacts/zymer`)
 - React + Vite + TypeScript frontend
 - URL: `/` (root)
-- Full premium agency landing page with dark space theme
-- Features: animated hero, services, pricing, testimonials, tech stack, contact form, AI chat assistant
+- Full premium agency landing page with dark space/glassmorphism theme
+- Features: animated hero with floating cards, services grid, pricing tiers, testimonials carousel, tech stack marquee, contact form, AI chat assistant
 - AI chat uses Groq API (llama3-70b-8192) — requires `GROQ_API_KEY` secret
 - Lead notifications via Telegram — requires `TELEGRAM_BOT_TOKEN`, `TELEGRAM_USER_ID_1`, `TELEGRAM_USER_ID_2`
 - Analytics events sent to `/api/contact`
 - Components: Nav, Hero, FloatingWidget, Services, Pricing, Testimonials, TechStack, WhyZymer, Contact, AIAssistant, Footer
+- Design: dark premium (#6c63ff violet + #00c4f0 cyan palette), `.glass` glassmorphism, `.gradient-text`, `.section-badge` utility
+- Typography: Syne (display), Inter (body), Menlo (mono)
+- Hero: 2-column grid — left has trust badge, animated headline with gradient, checkpoints, CTAs, marquee ticker; right has floating glass cards (code snippet, traffic stat, speed score, lead notification)
+- FloatingWidget: fixed bottom-left rotating testimonial/tech card
+- All sections have `.section-badge` pill labels above headings
 
 ### API Server (`artifacts/api-server`)
 - Express 5 backend

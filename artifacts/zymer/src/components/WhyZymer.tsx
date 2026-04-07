@@ -49,7 +49,7 @@ const reasons = [
   {
     Icon: icons.Globe,
     title: 'Global Standard, Local Understanding',
-    desc: 'We operate at international standards while deeply understanding emerging markets.',
+    desc: 'We operate at international standards while deeply understanding emerging markets — giving you an edge both at home and abroad.',
     number: '01'
   },
   {
@@ -61,40 +61,53 @@ const reasons = [
   {
     Icon: icons.Brain,
     title: 'Psychology-Driven Design',
-    desc: 'Every color, every word, every scroll animation is chosen based on conversion psychology. We make things persuasive.',
+    desc: 'Every color, word, and scroll animation is chosen based on conversion psychology. We build things that are not just beautiful — but persuasive.',
     number: '03'
   },
   {
     Icon: icons.Receipt,
     title: 'Transparent, No-Surprise Pricing',
-    desc: "Our packages are clear. Our communication is direct. You always know what you're getting.",
+    desc: "Our packages are crystal clear. Our communication is direct. You always know exactly what you're getting, and what it costs.",
     number: '04'
   },
   {
     Icon: icons.Infinity,
     title: 'Lifetime Technical Partnership',
-    desc: "We don't disappear after launch. We're your technical partners. Got a question? Our AI assistant never sleeps.",
+    desc: "We don't disappear after launch. We're your long-term technical partners. Got a question? Our AI assistant never sleeps.",
     number: '05'
   },
   {
     Icon: icons.SearchCheck,
     title: 'Built to Rank & Convert',
-    desc: 'Every site is SEO-optimized, performance-tuned, and analytically wired from day one.',
+    desc: 'Every site is SEO-optimized, performance-tuned, and analytically wired from day one. Traffic + conversion = growth.',
     number: '06'
   }
 ];
 
 export default function WhyZymer() {
   return (
-    <section className="py-24 relative z-10">
+    <section className="py-28 relative z-10">
+      {/* Section divider top */}
+      <div className="absolute top-0 inset-x-0 h-px bg-gradient-to-r from-transparent via-white/[0.06] to-transparent" />
+
       <div className="container mx-auto px-6 md:px-12">
 
         <div className="text-center max-w-3xl mx-auto mb-16">
+          <motion.div
+            initial={{ opacity: 0, y: 16 }}
+            whileInView={{ opacity: 1, y: 0 }}
+            viewport={{ once: true }}
+            className="section-badge mb-5 mx-auto"
+          >
+            <svg width="10" height="10" viewBox="0 0 10 10" fill="none"><path d="M5 1L6.18 3.76L9.14 3.76L6.82 5.48L7.7 8.24L5 6.6L2.3 8.24L3.18 5.48L0.86 3.76L3.82 3.76L5 1Z" stroke="currentColor" strokeWidth="0.8"/></svg>
+            Why Zymer
+          </motion.div>
           <motion.h2
             initial={{ opacity: 0, y: 20 }}
             whileInView={{ opacity: 1, y: 0 }}
             viewport={{ once: true }}
-            className="text-4xl md:text-5xl font-display font-bold mb-4"
+            transition={{ delay: 0.05 }}
+            className="text-4xl md:text-5xl font-display font-bold mb-4 text-balance"
           >
             Why Brands Choose Zymer
           </motion.h2>
@@ -115,25 +128,27 @@ export default function WhyZymer() {
             return (
               <motion.div
                 key={i}
-                initial={{ opacity: 0, y: 24 }}
+                initial={{ opacity: 0, y: 28 }}
                 whileInView={{ opacity: 1, y: 0 }}
                 viewport={{ once: true }}
                 transition={{ delay: i * 0.08, duration: 0.5, ease: [0.22, 1, 0.36, 1] }}
-                className="group flex flex-col gap-4"
+                className="group flex flex-col gap-4 p-6 rounded-2xl hover:bg-white/[0.025] transition-all duration-300 border border-transparent hover:border-white/[0.06]"
               >
-                {/* Icon + number row */}
+                {/* Icon row */}
                 <div className="flex items-center gap-4">
                   <div className="relative w-14 h-14 rounded-2xl flex items-center justify-center shrink-0 overflow-hidden group-hover:scale-105 transition-transform duration-300">
-                    <div className="absolute inset-0 bg-gradient-to-br from-primary/15 to-primary/5 border border-primary/20 rounded-2xl" />
+                    <div className="absolute inset-0 bg-gradient-to-br from-primary/18 to-primary/5 border border-primary/18 rounded-2xl" />
                     <span className="relative z-10 text-primary">
                       <Icon />
                     </span>
                   </div>
-                  <span className="font-mono text-[11px] tracking-[0.18em] text-primary/40 select-none">{reason.number}</span>
+                  <span className="font-mono text-[10px] tracking-[0.2em] text-primary/35 select-none tabular-nums">{reason.number}</span>
                 </div>
 
-                <h3 className="text-lg font-display font-bold text-foreground group-hover:text-primary/90 transition-colors duration-200">{reason.title}</h3>
-                <p className="text-sm text-muted-foreground leading-relaxed">{reason.desc}</p>
+                <div>
+                  <h3 className="text-[17px] font-display font-bold text-foreground mb-2 group-hover:text-primary/90 transition-colors duration-200 leading-snug">{reason.title}</h3>
+                  <p className="text-sm text-muted-foreground leading-relaxed">{reason.desc}</p>
+                </div>
               </motion.div>
             );
           })}

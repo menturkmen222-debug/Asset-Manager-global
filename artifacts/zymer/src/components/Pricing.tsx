@@ -9,8 +9,8 @@ import {
 
 const CheckIcon = () => (
   <svg width="15" height="15" viewBox="0 0 15 15" fill="none" xmlns="http://www.w3.org/2000/svg" className="shrink-0 mt-0.5">
-    <circle cx="7.5" cy="7.5" r="7" stroke="currentColor" strokeWidth="1.2" opacity="0.3"/>
-    <path d="M4.5 7.5L6.5 9.5L10.5 5.5" stroke="currentColor" strokeWidth="1.5" strokeLinecap="round" strokeLinejoin="round"/>
+    <circle cx="7.5" cy="7.5" r="7" stroke="currentColor" strokeWidth="1.2" opacity="0.25"/>
+    <path d="M4.5 7.5L6.5 9.5L10.5 5.5" stroke="currentColor" strokeWidth="1.6" strokeLinecap="round" strokeLinejoin="round"/>
   </svg>
 );
 
@@ -70,16 +70,18 @@ export default function Pricing() {
       tagline: "Your first serious step into the digital world.",
       features: ["Up to 5 pages", "Mobile-responsive", "Basic SEO", "Contact form", "1 revision round", "Deployment setup", "30-day support", "Analytics"],
       delivery: "7–10 business days",
-      featured: false
+      featured: false,
+      accentColor: "text-muted-foreground"
     },
     {
       name: "Growth",
       price: "$1,199",
       badge: "Most Popular",
       tagline: "For businesses serious about dominating their niche.",
-      features: ["Up to 12 pages", "Advanced animations", "Full mobile+tablet", "Advanced SEO", "AI Chatbot integration", "Multi-language support", "Custom forms", "Telegram/WhatsApp notifications", "Social tracking", "3 revision rounds", "60-day support", "Analytics dashboard"],
+      features: ["Up to 12 pages", "Advanced animations", "Full mobile+tablet", "Advanced SEO", "AI Chatbot integration", "Multi-language support", "Custom forms", "Telegram/WhatsApp alerts", "Social tracking", "3 revision rounds", "60-day support", "Analytics dashboard"],
       delivery: "10–14 business days",
-      featured: true
+      featured: true,
+      accentColor: "text-primary"
     },
     {
       name: "Enterprise",
@@ -88,7 +90,8 @@ export default function Pricing() {
       tagline: "Multi-server, full-scale digital ecosystems. No limits.",
       features: ["Unlimited pages", "Custom 3D scenes", "Full-stack apps", "E-commerce + payments", "Multi-region deployment", "Dedicated PM", "Weekly calls", "24/7 priority support", "Custom CMS", "Unlimited revisions", "6-month support", "Full docs"],
       delivery: "Custom timeline",
-      featured: false
+      featured: false,
+      accentColor: "text-muted-foreground"
     }
   ];
 
@@ -103,14 +106,30 @@ export default function Pricing() {
   ];
 
   return (
-    <section id="pricing" className="py-24 relative z-10 bg-secondary/40">
-      <div className="container mx-auto px-6 md:px-12">
+    <section id="pricing" className="py-28 relative z-10">
+      {/* Section divider top */}
+      <div className="absolute top-0 inset-x-0 h-px bg-gradient-to-r from-transparent via-white/[0.06] to-transparent" />
+
+      {/* Subtle background */}
+      <div className="absolute inset-0 bg-secondary/25 pointer-events-none" />
+
+      <div className="container mx-auto px-6 md:px-12 relative">
 
         <div className="text-center max-w-3xl mx-auto mb-16">
+          <motion.div
+            initial={{ opacity: 0, y: 16 }}
+            whileInView={{ opacity: 1, y: 0 }}
+            viewport={{ once: true }}
+            className="section-badge mb-5 mx-auto"
+          >
+            <svg width="10" height="10" viewBox="0 0 10 10" fill="currentColor"><rect x="1" y="1" width="3.5" height="3.5" rx="0.5"/><rect x="5.5" y="1" width="3.5" height="3.5" rx="0.5"/><rect x="1" y="5.5" width="3.5" height="3.5" rx="0.5"/><rect x="5.5" y="5.5" width="3.5" height="3.5" rx="0.5"/></svg>
+            Pricing
+          </motion.div>
           <motion.h2
             initial={{ opacity: 0, y: 20 }}
             whileInView={{ opacity: 1, y: 0 }}
             viewport={{ once: true }}
+            transition={{ delay: 0.05 }}
             className="text-4xl md:text-5xl font-display font-bold mb-4"
           >
             Investment, Not Cost
@@ -126,57 +145,57 @@ export default function Pricing() {
           </motion.p>
         </div>
 
-        <div className="grid lg:grid-cols-3 gap-6 max-w-6xl mx-auto items-center mb-14">
+        <div className="grid lg:grid-cols-3 gap-5 max-w-6xl mx-auto items-center mb-14">
           {tiers.map((tier, i) => (
             <motion.div
               key={tier.name}
-              initial={{ opacity: 0, y: 24 }}
+              initial={{ opacity: 0, y: 28 }}
               whileInView={{ opacity: 1, y: 0 }}
               viewport={{ once: true }}
               transition={{ delay: i * 0.1, duration: 0.5, ease: [0.22, 1, 0.36, 1] }}
-              className={`relative glass rounded-3xl flex flex-col h-full overflow-hidden ${
+              className={`relative glass rounded-3xl flex flex-col h-full overflow-hidden transition-all duration-300 ${
                 tier.featured
-                  ? 'border-primary/40 shadow-[0_0_50px_rgba(108,99,255,0.18)] lg:scale-[1.04] z-10'
-                  : 'border-white/[0.06] hover:border-primary/20 transition-colors duration-300'
+                  ? 'border-primary/35 shadow-[0_0_60px_rgba(108,99,255,0.22)] lg:scale-[1.04] z-10'
+                  : 'hover:border-primary/15 hover:shadow-[0_4px_30px_rgba(108,99,255,0.1)]'
               }`}
             >
-              {/* Top gradient accent for featured */}
+              {/* Top gradient accent */}
               {tier.featured && (
-                <div className="absolute top-0 inset-x-0 h-px bg-gradient-to-r from-transparent via-primary to-transparent" />
+                <div className="absolute top-0 inset-x-0 h-[2px] bg-gradient-to-r from-transparent via-primary to-transparent" />
               )}
 
-              {/* Badge */}
+              {/* Popular badge */}
               {tier.featured && (
-                <div className="absolute -top-3.5 left-1/2 -translate-x-1/2 z-10">
-                  <div className="gradient-bg text-white text-[10px] font-bold tracking-[0.12em] uppercase px-4 py-1.5 rounded-full shadow-lg shadow-primary/30">
-                    Most Popular
+                <div className="absolute -top-4 left-1/2 -translate-x-1/2 z-10">
+                  <div className="gradient-bg text-white text-[10px] font-bold tracking-[0.14em] uppercase px-5 py-1.5 rounded-full shadow-lg shadow-primary/40">
+                    ✦ Most Popular
                   </div>
                 </div>
               )}
 
               <div className="p-8 flex flex-col h-full">
-                <div className={`text-xs font-semibold tracking-wide mb-2 ${tier.featured ? 'text-primary' : 'text-muted-foreground'}`}>
+                <div className={`text-[11px] font-bold tracking-[0.1em] uppercase mb-2 ${tier.featured ? 'text-primary' : 'text-muted-foreground/70'}`}>
                   {tier.badge}
                 </div>
                 <h3 className="text-2xl font-display font-bold text-foreground mb-1">{tier.name}</h3>
-                <p className="text-sm text-muted-foreground mb-6 min-h-[40px]">{tier.tagline}</p>
+                <p className="text-sm text-muted-foreground mb-6 min-h-[38px] leading-relaxed">{tier.tagline}</p>
 
-                <div className="mb-6 pb-6 border-b border-border/50">
-                  <div className="flex items-baseline gap-1.5">
-                    <span className="text-4xl font-bold text-foreground font-display">{tier.price}</span>
+                <div className="mb-7 pb-7 border-b border-border/30">
+                  <div className="flex items-baseline gap-2">
+                    <span className="text-[2.6rem] font-bold text-foreground font-display leading-none">{tier.price}</span>
                     {tier.price !== 'Custom' && (
-                      <span className="text-sm text-muted-foreground">starting from</span>
+                      <span className="text-sm text-muted-foreground">starting</span>
                     )}
                   </div>
-                  <div className="flex items-center gap-1.5 mt-2 text-xs text-muted-foreground">
+                  <div className="flex items-center gap-1.5 mt-3 text-xs text-muted-foreground">
                     <svg width="12" height="12" viewBox="0 0 12 12" fill="none"><circle cx="6" cy="6" r="5" stroke="currentColor" strokeWidth="1"/><path d="M6 3.5V6L7.5 7.5" stroke="currentColor" strokeWidth="1" strokeLinecap="round"/></svg>
                     {tier.delivery}
                   </div>
                 </div>
 
-                <ul className="space-y-2.5 mb-8 flex-grow">
+                <ul className="space-y-3 mb-8 flex-grow">
                   {tier.features.map(f => (
-                    <li key={f} className="flex items-start gap-3 text-sm text-foreground/90">
+                    <li key={f} className="flex items-start gap-3 text-sm text-foreground/85">
                       <span className={tier.featured ? 'text-primary' : 'text-muted-foreground'}>
                         <CheckIcon />
                       </span>
@@ -190,10 +209,10 @@ export default function Pricing() {
                     trackEvent('cta_click', { button: `pricing_${tier.name.toLowerCase()}` });
                     scrollTo('contact');
                   }}
-                  className={`group w-full py-3.5 rounded-xl font-semibold text-sm transition-all outline-none flex items-center justify-center gap-2 ${
+                  className={`group w-full py-3.5 rounded-xl font-semibold text-sm transition-all duration-200 outline-none flex items-center justify-center gap-2 ${
                     tier.featured
-                      ? 'gradient-bg text-white hover:shadow-[0_0_20px_rgba(108,99,255,0.4)]'
-                      : 'bg-secondary/70 text-foreground hover:bg-secondary border border-border/50'
+                      ? 'gradient-bg text-white hover:shadow-[0_0_24px_rgba(108,99,255,0.5)] hover:scale-[1.02]'
+                      : 'bg-white/[0.04] text-foreground hover:bg-white/[0.08] border border-white/[0.08] hover:border-white/[0.14]'
                   }`}
                 >
                   {tier.name === 'Enterprise' ? "Let's Talk" : "Select Package"}
@@ -211,7 +230,7 @@ export default function Pricing() {
           initial={{ opacity: 0, y: 20 }}
           whileInView={{ opacity: 1, y: 0 }}
           viewport={{ once: true }}
-          className="max-w-3xl mx-auto glass rounded-2xl overflow-hidden border-white/[0.06]"
+          className="max-w-3xl mx-auto glass rounded-2xl overflow-hidden"
         >
           <Accordion type="single" collapsible>
             <AccordionItem value="styles" className="border-none">
@@ -228,7 +247,7 @@ export default function Pricing() {
                   {designStyles.map((style, i) => {
                     const StyleIcon = styleIcons[style.name];
                     return (
-                      <div key={i} className="group flex items-start gap-3 bg-secondary/40 hover:bg-secondary/70 p-4 rounded-xl border border-border/40 hover:border-primary/20 transition-all duration-200 cursor-default">
+                      <div key={i} className="group flex items-start gap-3 bg-white/[0.03] hover:bg-white/[0.06] p-4 rounded-xl border border-white/[0.06] hover:border-primary/20 transition-all duration-200 cursor-default">
                         <div className="w-7 h-7 rounded-lg bg-primary/10 border border-primary/15 flex items-center justify-center text-primary shrink-0 mt-0.5">
                           {StyleIcon ? <StyleIcon /> : null}
                         </div>

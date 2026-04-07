@@ -1,6 +1,5 @@
 import { motion } from 'framer-motion';
 
-// Custom premium SVG icons
 const icons = {
   LandingPage: () => (
     <svg width="22" height="22" viewBox="0 0 22 22" fill="none" xmlns="http://www.w3.org/2000/svg">
@@ -71,31 +70,41 @@ const icons = {
   ),
 };
 
-// Background ghost icons (large, used as decorative card watermarks)
-const ghostIcons = [icons.LandingPage, icons.BusinessSite, icons.Ecommerce, icons.Dashboard, icons.Portfolio, icons.WebApp, icons.UIRedesign, icons.Automation];
-
 const services = [
-  { Icon: icons.LandingPage, GhostIcon: icons.LandingPage, title: 'Landing Pages', desc: 'One page. One goal. Infinite conversions. We build landing pages that make visitors say yes before they reach the bottom.' },
-  { Icon: icons.BusinessSite, GhostIcon: icons.BusinessSite, title: 'Business Websites', desc: 'Your digital headquarters. Professional, fast, and built to establish authority in any market.' },
-  { Icon: icons.Ecommerce, GhostIcon: icons.Ecommerce, title: 'E-Commerce Stores', desc: 'Storefronts engineered to sell. Every element designed to reduce friction and maximize revenue.' },
-  { Icon: icons.Dashboard, GhostIcon: icons.Dashboard, title: 'SaaS Dashboards', desc: 'Complex interfaces made elegant. We turn powerful features into intuitive experiences.' },
-  { Icon: icons.Portfolio, GhostIcon: icons.Portfolio, title: 'Portfolio & Brand', desc: 'Your story, told beautifully. Stand out in a world drowning in mediocrity.' },
-  { Icon: icons.WebApp, GhostIcon: icons.WebApp, title: 'Web Applications', desc: 'From idea to working product. Full-stack applications built for scale and speed.' },
-  { Icon: icons.UIRedesign, GhostIcon: icons.UIRedesign, title: 'UI/UX Redesign', desc: 'Old site killing your conversions? We rebuild it into something that actually performs.' },
-  { Icon: icons.Automation, GhostIcon: icons.Automation, title: 'API & Automation', desc: 'Connect your tools, automate your workflows, and free your team to focus on what matters.' },
+  { Icon: icons.LandingPage, title: 'Landing Pages', desc: 'One page. One goal. Infinite conversions. We build landing pages that make visitors say yes before they reach the bottom.', tag: 'High ROI' },
+  { Icon: icons.BusinessSite, title: 'Business Websites', desc: 'Your digital headquarters. Professional, fast, and built to establish authority in any market.', tag: 'Most Popular' },
+  { Icon: icons.Ecommerce, title: 'E-Commerce Stores', desc: 'Storefronts engineered to sell. Every element designed to reduce friction and maximize revenue.', tag: 'Revenue First' },
+  { Icon: icons.Dashboard, title: 'SaaS Dashboards', desc: 'Complex interfaces made elegant. We turn powerful features into intuitive experiences users love.', tag: 'UX-Led' },
+  { Icon: icons.Portfolio, title: 'Portfolio & Brand', desc: 'Your story, told beautifully. Stand out in a world drowning in mediocrity.', tag: 'Creative' },
+  { Icon: icons.WebApp, title: 'Web Applications', desc: 'From idea to working product. Full-stack applications built for scale and speed.', tag: 'Full-Stack' },
+  { Icon: icons.UIRedesign, title: 'UI/UX Redesign', desc: 'Old site killing your conversions? We rebuild it into something that actually performs.', tag: 'Performance' },
+  { Icon: icons.Automation, title: 'API & Automation', desc: 'Connect your tools, automate your workflows, and free your team to focus on what matters.', tag: 'Efficiency' },
 ];
 
 export default function Services() {
   return (
-    <section id="services" className="py-24 relative z-10">
+    <section id="services" className="py-28 relative z-10">
+      {/* Section divider top */}
+      <div className="absolute top-0 inset-x-0 h-px bg-gradient-to-r from-transparent via-white/[0.06] to-transparent" />
+
       <div className="container mx-auto px-6 md:px-12">
 
         <div className="max-w-2xl mb-16">
+          <motion.div
+            initial={{ opacity: 0, y: 16 }}
+            whileInView={{ opacity: 1, y: 0 }}
+            viewport={{ once: true }}
+            className="section-badge mb-5"
+          >
+            <svg width="10" height="10" viewBox="0 0 10 10" fill="currentColor"><path d="M5 0L6.12 3.38L9.75 3.45L7.02 5.57L8.09 9.05L5 7L1.91 9.05L2.98 5.57L0.25 3.45L3.88 3.38L5 0Z"/></svg>
+            Our Services
+          </motion.div>
           <motion.h2
             initial={{ opacity: 0, y: 20 }}
             whileInView={{ opacity: 1, y: 0 }}
             viewport={{ once: true }}
-            className="text-4xl md:text-5xl font-display font-bold mb-4"
+            transition={{ delay: 0.05 }}
+            className="text-4xl md:text-5xl font-display font-bold mb-4 text-balance"
           >
             What We Build
           </motion.h2>
@@ -104,7 +113,7 @@ export default function Services() {
             whileInView={{ opacity: 1, y: 0 }}
             viewport={{ once: true }}
             transition={{ delay: 0.1 }}
-            className="text-lg text-muted-foreground"
+            className="text-lg text-muted-foreground leading-relaxed"
           >
             Every project is a statement. Here's how we make yours impossible to ignore.
           </motion.p>
@@ -112,34 +121,41 @@ export default function Services() {
 
         <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-4">
           {services.map((service, index) => {
-            const { Icon, GhostIcon } = service;
+            const { Icon } = service;
             return (
               <motion.div
                 key={service.title}
-                initial={{ opacity: 0, y: 24 }}
+                initial={{ opacity: 0, y: 28 }}
                 whileInView={{ opacity: 1, y: 0 }}
                 viewport={{ once: true }}
-                transition={{ delay: index * 0.07, duration: 0.5, ease: [0.22, 1, 0.36, 1] }}
-                className="group relative glass p-7 rounded-2xl hover:-translate-y-1.5 hover:shadow-[0_0_30px_rgba(108,99,255,0.15)] transition-all duration-300 overflow-hidden border border-white/[0.05] hover:border-primary/20"
+                transition={{ delay: index * 0.06, duration: 0.5, ease: [0.22, 1, 0.36, 1] }}
+                className="group relative glass p-6 rounded-2xl hover:-translate-y-2 hover:shadow-[0_8px_40px_rgba(108,99,255,0.18)] transition-all duration-300 overflow-hidden cursor-default"
               >
-                {/* Ghost watermark icon */}
-                <div className="absolute -bottom-3 -right-3 w-20 h-20 text-primary/[0.06] group-hover:text-primary/[0.1] transition-colors duration-300 pointer-events-none [&_svg]:w-full [&_svg]:h-full" aria-hidden>
-                  <GhostIcon />
+                {/* Top glow accent line */}
+                <div className="absolute top-0 left-0 right-0 h-px bg-gradient-to-r from-transparent via-primary/50 to-transparent opacity-0 group-hover:opacity-100 transition-opacity duration-400" />
+
+                {/* Background ghost watermark */}
+                <div className="absolute -bottom-2 -right-2 w-24 h-24 text-primary/[0.05] group-hover:text-primary/[0.12] transition-colors duration-400 pointer-events-none [&_svg]:w-full [&_svg]:h-full" aria-hidden>
+                  <Icon />
                 </div>
 
-                {/* Top accent line */}
-                <div className="absolute top-0 left-6 right-6 h-px bg-gradient-to-r from-transparent via-primary/40 to-transparent opacity-0 group-hover:opacity-100 transition-opacity duration-300" />
-
-                {/* Icon container */}
-                <div className="relative w-11 h-11 rounded-xl mb-6 flex items-center justify-center shrink-0 overflow-hidden group-hover:scale-105 transition-transform duration-300">
-                  <div className="absolute inset-0 bg-gradient-to-br from-primary/20 to-primary/5 rounded-xl border border-primary/20" />
+                {/* Icon */}
+                <div className="relative w-11 h-11 rounded-xl mb-5 flex items-center justify-center shrink-0 overflow-hidden group-hover:scale-110 transition-transform duration-300">
+                  <div className="absolute inset-0 bg-gradient-to-br from-primary/25 to-primary/5 rounded-xl border border-primary/20" />
                   <span className="relative text-primary z-10">
                     <Icon />
                   </span>
                 </div>
 
-                <h3 className="text-base font-bold font-display mb-2.5 text-foreground">{service.title}</h3>
-                <p className="text-sm text-muted-foreground leading-relaxed">
+                {/* Tag */}
+                <div className="mb-3">
+                  <span className="text-[10px] font-bold tracking-[0.1em] uppercase text-primary/60 bg-primary/8 px-2 py-1 rounded-md">
+                    {service.tag}
+                  </span>
+                </div>
+
+                <h3 className="text-[15px] font-bold font-display mb-2.5 text-foreground group-hover:text-primary/90 transition-colors duration-200">{service.title}</h3>
+                <p className="text-[13px] text-muted-foreground leading-relaxed">
                   {service.desc}
                 </p>
               </motion.div>

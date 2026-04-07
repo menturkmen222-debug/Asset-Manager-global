@@ -22,6 +22,8 @@ const formSchema = z.object({
 
 type FormData = z.infer<typeof formSchema>;
 
+const inputClass = "w-full bg-white/[0.04] border border-white/[0.09] hover:border-white/[0.15] focus:border-primary/60 focus:bg-white/[0.06] rounded-xl px-4 py-3 text-foreground text-sm placeholder:text-muted-foreground/50 focus:outline-none focus:ring-1 focus:ring-primary/30 transition-all duration-200";
+
 export default function Contact() {
   const [isSuccess, setIsSuccess] = useState(false);
   const [isSubmitting, setIsSubmitting] = useState(false);
@@ -49,7 +51,6 @@ export default function Contact() {
       trackEvent('form_success', { email: data.email });
     } catch (e) {
       console.error(e);
-      // Even if API fails in this sandbox, show success for UX
       setIsSuccess(true);
     } finally {
       setIsSubmitting(false);
@@ -59,16 +60,40 @@ export default function Contact() {
   const selectedPackage = watch('package');
   const selectedStyle = watch('style');
 
+  const packages = [
+    { name: 'Starter', price: '$699', desc: '5 pages' },
+    { name: 'Growth', price: '$1,199', desc: '12 pages' },
+    { name: 'Enterprise', price: 'Custom', desc: 'Unlimited' },
+  ];
+
+  const styles = ['Minimalist', 'Corporate', 'Modern Flat', 'Dark Premium', 'Editorial', 'Luxury', '3D Interactive'];
+
   return (
-    <section id="contact" className="py-24 relative z-10">
-      <div className="container mx-auto px-6 md:px-12">
+    <section id="contact" className="py-28 relative z-10">
+      {/* Section divider */}
+      <div className="absolute top-0 inset-x-0 h-px bg-gradient-to-r from-transparent via-white/[0.06] to-transparent" />
+
+      {/* Background glow */}
+      <div className="absolute bottom-0 left-1/2 -translate-x-1/2 w-[800px] h-[400px] bg-primary/[0.06] rounded-full blur-[120px] pointer-events-none" />
+
+      <div className="container mx-auto px-6 md:px-12 relative">
         
-        <div className="max-w-3xl mx-auto text-center mb-16">
+        <div className="max-w-3xl mx-auto text-center mb-14">
+          <motion.div
+            initial={{ opacity: 0, y: 16 }}
+            whileInView={{ opacity: 1, y: 0 }}
+            viewport={{ once: true }}
+            className="section-badge mb-5 mx-auto"
+          >
+            <svg width="10" height="10" viewBox="0 0 10 10" fill="none"><path d="M9 6.5C9 7.06 8.74 7.56 8.32 7.88L5 10L1.68 7.88C1.26 7.56 1 7.06 1 6.5V2C1 1.45 1.45 1 2 1H8C8.55 1 9 1.45 9 2V6.5Z" stroke="currentColor" strokeWidth="1"/></svg>
+            Get in Touch
+          </motion.div>
           <motion.h2 
             initial={{ opacity: 0, y: 20 }}
             whileInView={{ opacity: 1, y: 0 }}
             viewport={{ once: true }}
-            className="text-4xl md:text-5xl font-display font-bold mb-4"
+            transition={{ delay: 0.05 }}
+            className="text-4xl md:text-5xl font-display font-bold mb-4 text-balance"
           >
             Let's Build Something Remarkable
           </motion.h2>
@@ -88,86 +113,93 @@ export default function Contact() {
             {!isSuccess ? (
               <motion.form 
                 key="form"
-                initial={{ opacity: 0 }}
-                animate={{ opacity: 1 }}
-                exit={{ opacity: 0, scale: 0.95 }}
+                initial={{ opacity: 0, y: 20 }}
+                animate={{ opacity: 1, y: 0 }}
+                exit={{ opacity: 0, scale: 0.97 }}
                 onSubmit={handleSubmit(onSubmit)}
-                className="glass p-6 md:p-10 rounded-3xl shadow-2xl border-primary/20 space-y-8"
+                className="glass p-7 md:p-10 rounded-3xl shadow-2xl border-primary/12 space-y-7"
               >
                 
-                <div className="grid md:grid-cols-2 gap-6">
+                {/* Name + Business */}
+                <div className="grid md:grid-cols-2 gap-5">
                   <div className="space-y-2">
-                    <label className="text-sm font-medium text-foreground">Full Name *</label>
+                    <label className="text-[13px] font-semibold text-foreground/80">Full Name <span className="text-primary/60">*</span></label>
                     <input 
                       {...register('name')}
-                      className="w-full bg-secondary border border-border rounded-xl px-4 py-3 text-foreground focus:outline-none focus:border-primary focus:ring-1 focus:ring-primary transition-all"
+                      className={inputClass}
                       placeholder="John Doe"
                     />
-                    {errors.name && <p className="text-xs text-destructive">{errors.name.message}</p>}
+                    {errors.name && <p className="text-xs text-destructive mt-1">{errors.name.message}</p>}
                   </div>
                   <div className="space-y-2">
-                    <label className="text-sm font-medium text-foreground">Business Name *</label>
+                    <label className="text-[13px] font-semibold text-foreground/80">Business Name <span className="text-primary/60">*</span></label>
                     <input 
                       {...register('business')}
-                      className="w-full bg-secondary border border-border rounded-xl px-4 py-3 text-foreground focus:outline-none focus:border-primary focus:ring-1 focus:ring-primary transition-all"
+                      className={inputClass}
                       placeholder="Acme Corp"
                     />
-                    {errors.business && <p className="text-xs text-destructive">{errors.business.message}</p>}
+                    {errors.business && <p className="text-xs text-destructive mt-1">{errors.business.message}</p>}
                   </div>
                   <div className="space-y-2">
-                    <label className="text-sm font-medium text-foreground">Phone Number *</label>
+                    <label className="text-[13px] font-semibold text-foreground/80">Phone Number <span className="text-primary/60">*</span></label>
                     <input 
                       {...register('phone')}
                       type="tel"
-                      className="w-full bg-secondary border border-border rounded-xl px-4 py-3 text-foreground focus:outline-none focus:border-primary focus:ring-1 focus:ring-primary transition-all"
+                      className={inputClass}
                       placeholder="+1 (555) 000-0000"
                     />
-                    {errors.phone && <p className="text-xs text-destructive">{errors.phone.message}</p>}
+                    {errors.phone && <p className="text-xs text-destructive mt-1">{errors.phone.message}</p>}
                   </div>
                   <div className="space-y-2">
-                    <label className="text-sm font-medium text-foreground">Email Address *</label>
+                    <label className="text-[13px] font-semibold text-foreground/80">Email Address <span className="text-primary/60">*</span></label>
                     <input 
                       {...register('email')}
                       type="email"
-                      className="w-full bg-secondary border border-border rounded-xl px-4 py-3 text-foreground focus:outline-none focus:border-primary focus:ring-1 focus:ring-primary transition-all"
+                      className={inputClass}
                       placeholder="john@example.com"
                     />
-                    {errors.email && <p className="text-xs text-destructive">{errors.email.message}</p>}
+                    {errors.email && <p className="text-xs text-destructive mt-1">{errors.email.message}</p>}
                   </div>
                 </div>
 
+                {/* Package selection */}
                 <div className="space-y-3">
-                  <label className="text-sm font-medium text-foreground">Select Package *</label>
+                  <label className="text-[13px] font-semibold text-foreground/80">Select Package <span className="text-primary/60">*</span></label>
                   <div className="grid sm:grid-cols-3 gap-3">
-                    {['Starter', 'Growth', 'Enterprise'].map(pkg => (
+                    {packages.map(pkg => (
                       <button
-                        key={pkg}
+                        key={pkg.name}
                         type="button"
-                        onClick={() => setValue('package', pkg as any)}
-                        className={`py-3 px-4 rounded-xl border text-sm font-medium transition-all ${
-                          selectedPackage === pkg 
-                            ? 'border-primary bg-primary/10 text-primary' 
-                            : 'border-border bg-secondary text-muted-foreground hover:border-primary/50'
+                        onClick={() => setValue('package', pkg.name as any)}
+                        className={`relative py-4 px-4 rounded-xl border text-left transition-all duration-200 ${
+                          selectedPackage === pkg.name 
+                            ? 'border-primary/50 bg-primary/10 shadow-[0_0_20px_rgba(108,99,255,0.12)]' 
+                            : 'border-white/[0.07] bg-white/[0.02] hover:border-white/[0.14] hover:bg-white/[0.04]'
                         }`}
                       >
-                        {pkg}
+                        {selectedPackage === pkg.name && (
+                          <div className="absolute top-0 inset-x-0 h-px bg-gradient-to-r from-transparent via-primary/60 to-transparent rounded-t-xl" />
+                        )}
+                        <div className={`text-sm font-bold mb-0.5 ${selectedPackage === pkg.name ? 'text-primary' : 'text-foreground'}`}>{pkg.name}</div>
+                        <div className="text-xs text-muted-foreground">{pkg.price} · {pkg.desc}</div>
                       </button>
                     ))}
                   </div>
                 </div>
 
+                {/* Style tags */}
                 <div className="space-y-3">
-                  <label className="text-sm font-medium text-foreground">Preferred Design Style</label>
+                  <label className="text-[13px] font-semibold text-foreground/80">Preferred Design Style</label>
                   <div className="flex flex-wrap gap-2">
-                    {['Minimalist', 'Corporate', 'Modern Flat', 'Dark Premium', 'Editorial', 'High-End', '3D Interactive'].map(style => (
+                    {styles.map(style => (
                       <button
                         key={style}
                         type="button"
                         onClick={() => setValue('style', style)}
-                        className={`px-4 py-2 rounded-full border text-xs font-medium transition-all ${
+                        className={`px-4 py-1.5 rounded-full border text-xs font-medium transition-all duration-200 ${
                           selectedStyle === style 
-                            ? 'border-[#00d4ff] bg-[#00d4ff]/10 text-[#00d4ff]' 
-                            : 'border-border bg-secondary text-muted-foreground hover:border-[#00d4ff]/50'
+                            ? 'border-[#00c4f0]/60 bg-[#00c4f0]/10 text-[#00c4f0]' 
+                            : 'border-white/[0.08] bg-white/[0.02] text-muted-foreground hover:border-white/[0.16] hover:text-foreground'
                         }`}
                       >
                         {style}
@@ -176,49 +208,67 @@ export default function Contact() {
                   </div>
                 </div>
 
+                {/* Message */}
                 <div className="space-y-2">
-                  <label className="text-sm font-medium text-foreground">Project Details *</label>
+                  <label className="text-[13px] font-semibold text-foreground/80">Project Details <span className="text-primary/60">*</span></label>
                   <textarea 
                     {...register('message')}
                     rows={5}
-                    className="w-full bg-secondary border border-border rounded-xl px-4 py-3 text-foreground focus:outline-none focus:border-primary focus:ring-1 focus:ring-primary transition-all resize-none"
-                    placeholder="Tell us about your goals, current challenges, and what you want to achieve..."
+                    className={`${inputClass} resize-none`}
+                    placeholder="Tell us about your goals, current challenges, and what you want to achieve with this project..."
                   />
-                  {errors.message && <p className="text-xs text-destructive">{errors.message.message}</p>}
+                  {errors.message && <p className="text-xs text-destructive mt-1">{errors.message.message}</p>}
                 </div>
 
-                <div className="pt-4">
+                {/* Submit */}
+                <div className="flex flex-col sm:flex-row items-start sm:items-center gap-4 pt-2">
                   <button 
                     type="submit"
                     disabled={isSubmitting}
-                    className="w-full sm:w-auto gradient-bg text-white px-10 py-4 rounded-xl font-bold text-lg hover:glow-violet transition-all flex items-center justify-center gap-2 disabled:opacity-70"
+                    className="group gradient-bg text-white px-8 py-4 rounded-xl font-bold text-sm glow-violet hover:scale-[1.02] transition-all duration-200 flex items-center gap-2.5 disabled:opacity-60 disabled:scale-100 outline-none"
                   >
-                    {isSubmitting ? 'Sending...' : (
-                      <>Send My Project Brief <Send size={20} /></>
+                    {isSubmitting ? (
+                      <>
+                        <span className="w-4 h-4 border-2 border-white/30 border-t-white rounded-full animate-spin" />
+                        Sending...
+                      </>
+                    ) : (
+                      <>
+                        Send My Project Brief
+                        <Send size={16} />
+                      </>
                     )}
                   </button>
+                  <p className="text-xs text-muted-foreground flex items-center gap-1.5">
+                    <span className="w-1.5 h-1.5 rounded-full bg-emerald-500 shrink-0" />
+                    Response within 6 hours · No commitment required
+                  </p>
                 </div>
 
               </motion.form>
             ) : (
               <motion.div 
                 key="success"
-                initial={{ opacity: 0, scale: 0.9 }}
-                animate={{ opacity: 1, scale: 1 }}
-                className="glass p-10 rounded-3xl shadow-2xl border-emerald-500/30 text-center flex flex-col items-center py-20"
+                initial={{ opacity: 0, scale: 0.92, y: 20 }}
+                animate={{ opacity: 1, scale: 1, y: 0 }}
+                transition={{ duration: 0.5, ease: [0.22, 1, 0.36, 1] }}
+                className="glass p-12 rounded-3xl shadow-2xl border-emerald-500/20 text-center flex flex-col items-center"
               >
-                <div className="w-20 h-20 bg-emerald-500/20 rounded-full flex items-center justify-center text-emerald-400 mb-6 animate-pulse">
-                  <CheckCircle2 size={40} />
+                <div className="relative mb-8">
+                  <div className="w-20 h-20 bg-emerald-500/15 rounded-full flex items-center justify-center text-emerald-400">
+                    <CheckCircle2 size={40} />
+                  </div>
+                  <div className="absolute inset-0 rounded-full border-2 border-emerald-500/20 animate-ping" style={{ animationDuration: '2s' }} />
                 </div>
-                <h3 className="text-3xl font-display font-bold text-foreground mb-4">Your brief has been received!</h3>
-                <p className="text-lg text-muted-foreground max-w-md mx-auto mb-8 leading-relaxed">
-                  Thank you, {watch('name').split(' ')[0]}! We've received your project details and will personally review it. You'll hear from us within 6 hours.
+                <h3 className="text-3xl font-display font-bold text-foreground mb-3">Brief Received!</h3>
+                <p className="text-base text-muted-foreground max-w-md mx-auto mb-8 leading-relaxed">
+                  Thank you, <span className="text-foreground font-semibold">{watch('name').split(' ')[0]}</span>! We've received your project details and will personally review it. Expect a response within 6 hours.
                 </p>
-                <div className="flex flex-col sm:flex-row gap-4 w-full sm:w-auto">
-                  <a href="https://t.me/zymer" target="_blank" rel="noreferrer" className="bg-[#0088cc] text-white px-6 py-3 rounded-full font-medium flex items-center justify-center gap-2 hover:bg-[#0088cc]/90 transition-colors">
+                <div className="flex flex-col sm:flex-row gap-3 w-full sm:w-auto">
+                  <a href="https://t.me/zymer" target="_blank" rel="noreferrer" className="bg-[#0088cc] text-white px-6 py-3 rounded-full font-semibold text-sm flex items-center justify-center gap-2 hover:bg-[#0077bb] transition-colors">
                     Message on Telegram
                   </a>
-                  <a href="mailto:hello@zymer.com" className="bg-secondary text-foreground border border-border px-6 py-3 rounded-full font-medium flex items-center justify-center gap-2 hover:bg-secondary/80 transition-colors">
+                  <a href="mailto:hello@zymer.com" className="glass text-foreground border border-white/[0.1] px-6 py-3 rounded-full font-semibold text-sm flex items-center justify-center gap-2 hover:bg-white/[0.05] transition-colors">
                     hello@zymer.com
                   </a>
                 </div>
