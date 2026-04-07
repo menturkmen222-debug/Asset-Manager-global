@@ -1,21 +1,65 @@
 import { motion } from 'framer-motion';
-import { Check } from 'lucide-react';
 import { useAnalytics } from '@/hooks/useAnalytics';
 import {
   Accordion,
   AccordionContent,
   AccordionItem,
   AccordionTrigger,
-} from "@/components/ui/accordion"
+} from "@/components/ui/accordion";
+
+const CheckIcon = () => (
+  <svg width="15" height="15" viewBox="0 0 15 15" fill="none" xmlns="http://www.w3.org/2000/svg" className="shrink-0 mt-0.5">
+    <circle cx="7.5" cy="7.5" r="7" stroke="currentColor" strokeWidth="1.2" opacity="0.3"/>
+    <path d="M4.5 7.5L6.5 9.5L10.5 5.5" stroke="currentColor" strokeWidth="1.5" strokeLinecap="round" strokeLinejoin="round"/>
+  </svg>
+);
+
+const ArrowRight = () => (
+  <svg width="16" height="16" viewBox="0 0 16 16" fill="none" xmlns="http://www.w3.org/2000/svg">
+    <path d="M3 8H13M13 8L8.5 3.5M13 8L8.5 12.5" stroke="currentColor" strokeWidth="1.5" strokeLinecap="round" strokeLinejoin="round"/>
+  </svg>
+);
+
+const PaletteIcon = () => (
+  <svg width="18" height="18" viewBox="0 0 18 18" fill="none" xmlns="http://www.w3.org/2000/svg">
+    <circle cx="9" cy="9" r="7.5" stroke="currentColor" strokeWidth="1.3"/>
+    <circle cx="5.5" cy="7" r="1.5" fill="currentColor" opacity="0.6"/>
+    <circle cx="9" cy="4.5" r="1.5" fill="currentColor" opacity="0.6"/>
+    <circle cx="12.5" cy="7" r="1.5" fill="currentColor" opacity="0.6"/>
+    <path d="M4.5 12C4.5 12 6 14 9 14C10.5 14 11.5 13.5 11.5 13.5" stroke="currentColor" strokeWidth="1.3" strokeLinecap="round"/>
+  </svg>
+);
+
+const styleIcons: Record<string, () => JSX.Element> = {
+  'Minimalist Clean': () => (
+    <svg width="16" height="16" viewBox="0 0 16 16" fill="none"><rect x="2" y="4" width="12" height="1.5" rx="0.75" fill="currentColor" opacity="0.8"/><rect x="2" y="7.5" width="8" height="1.5" rx="0.75" fill="currentColor" opacity="0.5"/><rect x="2" y="11" width="10" height="1.5" rx="0.75" fill="currentColor" opacity="0.3"/></svg>
+  ),
+  'Corporate Professional': () => (
+    <svg width="16" height="16" viewBox="0 0 16 16" fill="none"><rect x="2" y="2" width="12" height="9" rx="1.5" stroke="currentColor" strokeWidth="1.2" opacity="0.7"/><path d="M5 14H11M8 11V14" stroke="currentColor" strokeWidth="1.2" strokeLinecap="round" opacity="0.7"/></svg>
+  ),
+  'Modern Flat': () => (
+    <svg width="16" height="16" viewBox="0 0 16 16" fill="none"><rect x="1" y="8" width="5" height="6" rx="1" fill="currentColor" opacity="0.4"/><rect x="7" y="5" width="5" height="9" rx="1" fill="currentColor" opacity="0.6"/><rect x="1" y="1" width="5" height="5" rx="1" fill="currentColor" opacity="0.8"/></svg>
+  ),
+  'Glassmorphism Dark Premium': () => (
+    <svg width="16" height="16" viewBox="0 0 16 16" fill="none"><circle cx="8" cy="8" r="6" stroke="currentColor" strokeWidth="1.2" opacity="0.5"/><circle cx="8" cy="8" r="3" fill="currentColor" opacity="0.3"/><path d="M5 5L11 11" stroke="currentColor" strokeWidth="1" opacity="0.4"/></svg>
+  ),
+  'Bold Editorial': () => (
+    <svg width="16" height="16" viewBox="0 0 16 16" fill="none"><rect x="2" y="3" width="12" height="3" rx="0.5" fill="currentColor" opacity="0.9"/><rect x="2" y="9" width="7" height="2" rx="0.5" fill="currentColor" opacity="0.5"/><rect x="2" y="13" width="10" height="1" rx="0.5" fill="currentColor" opacity="0.3"/></svg>
+  ),
+  'Luxury High-End': () => (
+    <svg width="16" height="16" viewBox="0 0 16 16" fill="none"><path d="M8 2L9.5 6.5H14L10.5 9.5L11.8 14L8 11.5L4.2 14L5.5 9.5L2 6.5H6.5L8 2Z" stroke="currentColor" strokeWidth="1.2" fill="none" opacity="0.8"/></svg>
+  ),
+  '3D Interactive Experimental': () => (
+    <svg width="16" height="16" viewBox="0 0 16 16" fill="none"><path d="M8 2L14 5.5V10.5L8 14L2 10.5V5.5L8 2Z" stroke="currentColor" strokeWidth="1.2" opacity="0.7"/><path d="M8 2V14M2 5.5L14 10.5M14 5.5L2 10.5" stroke="currentColor" strokeWidth="0.8" opacity="0.4"/></svg>
+  ),
+};
 
 export default function Pricing() {
   const { trackEvent } = useAnalytics();
 
   const scrollTo = (id: string) => {
     const element = document.getElementById(id);
-    if (element) {
-      element.scrollIntoView({ behavior: 'smooth' });
-    }
+    if (element) element.scrollIntoView({ behavior: 'smooth' });
   };
 
   const tiers = [
@@ -24,16 +68,7 @@ export default function Pricing() {
       price: "$699",
       badge: "Best for New Businesses",
       tagline: "Your first serious step into the digital world.",
-      features: [
-        "Up to 5 pages",
-        "Mobile-responsive",
-        "Basic SEO",
-        "Contact form",
-        "1 revision round",
-        "Deployment setup",
-        "30-day support",
-        "Analytics"
-      ],
+      features: ["Up to 5 pages", "Mobile-responsive", "Basic SEO", "Contact form", "1 revision round", "Deployment setup", "30-day support", "Analytics"],
       delivery: "7–10 business days",
       featured: false
     },
@@ -42,20 +77,7 @@ export default function Pricing() {
       price: "$1,199",
       badge: "Most Popular",
       tagline: "For businesses serious about dominating their niche.",
-      features: [
-        "Up to 12 pages",
-        "Advanced animations",
-        "Full mobile+tablet",
-        "Advanced SEO",
-        "AI Chatbot integration",
-        "Multi-language support",
-        "Custom forms",
-        "Telegram/WhatsApp notifications",
-        "Social tracking",
-        "3 revision rounds",
-        "60-day support",
-        "Analytics dashboard"
-      ],
+      features: ["Up to 12 pages", "Advanced animations", "Full mobile+tablet", "Advanced SEO", "AI Chatbot integration", "Multi-language support", "Custom forms", "Telegram/WhatsApp notifications", "Social tracking", "3 revision rounds", "60-day support", "Analytics dashboard"],
       delivery: "10–14 business days",
       featured: true
     },
@@ -64,20 +86,7 @@ export default function Pricing() {
       price: "Custom",
       badge: "For Ambitious Brands",
       tagline: "Multi-server, full-scale digital ecosystems. No limits.",
-      features: [
-        "Unlimited pages",
-        "Custom 3D scenes",
-        "Full-stack apps",
-        "E-commerce + payments",
-        "Multi-region deployment",
-        "Dedicated PM",
-        "Weekly calls",
-        "24/7 priority support",
-        "Custom CMS",
-        "Unlimited revisions",
-        "6-month support",
-        "Full docs"
-      ],
+      features: ["Unlimited pages", "Custom 3D scenes", "Full-stack apps", "E-commerce + payments", "Multi-region deployment", "Dedicated PM", "Weekly calls", "24/7 priority support", "Custom CMS", "Unlimited revisions", "6-month support", "Full docs"],
       delivery: "Custom timeline",
       featured: false
     }
@@ -94,11 +103,11 @@ export default function Pricing() {
   ];
 
   return (
-    <section id="pricing" className="py-24 relative z-10 bg-secondary/50">
+    <section id="pricing" className="py-24 relative z-10 bg-secondary/40">
       <div className="container mx-auto px-6 md:px-12">
-        
+
         <div className="text-center max-w-3xl mx-auto mb-16">
-          <motion.h2 
+          <motion.h2
             initial={{ opacity: 0, y: 20 }}
             whileInView={{ opacity: 1, y: 0 }}
             viewport={{ once: true }}
@@ -106,7 +115,7 @@ export default function Pricing() {
           >
             Investment, Not Cost
           </motion.h2>
-          <motion.p 
+          <motion.p
             initial={{ opacity: 0, y: 20 }}
             whileInView={{ opacity: 1, y: 0 }}
             viewport={{ once: true }}
@@ -117,83 +126,119 @@ export default function Pricing() {
           </motion.p>
         </div>
 
-        <div className="grid lg:grid-cols-3 gap-8 max-w-6xl mx-auto items-center mb-16">
+        <div className="grid lg:grid-cols-3 gap-6 max-w-6xl mx-auto items-center mb-14">
           {tiers.map((tier, i) => (
             <motion.div
               key={tier.name}
-              initial={{ opacity: 0, y: 20 }}
+              initial={{ opacity: 0, y: 24 }}
               whileInView={{ opacity: 1, y: 0 }}
               viewport={{ once: true }}
-              transition={{ delay: i * 0.1 }}
-              className={`glass rounded-3xl p-8 flex flex-col h-full relative ${
-                tier.featured 
-                  ? 'border-primary/50 shadow-[0_0_40px_rgba(108,99,255,0.2)] lg:scale-105 z-10' 
-                  : 'border-border/50 hover:border-primary/30 transition-colors'
+              transition={{ delay: i * 0.1, duration: 0.5, ease: [0.22, 1, 0.36, 1] }}
+              className={`relative glass rounded-3xl flex flex-col h-full overflow-hidden ${
+                tier.featured
+                  ? 'border-primary/40 shadow-[0_0_50px_rgba(108,99,255,0.18)] lg:scale-[1.04] z-10'
+                  : 'border-white/[0.06] hover:border-primary/20 transition-colors duration-300'
               }`}
             >
+              {/* Top gradient accent for featured */}
               {tier.featured && (
-                <div className="absolute -top-4 left-1/2 -translate-x-1/2 bg-primary text-primary-foreground px-4 py-1 rounded-full text-xs font-bold tracking-wide uppercase">
-                  Most Popular
+                <div className="absolute top-0 inset-x-0 h-px bg-gradient-to-r from-transparent via-primary to-transparent" />
+              )}
+
+              {/* Badge */}
+              {tier.featured && (
+                <div className="absolute -top-3.5 left-1/2 -translate-x-1/2 z-10">
+                  <div className="gradient-bg text-white text-[10px] font-bold tracking-[0.12em] uppercase px-4 py-1.5 rounded-full shadow-lg shadow-primary/30">
+                    Most Popular
+                  </div>
                 </div>
               )}
-              
-              <div className="text-primary text-sm font-semibold mb-2">{tier.badge}</div>
-              <h3 className="text-2xl font-display font-bold text-foreground mb-1">{tier.name}</h3>
-              <p className="text-sm text-muted-foreground mb-6 h-10">{tier.tagline}</p>
-              
-              <div className="mb-6 pb-6 border-b border-border">
-                <div className="flex items-baseline gap-1">
-                  <span className="text-4xl font-bold text-foreground">{tier.price}</span>
-                  {tier.price !== 'Custom' && <span className="text-muted-foreground">starting from</span>}
+
+              <div className="p-8 flex flex-col h-full">
+                <div className={`text-xs font-semibold tracking-wide mb-2 ${tier.featured ? 'text-primary' : 'text-muted-foreground'}`}>
+                  {tier.badge}
                 </div>
-                <div className="text-sm text-muted-foreground mt-2">Delivery: {tier.delivery}</div>
+                <h3 className="text-2xl font-display font-bold text-foreground mb-1">{tier.name}</h3>
+                <p className="text-sm text-muted-foreground mb-6 min-h-[40px]">{tier.tagline}</p>
+
+                <div className="mb-6 pb-6 border-b border-border/50">
+                  <div className="flex items-baseline gap-1.5">
+                    <span className="text-4xl font-bold text-foreground font-display">{tier.price}</span>
+                    {tier.price !== 'Custom' && (
+                      <span className="text-sm text-muted-foreground">starting from</span>
+                    )}
+                  </div>
+                  <div className="flex items-center gap-1.5 mt-2 text-xs text-muted-foreground">
+                    <svg width="12" height="12" viewBox="0 0 12 12" fill="none"><circle cx="6" cy="6" r="5" stroke="currentColor" strokeWidth="1"/><path d="M6 3.5V6L7.5 7.5" stroke="currentColor" strokeWidth="1" strokeLinecap="round"/></svg>
+                    {tier.delivery}
+                  </div>
+                </div>
+
+                <ul className="space-y-2.5 mb-8 flex-grow">
+                  {tier.features.map(f => (
+                    <li key={f} className="flex items-start gap-3 text-sm text-foreground/90">
+                      <span className={tier.featured ? 'text-primary' : 'text-muted-foreground'}>
+                        <CheckIcon />
+                      </span>
+                      {f}
+                    </li>
+                  ))}
+                </ul>
+
+                <button
+                  onClick={() => {
+                    trackEvent('cta_click', { button: `pricing_${tier.name.toLowerCase()}` });
+                    scrollTo('contact');
+                  }}
+                  className={`group w-full py-3.5 rounded-xl font-semibold text-sm transition-all outline-none flex items-center justify-center gap-2 ${
+                    tier.featured
+                      ? 'gradient-bg text-white hover:shadow-[0_0_20px_rgba(108,99,255,0.4)]'
+                      : 'bg-secondary/70 text-foreground hover:bg-secondary border border-border/50'
+                  }`}
+                >
+                  {tier.name === 'Enterprise' ? "Let's Talk" : "Select Package"}
+                  <span className="transition-transform duration-200 group-hover:translate-x-0.5">
+                    <ArrowRight />
+                  </span>
+                </button>
               </div>
-
-              <ul className="space-y-3 mb-8 flex-grow">
-                {tier.features.map(f => (
-                  <li key={f} className="flex items-start gap-3 text-sm text-foreground">
-                    <Check size={16} className="text-primary shrink-0 mt-0.5" />
-                    <span>{f}</span>
-                  </li>
-                ))}
-              </ul>
-
-              <button
-                onClick={() => {
-                  trackEvent('cta_click', { button: `pricing_${tier.name.toLowerCase()}` });
-                  scrollTo('contact');
-                }}
-                className={`w-full py-4 rounded-xl font-semibold transition-all outline-none ${
-                  tier.featured 
-                    ? 'gradient-bg text-white hover:glow-violet' 
-                    : 'bg-secondary text-foreground hover:bg-secondary/80'
-                }`}
-              >
-                {tier.name === 'Enterprise' ? "Let's Talk" : "Select Package"}
-              </button>
             </motion.div>
           ))}
         </div>
 
-        <motion.div 
+        {/* Design Styles accordion */}
+        <motion.div
           initial={{ opacity: 0, y: 20 }}
           whileInView={{ opacity: 1, y: 0 }}
           viewport={{ once: true }}
-          className="max-w-3xl mx-auto glass rounded-2xl p-6"
+          className="max-w-3xl mx-auto glass rounded-2xl overflow-hidden border-white/[0.06]"
         >
           <Accordion type="single" collapsible>
             <AccordionItem value="styles" className="border-none">
-              <AccordionTrigger className="hover:no-underline text-lg font-display font-semibold px-2 py-0">
-                Choose Your Visual Style
+              <AccordionTrigger className="hover:no-underline text-base font-display font-semibold px-7 py-5 hover:bg-white/[0.02] transition-colors [&[data-state=open]]:pb-4">
+                <span className="flex items-center gap-3">
+                  <span className="w-8 h-8 rounded-lg bg-primary/10 border border-primary/20 flex items-center justify-center text-primary shrink-0">
+                    <PaletteIcon />
+                  </span>
+                  Choose Your Visual Style
+                </span>
               </AccordionTrigger>
-              <AccordionContent className="pt-6 pb-2 px-2">
-                <div className="grid sm:grid-cols-2 gap-4">
-                  {designStyles.map((style, i) => (
-                    <div key={i} className="bg-secondary/50 p-4 rounded-xl border border-border">
-                      <h4 className="font-semibold text-foreground mb-1">{style.name}</h4>
-                      <p className="text-xs text-muted-foreground">{style.desc}</p>
-                    </div>
-                  ))}
+              <AccordionContent className="pb-6 px-7">
+                <div className="grid sm:grid-cols-2 gap-3 pt-2">
+                  {designStyles.map((style, i) => {
+                    const StyleIcon = styleIcons[style.name];
+                    return (
+                      <div key={i} className="group flex items-start gap-3 bg-secondary/40 hover:bg-secondary/70 p-4 rounded-xl border border-border/40 hover:border-primary/20 transition-all duration-200 cursor-default">
+                        <div className="w-7 h-7 rounded-lg bg-primary/10 border border-primary/15 flex items-center justify-center text-primary shrink-0 mt-0.5">
+                          {StyleIcon ? <StyleIcon /> : null}
+                        </div>
+                        <div>
+                          <h4 className="text-sm font-semibold text-foreground mb-0.5 group-hover:text-primary transition-colors duration-200">{style.name}</h4>
+                          <p className="text-xs text-muted-foreground leading-relaxed">{style.desc}</p>
+                        </div>
+                      </div>
+                    );
+                  })}
                 </div>
               </AccordionContent>
             </AccordionItem>
