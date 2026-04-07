@@ -80,14 +80,9 @@ export default function Hero() {
   };
 
   return (
-<<<<<<< HEAD
-    <section className="relative min-h-[100svh] flex flex-col justify-start md:justify-center overflow-hidden pt-20 md:pt-0">
-      {/* Background mesh */}
-=======
     <section className="relative h-[100svh] flex flex-col overflow-hidden pt-16">
 
       {/* Background */}
->>>>>>> 2ad3b6d223a7f8f1eb27d05767385c9fb7ef14fc
       <div className="absolute inset-0 z-0 pointer-events-none">
         <div className="absolute top-0 right-[-10%] w-[600px] h-[600px] bg-primary/[0.13] rounded-full blur-[120px] animate-aurora" />
         <div className="absolute bottom-[-20%] left-[-10%] w-[500px] h-[500px] bg-[#00c4f0]/[0.09] rounded-full blur-[100px] animate-aurora" style={{ animationDelay: '-6s' }} />
@@ -97,21 +92,13 @@ export default function Hero() {
         }} />
       </div>
 
-<<<<<<< HEAD
-      <div className="container mx-auto px-5 sm:px-8 md:px-12 relative z-10 py-6 md:py-0">
-        <div className="grid lg:grid-cols-2 gap-6 lg:gap-8 items-center">
-
-          {/* Left Content */}
-          <div className="flex flex-col items-start gap-4 md:gap-6">
-=======
       {/* Content area — fills space between nav and marquee */}
       <div className="flex-1 flex items-center relative z-10 overflow-hidden">
         <div className="container mx-auto px-5 sm:px-8 md:px-10 lg:px-12 w-full py-6 lg:py-8">
           <div className="grid lg:grid-cols-2 gap-8 xl:gap-10 items-center">
 
-            {/* ── Left column ── */}
+            {/* Left column */}
             <div className="flex flex-col gap-3 md:gap-4">
->>>>>>> 2ad3b6d223a7f8f1eb27d05767385c9fb7ef14fc
 
               {/* Trust badge */}
               <motion.div
@@ -219,118 +206,12 @@ export default function Hero() {
               </motion.div>
             </div>
 
-            {/* ── Right floating scene — desktop only ── */}
+            {/* Right floating scene — desktop only */}
             <div className="relative hidden lg:block" style={{ height: 'clamp(380px, 50svh, 540px)' }}>
               {/* Glow blobs */}
               <div className="absolute top-[15%] left-[20%] w-24 h-24 rounded-full bg-primary/20 blur-2xl animate-float pointer-events-none" />
               <div className="absolute bottom-[20%] right-[15%] w-28 h-28 rounded-full bg-[#00c4f0]/12 blur-3xl animate-float-slow pointer-events-none" />
 
-<<<<<<< HEAD
-            {/* Key proof points */}
-            <motion.div
-              initial={{ opacity: 0, y: 16 }}
-              animate={{ opacity: 1, y: 0 }}
-              transition={{ duration: 0.5, delay: 0.55 }}
-              className="flex flex-col sm:flex-row flex-wrap gap-x-4 gap-y-1.5"
-            >
-              {['Delivered in days, not months', '100/100 Lighthouse score', '24/7 support included'].map((point, i) => (
-                <span key={i} className="flex items-center gap-1.5 text-xs text-muted-foreground">
-                  <span className="text-emerald-400 shrink-0"><CheckSmall /></span>
-                  {point}
-                </span>
-              ))}
-            </motion.div>
-
-            {/* CTAs */}
-            <motion.div
-              initial={{ opacity: 0, y: 20 }}
-              animate={{ opacity: 1, y: 0 }}
-              transition={{ duration: 0.5, delay: 0.65 }}
-              className="flex flex-row gap-2.5 w-full sm:w-auto"
-            >
-              <button
-                onClick={() => {
-                  trackEvent('cta_click', { button: 'hero_primary' });
-                  scrollTo('contact');
-                }}
-                className="group relative overflow-hidden gradient-bg text-white px-5 sm:px-7 py-3.5 sm:py-4 rounded-full font-semibold text-sm glow-violet transition-all duration-300 flex-1 sm:flex-none sm:w-auto outline-none flex items-center justify-center gap-2 active:scale-[0.98] hover:scale-[1.03]"
-              >
-                <span className="relative z-10 flex items-center gap-2">
-                  Start Your Project
-                  <span className="transition-transform duration-200 group-hover:translate-x-0.5">
-                    <ArrowRight />
-                  </span>
-                </span>
-              </button>
-              <button
-                onClick={() => {
-                  trackEvent('cta_click', { button: 'hero_secondary' });
-                  scrollTo('pricing');
-                }}
-                className="glass text-foreground px-4 sm:px-7 py-3.5 sm:py-4 rounded-full font-semibold text-sm hover:bg-white/[0.06] active:scale-[0.98] transition-all duration-200 flex-1 sm:flex-none sm:w-auto outline-none hover:border-primary/30 whitespace-nowrap"
-              >
-                See Packages
-              </button>
-            </motion.div>
-
-            {/* Mobile Stats Grid — visible only on mobile */}
-            <motion.div
-              initial={{ opacity: 0, y: 16 }}
-              animate={{ opacity: 1, y: 0 }}
-              transition={{ duration: 0.6, delay: 0.75 }}
-              className="grid grid-cols-2 sm:grid-cols-4 gap-2 w-full lg:hidden"
-            >
-              {mobileStats.map((stat, i) => (
-                <div
-                  key={i}
-                  className={`flex flex-col items-center justify-center gap-1 py-2.5 px-2 rounded-2xl border ${stat.bg} ${stat.border}`}
-                >
-                  <span className={`text-sm font-bold ${stat.color} tabular-nums`}>{stat.value}</span>
-                  <span className="text-[9px] sm:text-[10px] text-muted-foreground font-medium tracking-wide text-center">{stat.label}</span>
-                </div>
-              ))}
-            </motion.div>
-
-            {/* Marquee ticker */}
-            <motion.div
-              initial={{ opacity: 0 }}
-              animate={{ opacity: 1 }}
-              transition={{ duration: 0.8, delay: 0.85 }}
-              className="w-full overflow-hidden border-y border-white/[0.06] py-3"
-            >
-              <div className="inline-flex items-center whitespace-nowrap animate-[marquee_24s_linear_infinite]">
-                {[...Array(2)].map((_, loop) => (
-                  <span key={loop} className="inline-flex items-center">
-                    {['50+ Projects Delivered', '20+ Countries Served', '4.9★ Client Rating', '48h Turnaround', '$0 Hidden Fees'].map((item, j) => (
-                      <span key={`${loop}-${j}`} className="inline-flex items-center">
-                        <span className="text-[11px] font-medium text-muted-foreground tracking-wide">{item}</span>
-                        <DiamondSep />
-                      </span>
-                    ))}
-                  </span>
-                ))}
-              </div>
-            </motion.div>
-          </div>
-
-          {/* Right Floating Scene — desktop only */}
-          <div className="relative h-[500px] lg:h-[580px] hidden lg:block">
-            <div className="absolute top-12 left-12 w-28 h-28 rounded-full bg-primary/30 blur-2xl animate-float" />
-            <div className="absolute bottom-16 right-8 w-44 h-44 rounded-full bg-[#00c4f0]/20 blur-3xl animate-float-slow" />
-            <div className="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 w-64 h-64 rounded-full bg-primary/[0.06] blur-3xl" />
-
-            {/* Card 1: Traffic Stat */}
-            <motion.div
-              initial={{ opacity: 0, scale: 0.85, y: 16 }}
-              animate={{ opacity: 1, scale: 1, y: 0 }}
-              transition={{ delay: 0.5, duration: 0.7, ease: [0.22, 1, 0.36, 1] }}
-              className="absolute top-16 right-8 glass p-5 rounded-2xl animate-float shadow-2xl"
-              style={{ width: '220px' }}
-            >
-              <div className="flex items-center gap-3 mb-4">
-                <div className="w-10 h-10 rounded-xl bg-emerald-500/15 flex items-center justify-center text-emerald-400 border border-emerald-500/20 shrink-0">
-                  <TrendUpIcon />
-=======
               {/* Speed badge — top center-left anchor */}
               <motion.div
                 initial={{ opacity: 0, scale: 0.88, y: 16 }} animate={{ opacity: 1, scale: 1, y: 0 }}
@@ -340,7 +221,6 @@ export default function Hero() {
               >
                 <div className="w-8 h-8 rounded-xl bg-amber-500/15 flex items-center justify-center text-amber-400 border border-amber-500/20 shrink-0">
                   <SpeedIcon />
->>>>>>> 2ad3b6d223a7f8f1eb27d05767385c9fb7ef14fc
                 </div>
                 <div>
                   <div className="text-[9px] text-muted-foreground font-medium">Lighthouse Score</div>

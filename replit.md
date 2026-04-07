@@ -55,4 +55,11 @@ pnpm workspace monorepo using TypeScript. Each package manages its own dependenc
 - `TELEGRAM_USER_ID_1` — first Telegram user to receive notifications
 - `TELEGRAM_USER_ID_2` — second Telegram user to receive notifications
 
+## Migration Notes (Vercel → Replit)
+- Migrated from Vercel (serverless functions in `/api/`) to Replit (pnpm monorepo)
+- Vercel serverless functions (`/api/contact.ts`, `/api/chat.ts`) replaced by Express routes in `artifacts/api-server`
+- Vite dev server proxies `/api/*` to Express server on port 8080 (see `artifacts/zymer/vite.config.ts`)
+- In production, path-based routing handles `/api` → Express server, `/` → Vite static build
+- `vercel.json` retained for reference but not used
+
 See the `pnpm-workspace` skill for workspace structure, TypeScript setup, and package details.
