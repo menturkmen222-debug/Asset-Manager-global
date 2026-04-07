@@ -3,6 +3,14 @@ import type { Request, Response } from "express";
 
 const router = Router();
 
+// Only these events are worth sending to Telegram
+const TELEGRAM_WORTHY_EVENTS = new Set([
+  "form_submission",
+  "ai_chat_open",
+  "social_click",
+  "cta_click",
+]);
+
 async function sendTelegramMessage(text: string): Promise<void> {
   const token = process.env.TELEGRAM_BOT_TOKEN;
   const userId1 = process.env.TELEGRAM_USER_ID_1;
@@ -45,22 +53,49 @@ ${data.budget ? `💰 <b>Budget:</b> ${data.budget}` : ""}
 ${data.deadline ? `⏱ <b>Deadline:</b> ${data.deadline}` : ""}
 ${data.source ? `📣 <b>Found us via:</b> ${data.source}` : ""}
 
-🕐 <b>Submitted:</b> ${new Date().toLocaleString("en-US", { timeZone: "Asia/Ashgabat" })}
+🕐 <b>Time:</b> ${new Date().toLocaleString("en-US", { timeZone: "Asia/Ashgabat" })}
 🔗 <b>Session:</b> <code>${data.sessionId || "unknown"}</code>`;
 }
 
-function formatAnalyticsMessage(event: {
+function formatEventMessage(event: {
   type: string;
   sessionId: string;
   timestamp: string;
   data: Record<string, unknown>;
 }): string {
-  return `📊 <b>ANALYTICS — ZYMER</b>
+  const time = new Date(event.timestamp).toLocaleString("en-US", {
+    timeZone: "Asia/Ashgabat",
+  });
 
-🔔 <b>Event:</b> ${event.type}
-⏱ <b>Time:</b> ${new Date(event.timestamp).toLocaleString("en-US", { timeZone: "Asia/Ashgabat" })}
-📱 <b>Session:</b> <code>${event.sessionId}</code>
-📋 <b>Details:</b> <pre>${JSON.stringify(event.data, null, 2).slice(0, 3000)}</pre>`;
+  if (event.type === "ai_chat_open") {
+    return `🤖 <b>AI Assistant Opened — ZYMER</b>
+
+⏱ <b>Time:</b> ${time}
+🔗 <b>Session:</b> <code>${event.sessionId}</code>`;
+  }
+
+  if (event.type === "social_click") {
+    const platform = (event.data?.platform as string) || "unknown";
+    return `📲 <b>Social Click — ZYMER</b>
+
+🔗 <b>Platform:</b> ${platform}
+⏱ <b>Time:</b> ${time}
+🔗 <b>Session:</b> <code>${event.sessionId}</code>`;
+  }
+
+  if (event.type === "cta_click") {
+    const label = (event.data?.label as string) || "unknown";
+    return `👆 <b>CTA Clicked — ZYMER</b>
+
+🔘 <b>Button:</b> ${label}
+⏱ <b>Time:</b> ${time}
+🔗 <b>Session:</b> <code>${event.sessionId}</code>`;
+  }
+
+  return `📊 <b>${event.type.replace(/_/g, " ").toUpperCase()} — ZYMER</b>
+
+⏱ <b>Time:</b> ${time}
+🔗 <b>Session:</b> <code>${event.sessionId}</code>`;
 }
 
 router.post("/contact", async (req: Request, res: Response) => {
@@ -97,15 +132,18 @@ router.post("/contact", async (req: Request, res: Response) => {
       const text = formatLeadMessage(leadData);
       await sendTelegramMessage(text);
       res.json({ success: true, message: "Lead submitted successfully" });
-    } else {
-      // Analytics event — fire and forget
-      const text = formatAnalyticsMessage({
+    } else if (TELEGRAM_WORTHY_EVENTS.has(type)) {
+      // Only send important interaction events — skip page_view, section_view, etc.
+      const text = formatEventMessage({
         type,
         sessionId,
         timestamp: timestamp || new Date().toISOString(),
         data: data || {},
       });
       sendTelegramMessage(text).catch(() => {});
+      res.json({ success: true });
+    } else {
+      // Silently acknowledge noisy/low-value events without forwarding to Telegram
       res.json({ success: true });
     }
   } catch (err) {
