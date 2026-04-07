@@ -61,80 +61,84 @@ const reviews = [
 const techs = ['Next.js', 'React', 'Three.js', 'Tailwind', 'TypeScript', 'GSAP'];
 
 export default function FloatingWidget() {
+  const [mounted, setMounted] = useState(false);
   const [activeIndex, setActiveIndex] = useState(0);
   const [reviewIndex, setReviewIndex] = useState(0);
 
   useEffect(() => {
+    const timer = setTimeout(() => setMounted(true), 1800);
+    return () => clearTimeout(timer);
+  }, []);
+
+  useEffect(() => {
+    if (!mounted) return;
     const interval = setInterval(() => {
       setActiveIndex(current => current === 0 ? 1 : 0);
       setReviewIndex(current => (current + 1) % reviews.length);
-    }, 6000);
+    }, 6500);
     return () => clearInterval(interval);
-  }, []);
+  }, [mounted]);
 
   const review = reviews[reviewIndex];
 
   return (
-    <div className="fixed bottom-6 right-6 z-40 hidden lg:block">
-      {/* Outer wrapper always stays in place — only inner content fades */}
-      <div className="relative w-[288px]">
-        <AnimatePresence mode="sync">
-          {activeIndex === 0 ? (
-            <motion.div
-              key={`review-${reviewIndex}`}
-              initial={{ opacity: 0, y: 6 }}
-              animate={{ opacity: 1, y: 0 }}
-              exit={{ opacity: 0, y: -6 }}
-              transition={{ duration: 0.35, ease: 'easeInOut' }}
-              className="glass p-5 rounded-2xl shadow-2xl border border-white/[0.07]"
-            >
-              <div className="flex gap-0.5 mb-3">
-                {[1, 2, 3, 4, 5].map(i => (
-                  <StarIcon key={i} className="text-amber-400" />
-                ))}
+    <div className="fixed bottom-28 right-6 md:bottom-32 md:right-8 z-40 hidden lg:block">
+      <AnimatePresence mode="wait">
+        {!mounted ? null : activeIndex === 0 ? (
+          <motion.div
+            key={`review-${reviewIndex}`}
+            initial={{ x: 320, opacity: 0 }}
+            animate={{ x: 0, opacity: 1 }}
+            exit={{ x: 320, opacity: 0 }}
+            transition={{ type: 'spring', stiffness: 240, damping: 28, mass: 0.9 }}
+            className="w-[290px] glass p-5 rounded-2xl shadow-2xl border border-white/[0.07]"
+          >
+            <div className="flex gap-0.5 mb-3">
+              {[1, 2, 3, 4, 5].map(i => (
+                <StarIcon key={i} className="text-amber-400" />
+              ))}
+            </div>
+            <p className="text-[13px] text-foreground/85 mb-4 leading-relaxed">{review.text}</p>
+            <div className="flex items-center gap-3 pt-3 border-t border-white/[0.06]">
+              <ReviewAvatar
+                src={review.avatar}
+                alt={review.name}
+                gradient={review.gradient}
+                initials={review.initials}
+              />
+              <div>
+                <div className="text-xs font-semibold text-foreground">{review.name}</div>
+                <div className="text-[10px] text-muted-foreground">{review.role}</div>
               </div>
-              <p className="text-[13px] text-foreground/85 mb-4 leading-relaxed">{review.text}</p>
-              <div className="flex items-center gap-3 pt-3 border-t border-white/[0.06]">
-                <ReviewAvatar
-                  src={review.avatar}
-                  alt={review.name}
-                  gradient={review.gradient}
-                  initials={review.initials}
-                />
-                <div>
-                  <div className="text-xs font-semibold text-foreground">{review.name}</div>
-                  <div className="text-[10px] text-muted-foreground">{review.role}</div>
-                </div>
+            </div>
+          </motion.div>
+        ) : (
+          <motion.div
+            key="tech"
+            initial={{ x: 320, opacity: 0 }}
+            animate={{ x: 0, opacity: 1 }}
+            exit={{ x: 320, opacity: 0 }}
+            transition={{ type: 'spring', stiffness: 240, damping: 28, mass: 0.9 }}
+            className="w-[290px] glass p-5 rounded-2xl shadow-2xl border border-[#00c4f0]/12"
+          >
+            <div className="flex items-center gap-2 mb-3">
+              <div className="w-7 h-7 rounded-lg bg-[#00c4f0]/10 border border-[#00c4f0]/20 flex items-center justify-center text-[#00c4f0]">
+                <CodeIcon />
               </div>
-            </motion.div>
-          ) : (
-            <motion.div
-              key="tech"
-              initial={{ opacity: 0, y: 6 }}
-              animate={{ opacity: 1, y: 0 }}
-              exit={{ opacity: 0, y: -6 }}
-              transition={{ duration: 0.35, ease: 'easeInOut' }}
-              className="glass p-5 rounded-2xl shadow-2xl border border-[#00c4f0]/12"
-            >
-              <div className="flex items-center gap-2 mb-3">
-                <div className="w-7 h-7 rounded-lg bg-[#00c4f0]/10 border border-[#00c4f0]/20 flex items-center justify-center text-[#00c4f0]">
-                  <CodeIcon />
-                </div>
-                <span className="text-[10px] font-bold uppercase tracking-[0.15em] text-[#00c4f0]/80">Elite Technology</span>
-              </div>
-              <div className="text-sm font-semibold text-foreground mb-3">Start Your Project →</div>
-              <div className="flex flex-wrap gap-1.5">
-                {techs.map(tech => (
-                  <span key={tech}
-                    className="text-[10px] font-medium px-2.5 py-1 rounded-full bg-white/[0.04] border border-white/[0.08] text-muted-foreground">
-                    {tech}
-                  </span>
-                ))}
-              </div>
-            </motion.div>
-          )}
-        </AnimatePresence>
-      </div>
+              <span className="text-[10px] font-bold uppercase tracking-[0.15em] text-[#00c4f0]/80">Elite Technology</span>
+            </div>
+            <div className="text-sm font-semibold text-foreground mb-3">Start Your Project →</div>
+            <div className="flex flex-wrap gap-1.5">
+              {techs.map(tech => (
+                <span key={tech}
+                  className="text-[10px] font-medium px-2.5 py-1 rounded-full bg-white/[0.04] border border-white/[0.08] text-muted-foreground">
+                  {tech}
+                </span>
+              ))}
+            </div>
+          </motion.div>
+        )}
+      </AnimatePresence>
     </div>
   );
 }
