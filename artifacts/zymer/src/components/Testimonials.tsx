@@ -27,7 +27,6 @@ const testimonials = [
     initials: "AM",
     gradient: "from-violet-500 to-indigo-600",
     avatar: "https://randomuser.me/api/portraits/men/32.jpg",
-    countryFlag: "🇦🇪",
   },
   {
     quote: "Our bounce rate dropped 60% after the redesign. Zymer didn't just build a website — they built a sales machine. Worth every cent.",
@@ -38,7 +37,6 @@ const testimonials = [
     initials: "EK",
     gradient: "from-blue-500 to-cyan-500",
     avatar: "https://randomuser.me/api/portraits/women/44.jpg",
-    countryFlag: "🇰🇿",
   },
   {
     quote: "The attention to detail is insane. Every animation, every word placement — you can tell these people think deeply about what they're building. Truly world-class.",
@@ -49,7 +47,6 @@ const testimonials = [
     initials: "MB",
     gradient: "from-emerald-500 to-teal-500",
     avatar: "https://randomuser.me/api/portraits/men/67.jpg",
-    countryFlag: "🇹🇷",
   },
   {
     quote: "Three months later, our site is generating 4x more leads. Zero regrets. The ROI was visible in the first week after launch.",
@@ -60,7 +57,6 @@ const testimonials = [
     initials: "SJ",
     gradient: "from-pink-500 to-rose-600",
     avatar: "https://randomuser.me/api/portraits/women/28.jpg",
-    countryFlag: "🇩🇪",
   },
   {
     quote: "Zymer is the first agency that actually listened. They asked smart questions and came back with something that blew my expectations. The mobile design is perfect.",
@@ -71,7 +67,6 @@ const testimonials = [
     initials: "TN",
     gradient: "from-amber-500 to-orange-500",
     avatar: "https://randomuser.me/api/portraits/men/52.jpg",
-    countryFlag: "🇺🇿",
   },
   {
     quote: "Professional, fast, and brutally talented. By Thursday I had a live site that made my investors say 'wow'. Best investment this quarter.",
@@ -82,7 +77,6 @@ const testimonials = [
     initials: "PS",
     gradient: "from-purple-500 to-violet-600",
     avatar: "https://randomuser.me/api/portraits/women/73.jpg",
-    countryFlag: "🇮🇳",
   }
 ];
 
@@ -99,16 +93,13 @@ function AvatarImage({ t }: { t: typeof testimonials[0] }) {
 
   return (
     <div className="relative shrink-0">
-      <div className={`absolute inset-0 rounded-full bg-gradient-to-br ${t.gradient} blur-md opacity-50`} />
+      <div className={`absolute inset-0 rounded-full bg-gradient-to-br ${t.gradient} blur-md opacity-40`} />
       <img
         src={t.avatar}
         alt={t.name}
         onError={() => setImgError(true)}
         className="relative w-12 h-12 rounded-full object-cover shadow-lg ring-2 ring-white/10"
       />
-      <div className="absolute -bottom-1 -right-1 text-base leading-none select-none" title={t.country}>
-        {t.countryFlag}
-      </div>
     </div>
   );
 }
@@ -124,13 +115,8 @@ export default function Testimonials() {
 
   return (
     <section className="py-28 relative z-10 overflow-hidden">
-      {/* Section divider top */}
       <div className="absolute top-0 inset-x-0 h-px bg-gradient-to-r from-transparent via-white/[0.06] to-transparent" />
-
-      {/* Subtle background treatment */}
       <div className="absolute inset-0 bg-secondary/20 pointer-events-none" />
-
-      {/* Decorative floating orb */}
       <div className="absolute top-1/3 right-[-100px] w-[400px] h-[400px] bg-primary/[0.04] rounded-full blur-[100px] pointer-events-none" />
 
       <div className="container mx-auto px-6 md:px-12 relative">
@@ -166,7 +152,6 @@ export default function Testimonials() {
             </motion.p>
           </div>
 
-          {/* Aggregate rating */}
           <motion.div
             initial={{ opacity: 0, y: 16 }}
             whileInView={{ opacity: 1, y: 0 }}
@@ -199,18 +184,13 @@ export default function Testimonials() {
                 transition={{ delay: i * 0.07, duration: 0.5, ease: [0.22, 1, 0.36, 1] }}
                 className="flex-[0_0_85%] min-w-0 md:flex-[0_0_45%] lg:flex-none glass p-7 rounded-3xl flex flex-col hover:shadow-[0_8px_40px_rgba(108,99,255,0.16)] hover:-translate-y-1.5 transition-all duration-300 relative overflow-hidden group"
               >
-                {/* Subtle hover glow */}
                 <div className="absolute inset-0 bg-gradient-to-br from-primary/[0.03] to-transparent opacity-0 group-hover:opacity-100 transition-opacity duration-500 pointer-events-none rounded-3xl" />
-
-                {/* Top border accent */}
                 <div className="absolute top-0 left-8 right-8 h-px bg-gradient-to-r from-transparent via-primary/25 to-transparent" />
 
-                {/* Quote icon */}
                 <div className="mb-4">
                   <QuoteIcon />
                 </div>
 
-                {/* Stars */}
                 <div className="flex gap-1 mb-4">
                   {[1, 2, 3, 4, 5].map((star) => (
                     <StarIcon key={star} className="text-amber-400" />

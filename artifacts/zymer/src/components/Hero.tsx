@@ -1,5 +1,28 @@
 import { motion } from 'framer-motion';
+import { useState } from 'react';
 import { useAnalytics } from '@/hooks/useAnalytics';
+
+function HeroAvatar({ src, alt, index }: { src: string; alt: string; index: number }) {
+  const [error, setError] = useState(false);
+  const fallbackColors = ['from-violet-500 to-indigo-600', 'from-blue-500 to-cyan-500', 'from-emerald-500 to-teal-500'];
+  const initials = alt.split(' ').map(w => w[0]).join('');
+
+  if (error) {
+    return (
+      <div className={`w-7 h-7 rounded-full bg-gradient-to-br ${fallbackColors[index]} flex items-center justify-center text-[8px] font-bold text-white border-2 border-background`}>
+        {initials}
+      </div>
+    );
+  }
+  return (
+    <img
+      src={src}
+      alt={alt}
+      onError={() => setError(true)}
+      className="w-7 h-7 rounded-full object-cover border-2 border-background"
+    />
+  );
+}
 
 const DiamondSep = () => (
   <svg width="6" height="6" viewBox="0 0 6 6" fill="none" xmlns="http://www.w3.org/2000/svg" className="inline-block align-middle mx-4 opacity-30" aria-hidden>
@@ -93,10 +116,12 @@ export default function Hero() {
               className="flex items-center gap-3 glass-light px-4 py-2.5 rounded-full border border-white/10"
             >
               <div className="flex -space-x-1.5">
-                {['AM', 'EK', 'MB'].map((init, i) => (
-                  <div key={i} className="w-6 h-6 rounded-full gradient-bg flex items-center justify-center text-[9px] font-bold text-white border border-background ring-1 ring-background">
-                    {init[0]}
-                  </div>
+                {[
+                  { src: 'https://randomuser.me/api/portraits/men/32.jpg', alt: 'Aziz M.' },
+                  { src: 'https://randomuser.me/api/portraits/women/44.jpg', alt: 'Elena K.' },
+                  { src: 'https://randomuser.me/api/portraits/men/67.jpg', alt: 'Murad B.' },
+                ].map((av, i) => (
+                  <HeroAvatar key={i} src={av.src} alt={av.alt} index={i} />
                 ))}
               </div>
               <div className="flex items-center gap-1">
