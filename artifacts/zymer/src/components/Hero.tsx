@@ -207,15 +207,32 @@ export default function Hero() {
             </div>
 
             {/* ── Right floating scene — desktop only ── */}
-            <div className="relative hidden lg:block" style={{ height: 'clamp(320px, 45svh, 520px)' }}>
-              <div className="absolute top-8 left-8 w-20 h-20 rounded-full bg-primary/25 blur-2xl animate-float" />
-              <div className="absolute bottom-8 right-4 w-32 h-32 rounded-full bg-[#00c4f0]/15 blur-3xl animate-float-slow" />
+            <div className="relative hidden lg:block" style={{ height: 'clamp(380px, 50svh, 540px)' }}>
+              {/* Glow blobs */}
+              <div className="absolute top-[15%] left-[20%] w-24 h-24 rounded-full bg-primary/20 blur-2xl animate-float pointer-events-none" />
+              <div className="absolute bottom-[20%] right-[15%] w-28 h-28 rounded-full bg-[#00c4f0]/12 blur-3xl animate-float-slow pointer-events-none" />
 
-              {/* Traffic card */}
+              {/* Speed badge — top center-left anchor */}
               <motion.div
-                initial={{ opacity: 0, scale: 0.88, y: 14 }} animate={{ opacity: 1, scale: 1, y: 0 }}
-                transition={{ delay: 0.45, duration: 0.65, ease: [0.22, 1, 0.36, 1] }}
-                className="absolute top-4 right-0 glass p-4 rounded-2xl animate-float shadow-2xl w-[190px]"
+                initial={{ opacity: 0, scale: 0.88, y: 16 }} animate={{ opacity: 1, scale: 1, y: 0 }}
+                transition={{ delay: 0.4, duration: 0.6, ease: [0.22, 1, 0.36, 1] }}
+                className="absolute top-[4%] left-[38%] glass px-3.5 py-2.5 rounded-2xl flex items-center gap-2.5 shadow-xl animate-float z-10"
+                style={{ animationDelay: '-3s' }}
+              >
+                <div className="w-8 h-8 rounded-xl bg-amber-500/15 flex items-center justify-center text-amber-400 border border-amber-500/20 shrink-0">
+                  <SpeedIcon />
+                </div>
+                <div>
+                  <div className="text-[9px] text-muted-foreground font-medium">Lighthouse Score</div>
+                  <div className="text-sm font-bold text-foreground">100 / 100</div>
+                </div>
+              </motion.div>
+
+              {/* Traffic card — right, slightly lower */}
+              <motion.div
+                initial={{ opacity: 0, scale: 0.88, y: 16 }} animate={{ opacity: 1, scale: 1, y: 0 }}
+                transition={{ delay: 0.55, duration: 0.6, ease: [0.22, 1, 0.36, 1] }}
+                className="absolute top-[16%] right-0 glass p-4 rounded-2xl animate-float shadow-2xl w-[195px]"
               >
                 <div className="flex items-center gap-2.5 mb-3">
                   <div className="w-8 h-8 rounded-xl bg-emerald-500/15 flex items-center justify-center text-emerald-400 border border-emerald-500/20 shrink-0">
@@ -229,7 +246,7 @@ export default function Hero() {
                 <div className="flex items-end gap-0.5 h-7 mb-1.5">
                   {[30, 45, 35, 60, 50, 75, 65, 85].map((h, i) => (
                     <motion.div key={i} initial={{ scaleY: 0 }} animate={{ scaleY: 1 }}
-                      transition={{ delay: 0.9 + i * 0.06, duration: 0.3 }}
+                      transition={{ delay: 1.0 + i * 0.06, duration: 0.3 }}
                       className="flex-1 rounded-[3px] origin-bottom"
                       style={{ height: `${h}%`, background: i === 7 ? 'linear-gradient(to top, #10b981, #34d399)' : 'rgba(16,185,129,0.22)' }}
                     />
@@ -238,11 +255,11 @@ export default function Hero() {
                 <div className="text-[9px] text-emerald-400 font-medium">↑ After Zymer redesign</div>
               </motion.div>
 
-              {/* Code card */}
+              {/* Code card — left, middle */}
               <motion.div
-                initial={{ opacity: 0, scale: 0.88, y: 14 }} animate={{ opacity: 1, scale: 1, y: 0 }}
-                transition={{ delay: 0.6, duration: 0.65, ease: [0.22, 1, 0.36, 1] }}
-                className="absolute top-[38%] left-0 -translate-y-1/2 glass p-4 rounded-2xl animate-float-slow shadow-2xl border border-primary/15 z-10 w-[230px]"
+                initial={{ opacity: 0, scale: 0.88, y: 16 }} animate={{ opacity: 1, scale: 1, y: 0 }}
+                transition={{ delay: 0.7, duration: 0.6, ease: [0.22, 1, 0.36, 1] }}
+                className="absolute top-[30%] left-0 glass p-4 rounded-2xl animate-float-slow shadow-2xl border border-primary/15 z-10 w-[235px]"
               >
                 <div className="flex items-center gap-1.5 mb-3">
                   <div className="w-2 h-2 rounded-full bg-rose-500/80" />
@@ -262,31 +279,15 @@ export default function Hero() {
                 </pre>
               </motion.div>
 
-              {/* Speed badge */}
+              {/* Lead notification — bottom center-left */}
               <motion.div
-                initial={{ opacity: 0, scale: 0.88, y: 14 }} animate={{ opacity: 1, scale: 1, y: 0 }}
-                transition={{ delay: 0.75, duration: 0.65, ease: [0.22, 1, 0.36, 1] }}
-                className="absolute top-[12%] left-[35%] glass px-3 py-2.5 rounded-2xl flex items-center gap-2.5 shadow-xl animate-float z-10"
-                style={{ animationDelay: '-3s' }}
-              >
-                <div className="w-8 h-8 rounded-xl bg-amber-500/15 flex items-center justify-center text-amber-400 border border-amber-500/20 shrink-0">
-                  <SpeedIcon />
-                </div>
-                <div>
-                  <div className="text-[9px] text-muted-foreground font-medium">Lighthouse Score</div>
-                  <div className="text-sm font-bold text-foreground">100 / 100</div>
-                </div>
-              </motion.div>
-
-              {/* Lead notification */}
-              <motion.div
-                initial={{ opacity: 0, scale: 0.88, y: 14 }} animate={{ opacity: 1, scale: 1, y: 0 }}
-                transition={{ delay: 0.9, duration: 0.65, ease: [0.22, 1, 0.36, 1] }}
-                className="absolute bottom-4 right-8 glass p-3 rounded-2xl flex items-center gap-3 animate-float shadow-xl z-20"
+                initial={{ opacity: 0, scale: 0.88, y: 16 }} animate={{ opacity: 1, scale: 1, y: 0 }}
+                transition={{ delay: 0.85, duration: 0.6, ease: [0.22, 1, 0.36, 1] }}
+                className="absolute bottom-[5%] left-[10%] glass p-3 rounded-2xl flex items-center gap-3 animate-float shadow-xl z-20"
                 style={{ animationDelay: '-2s' }}
               >
-                <div className="relative">
-                  <div className="w-9 h-9 rounded-xl gradient-bg flex items-center justify-center text-white glow-sm shrink-0">
+                <div className="relative shrink-0">
+                  <div className="w-9 h-9 rounded-xl gradient-bg flex items-center justify-center text-white glow-sm">
                     <LeadIcon />
                   </div>
                   <span className="absolute -top-1 -right-1 w-2.5 h-2.5 bg-emerald-500 rounded-full border-2 border-background" />
