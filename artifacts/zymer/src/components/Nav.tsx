@@ -70,13 +70,9 @@ export default function Nav() {
           {/* Logo */}
           <button
             onClick={() => window.scrollTo({ top: 0, behavior: 'smooth' })}
-            className="relative z-50 outline-none group flex items-center gap-2.5"
+            className="relative z-50 outline-none group"
           >
-            <div className="relative">
-              <div className="absolute inset-0 rounded-xl bg-primary/20 blur-md group-hover:bg-primary/35 transition-all duration-300" />
-              <img src="/favicon.svg" alt="Zymer" className="relative h-8 w-8 rounded-xl transition-all duration-300" />
-            </div>
-            <img src="/web-logo.png" alt="Zymer" className="h-7 transition-all duration-300 group-hover:opacity-75" />
+            <img src="/web-logo.png" alt="Zymer" className="h-8 transition-all duration-300 group-hover:opacity-75" />
           </button>
 
           {/* Desktop Nav */}
