@@ -87,7 +87,7 @@ export default function Hero() {
   };
 
   return (
-    <section className="relative min-h-[100svh] flex flex-col justify-center overflow-hidden pt-20 md:pt-0">
+    <section className="relative min-h-[100svh] flex flex-col justify-start md:justify-center overflow-hidden pt-20 md:pt-0">
       {/* Background mesh */}
       <div className="absolute inset-0 z-0 pointer-events-none">
         <div className="absolute top-0 right-[-10%] w-[500px] md:w-[700px] h-[500px] md:h-[700px] bg-primary/[0.14] rounded-full blur-[100px] md:blur-[130px] animate-aurora" />
@@ -102,11 +102,11 @@ export default function Hero() {
         />
       </div>
 
-      <div className="container mx-auto px-5 sm:px-8 md:px-12 relative z-10 py-10 md:py-0">
-        <div className="grid lg:grid-cols-2 gap-10 lg:gap-8 items-center">
+      <div className="container mx-auto px-5 sm:px-8 md:px-12 relative z-10 py-6 md:py-0">
+        <div className="grid lg:grid-cols-2 gap-6 lg:gap-8 items-center">
 
           {/* Left Content */}
-          <div className="flex flex-col items-start gap-5 md:gap-6">
+          <div className="flex flex-col items-start gap-4 md:gap-6">
 
             {/* Trust badge */}
             <motion.div
@@ -171,10 +171,10 @@ export default function Hero() {
               initial={{ opacity: 0, y: 16 }}
               animate={{ opacity: 1, y: 0 }}
               transition={{ duration: 0.5, delay: 0.55 }}
-              className="flex flex-wrap gap-x-4 gap-y-2"
+              className="flex flex-col sm:flex-row flex-wrap gap-x-4 gap-y-1.5"
             >
               {['Delivered in days, not months', '100/100 Lighthouse score', '24/7 support included'].map((point, i) => (
-                <span key={i} className="flex items-center gap-2 text-xs sm:text-sm text-muted-foreground">
+                <span key={i} className="flex items-center gap-1.5 text-xs text-muted-foreground">
                   <span className="text-emerald-400 shrink-0"><CheckSmall /></span>
                   {point}
                 </span>
@@ -186,14 +186,14 @@ export default function Hero() {
               initial={{ opacity: 0, y: 20 }}
               animate={{ opacity: 1, y: 0 }}
               transition={{ duration: 0.5, delay: 0.65 }}
-              className="flex flex-col sm:flex-row gap-3 w-full sm:w-auto"
+              className="flex flex-row gap-2.5 w-full sm:w-auto"
             >
               <button
                 onClick={() => {
                   trackEvent('cta_click', { button: 'hero_primary' });
                   scrollTo('contact');
                 }}
-                className="group relative overflow-hidden gradient-bg text-white px-7 py-4 rounded-full font-semibold text-sm sm:text-base glow-violet transition-all duration-300 w-full sm:w-auto outline-none flex items-center justify-center gap-2 active:scale-[0.98] hover:scale-[1.03]"
+                className="group relative overflow-hidden gradient-bg text-white px-5 sm:px-7 py-3.5 sm:py-4 rounded-full font-semibold text-sm glow-violet transition-all duration-300 flex-1 sm:flex-none sm:w-auto outline-none flex items-center justify-center gap-2 active:scale-[0.98] hover:scale-[1.03]"
               >
                 <span className="relative z-10 flex items-center gap-2">
                   Start Your Project
@@ -207,9 +207,9 @@ export default function Hero() {
                   trackEvent('cta_click', { button: 'hero_secondary' });
                   scrollTo('pricing');
                 }}
-                className="glass text-foreground px-7 py-4 rounded-full font-semibold text-sm sm:text-base hover:bg-white/[0.06] active:scale-[0.98] transition-all duration-200 w-full sm:w-auto outline-none hover:border-primary/30"
+                className="glass text-foreground px-4 sm:px-7 py-3.5 sm:py-4 rounded-full font-semibold text-sm hover:bg-white/[0.06] active:scale-[0.98] transition-all duration-200 flex-1 sm:flex-none sm:w-auto outline-none hover:border-primary/30 whitespace-nowrap"
               >
-                See Our Packages
+                See Packages
               </button>
             </motion.div>
 
@@ -218,14 +218,14 @@ export default function Hero() {
               initial={{ opacity: 0, y: 16 }}
               animate={{ opacity: 1, y: 0 }}
               transition={{ duration: 0.6, delay: 0.75 }}
-              className="grid grid-cols-4 gap-2 w-full lg:hidden"
+              className="grid grid-cols-2 sm:grid-cols-4 gap-2 w-full lg:hidden"
             >
               {mobileStats.map((stat, i) => (
                 <div
                   key={i}
-                  className={`flex flex-col items-center justify-center gap-1 py-3 px-2 rounded-2xl border ${stat.bg} ${stat.border}`}
+                  className={`flex flex-col items-center justify-center gap-1 py-2.5 px-2 rounded-2xl border ${stat.bg} ${stat.border}`}
                 >
-                  <span className={`text-sm sm:text-base font-bold ${stat.color} tabular-nums`}>{stat.value}</span>
+                  <span className={`text-sm font-bold ${stat.color} tabular-nums`}>{stat.value}</span>
                   <span className="text-[9px] sm:text-[10px] text-muted-foreground font-medium tracking-wide text-center">{stat.label}</span>
                 </div>
               ))}

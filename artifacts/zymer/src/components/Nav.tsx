@@ -234,7 +234,7 @@ export default function Nav() {
                       <span className="font-mono text-[10px] tracking-[0.2em] text-primary/35 tabular-nums w-5 leading-none pt-0.5">
                         {String(i + 1).padStart(2, '0')}
                       </span>
-                      <span className="text-[2.2rem] font-display font-bold text-foreground/75 group-hover:text-foreground transition-colors duration-200 leading-tight">
+                      <span className="text-[1.85rem] font-display font-bold text-foreground/75 group-hover:text-foreground transition-colors duration-200 leading-tight whitespace-nowrap">
                         {link.name}
                       </span>
                     </div>
