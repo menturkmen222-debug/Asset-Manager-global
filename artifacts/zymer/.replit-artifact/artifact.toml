@@ -1,0 +1,31 @@
+kind = "web"
+previewPath = "/"
+title = "Zymer — Premium Web Agency"
+version = "1.0.0"
+id = "artifacts/zymer"
+router = "path"
+
+[[integratedSkills]]
+name = "react-vite"
+version = "1.0.0"
+
+[[services]]
+name = "web"
+paths = [ "/" ]
+localPort = 22200
+
+[services.development]
+run = "pnpm --filter @workspace/zymer run dev"
+
+[services.production]
+build = [ "pnpm", "--filter", "@workspace/zymer", "run", "build" ]
+publicDir = "artifacts/zymer/dist/public"
+serve = "static"
+
+[[services.production.rewrites]]
+from = "/*"
+to = "/index.html"
+
+[services.env]
+PORT = "22200"
+BASE_PATH = "/"
