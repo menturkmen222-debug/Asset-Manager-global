@@ -75,25 +75,26 @@ export default function Nav() {
             <img src="/web-logo.png" alt="Zymer" className="h-7 transition-all duration-300 group-hover:opacity-75" />
           </button>
 
-          {/* Links — truly centered via flex-1 + justify-center */}
+          {/* Links — glass pill, truly centered */}
           <div className="flex-1 hidden md:flex items-center justify-center">
-            <div className="flex items-center gap-1">
+            <div className="relative flex items-center gap-0.5 px-2 py-1.5 rounded-full border border-white/[0.08] bg-white/[0.03] backdrop-blur-sm">
+              {/* Active indicator background */}
               {links.map((link, i) => (
                 <div key={link.name} className="flex items-center">
                   <button
                     onMouseEnter={() => setActiveLink(link.href)}
                     onMouseLeave={() => setActiveLink(null)}
                     onClick={() => scrollTo(link.href)}
-                    className="relative px-4 py-2 text-sm font-medium text-muted-foreground hover:text-foreground transition-colors duration-200 outline-none group"
+                    className="relative px-4 py-1.5 text-[13px] font-medium text-muted-foreground hover:text-foreground transition-colors duration-200 outline-none rounded-full group"
                   >
                     {activeLink === link.href && (
                       <motion.div
-                        layoutId="nav-indicator"
-                        className="absolute inset-x-2 -bottom-px h-px bg-gradient-to-r from-transparent via-primary/60 to-transparent"
-                        transition={{ type: 'spring', stiffness: 400, damping: 30 }}
+                        layoutId="nav-pill-active"
+                        className="absolute inset-0 rounded-full bg-white/[0.06] border border-white/[0.09]"
+                        transition={{ type: 'spring', stiffness: 350, damping: 30 }}
                       />
                     )}
-                    {link.name}
+                    <span className="relative z-10">{link.name}</span>
                   </button>
                   {i < links.length - 1 && <OrnamentDot />}
                 </div>

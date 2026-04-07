@@ -1,178 +1,115 @@
-import { useEffect, useRef } from 'react';
-
-interface Particle {
-  x: number;
-  y: number;
-  vx: number;
-  vy: number;
-  size: number;
-  opacity: number;
-  colorR: number;
-  colorG: number;
-  colorB: number;
-  pulse: number;
-  pulseSpeed: number;
-}
-
 export default function ParticleField() {
-  const canvasRef = useRef<HTMLCanvasElement>(null);
-  const animRef = useRef<number>(0);
-  const particlesRef = useRef<Particle[]>([]);
-
-  useEffect(() => {
-    const canvas = canvasRef.current;
-    if (!canvas) return;
-    const ctx = canvas.getContext('2d');
-    if (!ctx) return;
-
-    const colorPalette = [
-      [108, 99, 255],
-      [0, 196, 240],
-      [124, 116, 255],
-      [160, 158, 255],
-      [80, 60, 220],
-    ];
-
-    const resize = () => {
-      canvas.width = window.innerWidth;
-      canvas.height = window.innerHeight;
-    };
-    resize();
-
-    const count = Math.min(70, Math.floor(window.innerWidth / 18));
-    particlesRef.current = Array.from({ length: count }, () => {
-      const c = colorPalette[Math.floor(Math.random() * colorPalette.length)];
-      return {
-        x: Math.random() * canvas.width,
-        y: Math.random() * canvas.height,
-        vx: (Math.random() - 0.5) * 0.28,
-        vy: (Math.random() - 0.5) * 0.28,
-        size: Math.random() * 2.2 + 0.5,
-        opacity: Math.random() * 0.55 + 0.12,
-        colorR: c[0],
-        colorG: c[1],
-        colorB: c[2],
-        pulse: Math.random() * Math.PI * 2,
-        pulseSpeed: Math.random() * 0.018 + 0.006,
-      };
-    });
-
-    const draw = () => {
-      ctx.clearRect(0, 0, canvas.width, canvas.height);
-
-      const particles = particlesRef.current;
-      const len = particles.length;
-
-      for (let i = 0; i < len; i++) {
-        const p = particles[i];
-        p.x += p.vx;
-        p.y += p.vy;
-        p.pulse += p.pulseSpeed;
-
-        if (p.x < 0) p.x = canvas.width;
-        if (p.x > canvas.width) p.x = 0;
-        if (p.y < 0) p.y = canvas.height;
-        if (p.y > canvas.height) p.y = 0;
-
-        const pulsedOpacity = p.opacity * (0.55 + 0.45 * Math.sin(p.pulse));
-        const pulsedSize = p.size * (0.85 + 0.15 * Math.sin(p.pulse * 1.3));
-
-        ctx.beginPath();
-        ctx.arc(p.x, p.y, pulsedSize, 0, Math.PI * 2);
-        ctx.fillStyle = `rgba(${p.colorR},${p.colorG},${p.colorB},${pulsedOpacity})`;
-        ctx.fill();
-
-        for (let j = i + 1; j < len; j++) {
-          const q = particles[j];
-          const dx = p.x - q.x;
-          const dy = p.y - q.y;
-          const dist = Math.sqrt(dx * dx + dy * dy);
-          if (dist < 140) {
-            const lineAlpha = (1 - dist / 140) * 0.09;
-            ctx.beginPath();
-            ctx.moveTo(p.x, p.y);
-            ctx.lineTo(q.x, q.y);
-            ctx.strokeStyle = `rgba(108,99,255,${lineAlpha})`;
-            ctx.lineWidth = 0.7;
-            ctx.stroke();
-          }
-        }
-      }
-
-      animRef.current = requestAnimationFrame(draw);
-    };
-
-    draw();
-
-    window.addEventListener('resize', resize);
-    return () => {
-      cancelAnimationFrame(animRef.current);
-      window.removeEventListener('resize', resize);
-    };
-  }, []);
-
   return (
-    <>
-      {/* Animated gradient orbs for dramatic 3D-like depth */}
-      <div className="fixed inset-0 z-0 pointer-events-none overflow-hidden">
-        {/* Large violet orb — top right, drifting */}
-        <div
-          className="absolute rounded-full animate-aurora"
-          style={{
-            width: '800px',
-            height: '800px',
-            top: '-200px',
-            right: '-200px',
-            background: 'radial-gradient(circle, rgba(108,99,255,0.18) 0%, rgba(108,99,255,0.06) 50%, transparent 70%)',
-            filter: 'blur(60px)',
-          }}
-        />
-        {/* Cyan orb — bottom left */}
-        <div
-          className="absolute rounded-full animate-aurora"
-          style={{
-            width: '700px',
-            height: '700px',
-            bottom: '-150px',
-            left: '-150px',
-            background: 'radial-gradient(circle, rgba(0,196,240,0.14) 0%, rgba(0,196,240,0.05) 50%, transparent 70%)',
-            filter: 'blur(70px)',
-            animationDelay: '-8s',
-          }}
-        />
-        {/* Small violet orb — center left */}
-        <div
-          className="absolute rounded-full animate-float-slow"
-          style={{
-            width: '400px',
-            height: '400px',
-            top: '30%',
-            left: '10%',
-            background: 'radial-gradient(circle, rgba(124,116,255,0.1) 0%, transparent 70%)',
-            filter: 'blur(50px)',
-          }}
-        />
-        {/* Tiny cyan accent — top center */}
-        <div
-          className="absolute rounded-full animate-float"
-          style={{
-            width: '300px',
-            height: '300px',
-            top: '15%',
-            left: '40%',
-            background: 'radial-gradient(circle, rgba(0,196,240,0.09) 0%, transparent 70%)',
-            filter: 'blur(60px)',
-            animationDelay: '-4s',
-          }}
-        />
-      </div>
+    <div className="fixed inset-0 z-0 pointer-events-none overflow-hidden">
 
-      {/* Particle canvas */}
-      <canvas
-        ref={canvasRef}
-        className="fixed inset-0 z-0 pointer-events-none"
-        style={{ opacity: 0.75 }}
+      {/* ── Base dark radial vignette ── */}
+      <div className="absolute inset-0"
+        style={{
+          background: 'radial-gradient(ellipse 110% 90% at 50% 0%, rgba(108,99,255,0.13) 0%, transparent 65%), radial-gradient(ellipse 80% 60% at 80% 100%, rgba(0,196,240,0.10) 0%, transparent 60%)',
+        }}
       />
-    </>
+
+      {/* ── Drifting aurora orbs ── */}
+      <div className="absolute rounded-full animate-aurora"
+        style={{
+          width: '900px', height: '900px',
+          top: '-260px', right: '-240px',
+          background: 'radial-gradient(circle, rgba(108,99,255,0.16) 0%, rgba(108,99,255,0.05) 45%, transparent 70%)',
+          filter: 'blur(80px)',
+        }}
+      />
+      <div className="absolute rounded-full animate-aurora"
+        style={{
+          width: '750px', height: '750px',
+          bottom: '-180px', left: '-160px',
+          background: 'radial-gradient(circle, rgba(0,196,240,0.12) 0%, rgba(0,196,240,0.04) 45%, transparent 70%)',
+          filter: 'blur(90px)',
+          animationDelay: '-9s',
+        }}
+      />
+      <div className="absolute rounded-full animate-float-slow"
+        style={{
+          width: '500px', height: '500px',
+          top: '25%', left: '5%',
+          background: 'radial-gradient(circle, rgba(124,116,255,0.09) 0%, transparent 70%)',
+          filter: 'blur(60px)',
+        }}
+      />
+      <div className="absolute rounded-full animate-float"
+        style={{
+          width: '350px', height: '350px',
+          top: '10%', left: '38%',
+          background: 'radial-gradient(circle, rgba(0,196,240,0.07) 0%, transparent 70%)',
+          filter: 'blur(70px)',
+          animationDelay: '-5s',
+        }}
+      />
+
+      {/* ── Flat top grid (standard overhead) ── */}
+      <div className="absolute inset-0"
+        style={{
+          backgroundImage: `
+            linear-gradient(rgba(108,99,255,0.045) 1px, transparent 1px),
+            linear-gradient(90deg, rgba(108,99,255,0.045) 1px, transparent 1px)
+          `,
+          backgroundSize: '72px 72px',
+          maskImage: 'radial-gradient(ellipse 90% 80% at 50% 40%, rgba(0,0,0,0.35) 0%, transparent 75%)',
+          WebkitMaskImage: 'radial-gradient(ellipse 90% 80% at 50% 40%, rgba(0,0,0,0.35) 0%, transparent 75%)',
+        }}
+      />
+
+      {/* ── Perspective grid — converging vanishing point at bottom ── */}
+      <div
+        style={{
+          position: 'absolute',
+          bottom: 0,
+          left: '-15%',
+          width: '130%',
+          height: '55%',
+          backgroundImage: `
+            linear-gradient(rgba(108,99,255,0.12) 1px, transparent 1px),
+            linear-gradient(90deg, rgba(108,99,255,0.09) 1px, transparent 1px)
+          `,
+          backgroundSize: '88px 88px',
+          transform: 'perspective(520px) rotateX(62deg)',
+          transformOrigin: 'bottom center',
+          maskImage: 'linear-gradient(to top, rgba(0,0,0,0.5) 0%, rgba(0,0,0,0.15) 45%, transparent 80%)',
+          WebkitMaskImage: 'linear-gradient(to top, rgba(0,0,0,0.5) 0%, rgba(0,0,0,0.15) 45%, transparent 80%)',
+        }}
+      />
+
+      {/* ── Subtle noise grain overlay ── */}
+      <div className="absolute inset-0 opacity-[0.022]"
+        style={{
+          backgroundImage: `url("data:image/svg+xml,%3Csvg viewBox='0 0 256 256' xmlns='http://www.w3.org/2000/svg'%3E%3Cfilter id='noise'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.9' numOctaves='4' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23noise)'/%3E%3C/svg%3E")`,
+          backgroundSize: '180px 180px',
+        }}
+      />
+
+      {/* ── Floating glint dots (SVG, static) ── */}
+      <svg className="absolute inset-0 w-full h-full opacity-40" xmlns="http://www.w3.org/2000/svg" aria-hidden>
+        {[
+          [12, 22], [34, 64], [55, 18], [78, 45], [92, 8],
+          [8, 80], [25, 55], [45, 88], [68, 70], [85, 35],
+          [20, 40], [60, 30], [75, 85], [50, 60], [38, 12],
+        ].map(([cx, cy], i) => (
+          <circle key={i}
+            cx={`${cx}%`} cy={`${cy}%`}
+            r={i % 3 === 0 ? '1.4' : '0.9'}
+            fill={i % 4 === 0 ? 'rgba(108,99,255,0.7)' : i % 4 === 1 ? 'rgba(0,196,240,0.6)' : 'rgba(255,255,255,0.5)'}
+          />
+        ))}
+      </svg>
+
+      {/* ── Horizontal glow line accent ── */}
+      <div className="absolute left-0 right-0"
+        style={{
+          top: '38%',
+          height: '1px',
+          background: 'linear-gradient(90deg, transparent 0%, rgba(108,99,255,0.25) 30%, rgba(0,196,240,0.2) 70%, transparent 100%)',
+          maskImage: 'linear-gradient(90deg, transparent, white 20%, white 80%, transparent)',
+        }}
+      />
+    </div>
   );
 }
