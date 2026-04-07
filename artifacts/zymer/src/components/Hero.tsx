@@ -2,7 +2,7 @@ import { motion } from 'framer-motion';
 import { useAnalytics } from '@/hooks/useAnalytics';
 
 const DiamondSep = () => (
-  <svg width="6" height="6" viewBox="0 0 6 6" fill="none" xmlns="http://www.w3.org/2000/svg" className="inline-block align-middle mx-5 opacity-30" aria-hidden>
+  <svg width="6" height="6" viewBox="0 0 6 6" fill="none" xmlns="http://www.w3.org/2000/svg" className="inline-block align-middle mx-4 opacity-30" aria-hidden>
     <path d="M3 0L6 3L3 6L0 3L3 0Z" fill="currentColor" />
   </svg>
 );
@@ -48,6 +48,13 @@ const SpeedIcon = () => (
   </svg>
 );
 
+const mobileStats = [
+  { label: 'Projects', value: '50+', color: 'text-primary', bg: 'bg-primary/10', border: 'border-primary/20' },
+  { label: 'Rating', value: '4.9★', color: 'text-amber-400', bg: 'bg-amber-400/10', border: 'border-amber-400/20' },
+  { label: 'Traffic', value: '+340%', color: 'text-emerald-400', bg: 'bg-emerald-400/10', border: 'border-emerald-400/20' },
+  { label: 'Lighthouse', value: '100/100', color: 'text-[#00c4f0]', bg: 'bg-[#00c4f0]/10', border: 'border-[#00c4f0]/20' },
+];
+
 export default function Hero() {
   const { trackEvent } = useAnalytics();
 
@@ -57,30 +64,26 @@ export default function Hero() {
   };
 
   return (
-    <section className="relative min-h-[100svh] flex flex-col justify-center overflow-hidden pt-24 md:pt-0">
+    <section className="relative min-h-[100svh] flex flex-col justify-center overflow-hidden pt-20 md:pt-0">
       {/* Background mesh */}
       <div className="absolute inset-0 z-0 pointer-events-none">
-        {/* Primary violet orb */}
-        <div className="absolute top-0 right-[-10%] w-[700px] h-[700px] bg-primary/[0.14] rounded-full blur-[130px] animate-aurora" />
-        {/* Cyan secondary */}
-        <div className="absolute bottom-[-15%] left-[-10%] w-[600px] h-[600px] bg-[#00c4f0]/[0.1] rounded-full blur-[110px] animate-aurora" style={{ animationDelay: '-6s' }} />
-        {/* Subtle center glow */}
-        <div className="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 w-[900px] h-[400px] bg-primary/[0.04] rounded-full blur-[100px]" />
-        {/* Grid pattern */}
+        <div className="absolute top-0 right-[-10%] w-[500px] md:w-[700px] h-[500px] md:h-[700px] bg-primary/[0.14] rounded-full blur-[100px] md:blur-[130px] animate-aurora" />
+        <div className="absolute bottom-[-15%] left-[-10%] w-[400px] md:w-[600px] h-[400px] md:h-[600px] bg-[#00c4f0]/[0.1] rounded-full blur-[90px] md:blur-[110px] animate-aurora" style={{ animationDelay: '-6s' }} />
+        <div className="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 w-[600px] md:w-[900px] h-[300px] md:h-[400px] bg-primary/[0.04] rounded-full blur-[80px] md:blur-[100px]" />
         <div
           className="absolute inset-0 opacity-[0.018]"
           style={{
             backgroundImage: `linear-gradient(rgba(255,255,255,1) 1px, transparent 1px), linear-gradient(90deg, rgba(255,255,255,1) 1px, transparent 1px)`,
-            backgroundSize: '80px 80px'
+            backgroundSize: '60px 60px'
           }}
         />
       </div>
 
-      <div className="container mx-auto px-6 md:px-12 relative z-10">
-        <div className="grid lg:grid-cols-2 gap-14 lg:gap-8 items-center">
+      <div className="container mx-auto px-5 sm:px-8 md:px-12 relative z-10 py-10 md:py-0">
+        <div className="grid lg:grid-cols-2 gap-10 lg:gap-8 items-center">
 
           {/* Left Content */}
-          <div className="flex flex-col items-start gap-6">
+          <div className="flex flex-col items-start gap-5 md:gap-6">
 
             {/* Trust badge */}
             <motion.div
@@ -96,17 +99,17 @@ export default function Hero() {
                   </div>
                 ))}
               </div>
-              <div className="flex items-center gap-1.5">
-                {[1,2,3,4,5].map(s => <StarIcon key={s} size={11} className="text-amber-400" />)}
+              <div className="flex items-center gap-1">
+                {[1,2,3,4,5].map(s => <StarIcon key={s} size={10} className="text-amber-400" />)}
               </div>
-              <span className="text-[12px] font-medium text-muted-foreground">
-                Trusted by <span className="text-foreground font-semibold">50+</span> businesses globally
+              <span className="text-[11px] sm:text-[12px] font-medium text-muted-foreground">
+                Trusted by <span className="text-foreground font-semibold">50+</span> businesses
               </span>
             </motion.div>
 
             {/* Main headline */}
             <div>
-              <h1 className="text-[2.8rem] md:text-[3.6rem] lg:text-[3rem] xl:text-[3.8rem] font-display font-bold leading-[1.06] tracking-tight">
+              <h1 className="text-[2.15rem] sm:text-[2.8rem] md:text-[3.4rem] lg:text-[3rem] xl:text-[3.75rem] font-display font-bold leading-[1.06] tracking-tight">
                 {["We Don't", "Build Websites.", "We Build"].map((line, i) => (
                   <motion.div
                     key={i}
@@ -133,7 +136,7 @@ export default function Hero() {
               initial={{ opacity: 0, y: 20 }}
               animate={{ opacity: 1, y: 0 }}
               transition={{ duration: 0.5, delay: 0.7 }}
-              className="text-base md:text-lg text-muted-foreground max-w-lg leading-relaxed"
+              className="text-sm sm:text-base md:text-lg text-muted-foreground max-w-lg leading-relaxed"
             >
               Zymer crafts high-performance, visually breathtaking web experiences for businesses ready to dominate their market — globally.
             </motion.p>
@@ -142,11 +145,11 @@ export default function Hero() {
             <motion.div
               initial={{ opacity: 0, y: 16 }}
               animate={{ opacity: 1, y: 0 }}
-              transition={{ duration: 0.5, delay: 0.5 }}
-              className="flex flex-wrap gap-x-5 gap-y-2"
+              transition={{ duration: 0.5, delay: 0.55 }}
+              className="flex flex-wrap gap-x-4 gap-y-2"
             >
               {['Delivered in days, not months', '100/100 Lighthouse score', '24/7 support included'].map((point, i) => (
-                <span key={i} className="flex items-center gap-2 text-sm text-muted-foreground">
+                <span key={i} className="flex items-center gap-2 text-xs sm:text-sm text-muted-foreground">
                   <span className="text-emerald-400 shrink-0"><CheckSmall /></span>
                   {point}
                 </span>
@@ -165,7 +168,7 @@ export default function Hero() {
                   trackEvent('cta_click', { button: 'hero_primary' });
                   scrollTo('contact');
                 }}
-                className="group relative overflow-hidden gradient-bg text-white px-8 py-4 rounded-full font-semibold text-base glow-violet transition-all duration-300 w-full sm:w-auto outline-none flex items-center justify-center gap-2 hover:scale-[1.03]"
+                className="group relative overflow-hidden gradient-bg text-white px-7 py-4 rounded-full font-semibold text-sm sm:text-base glow-violet transition-all duration-300 w-full sm:w-auto outline-none flex items-center justify-center gap-2 active:scale-[0.98] hover:scale-[1.03]"
               >
                 <span className="relative z-10 flex items-center gap-2">
                   Start Your Project
@@ -179,17 +182,35 @@ export default function Hero() {
                   trackEvent('cta_click', { button: 'hero_secondary' });
                   scrollTo('pricing');
                 }}
-                className="glass text-foreground px-8 py-4 rounded-full font-semibold text-base hover:bg-white/[0.06] transition-all duration-200 w-full sm:w-auto outline-none hover:border-primary/30"
+                className="glass text-foreground px-7 py-4 rounded-full font-semibold text-sm sm:text-base hover:bg-white/[0.06] active:scale-[0.98] transition-all duration-200 w-full sm:w-auto outline-none hover:border-primary/30"
               >
                 See Our Packages
               </button>
+            </motion.div>
+
+            {/* Mobile Stats Grid — visible only on mobile */}
+            <motion.div
+              initial={{ opacity: 0, y: 16 }}
+              animate={{ opacity: 1, y: 0 }}
+              transition={{ duration: 0.6, delay: 0.75 }}
+              className="grid grid-cols-4 gap-2 w-full lg:hidden"
+            >
+              {mobileStats.map((stat, i) => (
+                <div
+                  key={i}
+                  className={`flex flex-col items-center justify-center gap-1 py-3 px-2 rounded-2xl border ${stat.bg} ${stat.border}`}
+                >
+                  <span className={`text-sm sm:text-base font-bold ${stat.color} tabular-nums`}>{stat.value}</span>
+                  <span className="text-[9px] sm:text-[10px] text-muted-foreground font-medium tracking-wide text-center">{stat.label}</span>
+                </div>
+              ))}
             </motion.div>
 
             {/* Marquee ticker */}
             <motion.div
               initial={{ opacity: 0 }}
               animate={{ opacity: 1 }}
-              transition={{ duration: 0.8, delay: 0.8 }}
+              transition={{ duration: 0.8, delay: 0.85 }}
               className="w-full overflow-hidden border-y border-white/[0.06] py-3"
             >
               <div className="inline-flex items-center whitespace-nowrap animate-[marquee_24s_linear_infinite]">
@@ -197,7 +218,7 @@ export default function Hero() {
                   <span key={loop} className="inline-flex items-center">
                     {['50+ Projects Delivered', '20+ Countries Served', '4.9★ Client Rating', '48h Turnaround', '$0 Hidden Fees'].map((item, j) => (
                       <span key={`${loop}-${j}`} className="inline-flex items-center">
-                        <span className="text-xs font-medium text-muted-foreground tracking-wide">{item}</span>
+                        <span className="text-[11px] font-medium text-muted-foreground tracking-wide">{item}</span>
                         <DiamondSep />
                       </span>
                     ))}
@@ -207,9 +228,8 @@ export default function Hero() {
             </motion.div>
           </div>
 
-          {/* Right Floating Scene */}
-          <div className="relative h-[440px] lg:h-[580px] hidden md:block">
-            {/* Ambient orbs */}
+          {/* Right Floating Scene — desktop only */}
+          <div className="relative h-[500px] lg:h-[580px] hidden lg:block">
             <div className="absolute top-12 left-12 w-28 h-28 rounded-full bg-primary/30 blur-2xl animate-float" />
             <div className="absolute bottom-16 right-8 w-44 h-44 rounded-full bg-[#00c4f0]/20 blur-3xl animate-float-slow" />
             <div className="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 w-64 h-64 rounded-full bg-primary/[0.06] blur-3xl" />
@@ -219,7 +239,7 @@ export default function Hero() {
               initial={{ opacity: 0, scale: 0.85, y: 16 }}
               animate={{ opacity: 1, scale: 1, y: 0 }}
               transition={{ delay: 0.5, duration: 0.7, ease: [0.22, 1, 0.36, 1] }}
-              className="absolute top-16 right-8 glass p-5 rounded-2xl w-58 animate-float shadow-2xl"
+              className="absolute top-16 right-8 glass p-5 rounded-2xl animate-float shadow-2xl"
               style={{ width: '220px' }}
             >
               <div className="flex items-center gap-3 mb-4">
@@ -231,7 +251,6 @@ export default function Hero() {
                   <div className="text-2xl font-bold text-foreground leading-tight">+340%</div>
                 </div>
               </div>
-              {/* Mini chart bars */}
               <div className="flex items-end gap-1 h-8 mb-2">
                 {[30, 45, 35, 60, 50, 75, 65, 85].map((h, i) => (
                   <motion.div

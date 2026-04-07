@@ -71,30 +71,29 @@ const icons = {
 };
 
 const services = [
-  { Icon: icons.LandingPage, title: 'Landing Pages', desc: 'One page. One goal. Infinite conversions. We build landing pages that make visitors say yes before they reach the bottom.', tag: 'High ROI' },
-  { Icon: icons.BusinessSite, title: 'Business Websites', desc: 'Your digital headquarters. Professional, fast, and built to establish authority in any market.', tag: 'Most Popular' },
-  { Icon: icons.Ecommerce, title: 'E-Commerce Stores', desc: 'Storefronts engineered to sell. Every element designed to reduce friction and maximize revenue.', tag: 'Revenue First' },
-  { Icon: icons.Dashboard, title: 'SaaS Dashboards', desc: 'Complex interfaces made elegant. We turn powerful features into intuitive experiences users love.', tag: 'UX-Led' },
-  { Icon: icons.Portfolio, title: 'Portfolio & Brand', desc: 'Your story, told beautifully. Stand out in a world drowning in mediocrity.', tag: 'Creative' },
-  { Icon: icons.WebApp, title: 'Web Applications', desc: 'From idea to working product. Full-stack applications built for scale and speed.', tag: 'Full-Stack' },
-  { Icon: icons.UIRedesign, title: 'UI/UX Redesign', desc: 'Old site killing your conversions? We rebuild it into something that actually performs.', tag: 'Performance' },
-  { Icon: icons.Automation, title: 'API & Automation', desc: 'Connect your tools, automate your workflows, and free your team to focus on what matters.', tag: 'Efficiency' },
+  { Icon: icons.LandingPage, title: 'Landing Pages', desc: 'One page. One goal. Infinite conversions. We build landing pages that make visitors say yes before they reach the bottom.', tag: 'High ROI', tagColor: 'text-emerald-400 bg-emerald-400/10 border-emerald-400/20' },
+  { Icon: icons.BusinessSite, title: 'Business Websites', desc: 'Your digital headquarters. Professional, fast, and built to establish authority in any market.', tag: 'Most Popular', tagColor: 'text-primary bg-primary/10 border-primary/20' },
+  { Icon: icons.Ecommerce, title: 'E-Commerce Stores', desc: 'Storefronts engineered to sell. Every element designed to reduce friction and maximize revenue.', tag: 'Revenue First', tagColor: 'text-amber-400 bg-amber-400/10 border-amber-400/20' },
+  { Icon: icons.Dashboard, title: 'SaaS Dashboards', desc: 'Complex interfaces made elegant. We turn powerful features into intuitive experiences users love.', tag: 'UX-Led', tagColor: 'text-[#00c4f0] bg-[#00c4f0]/10 border-[#00c4f0]/20' },
+  { Icon: icons.Portfolio, title: 'Portfolio & Brand', desc: 'Your story, told beautifully. Stand out in a world drowning in mediocrity.', tag: 'Creative', tagColor: 'text-pink-400 bg-pink-400/10 border-pink-400/20' },
+  { Icon: icons.WebApp, title: 'Web Applications', desc: 'From idea to working product. Full-stack applications built for scale and speed.', tag: 'Full-Stack', tagColor: 'text-violet-400 bg-violet-400/10 border-violet-400/20' },
+  { Icon: icons.UIRedesign, title: 'UI/UX Redesign', desc: 'Old site killing your conversions? We rebuild it into something that actually performs.', tag: 'Performance', tagColor: 'text-orange-400 bg-orange-400/10 border-orange-400/20' },
+  { Icon: icons.Automation, title: 'API & Automation', desc: 'Connect your tools, automate your workflows, and free your team to focus on what matters.', tag: 'Efficiency', tagColor: 'text-teal-400 bg-teal-400/10 border-teal-400/20' },
 ];
 
 export default function Services() {
   return (
-    <section id="services" className="py-28 relative z-10">
-      {/* Section divider top */}
+    <section id="services" className="py-20 md:py-28 relative z-10">
       <div className="absolute top-0 inset-x-0 h-px bg-gradient-to-r from-transparent via-white/[0.06] to-transparent" />
 
-      <div className="container mx-auto px-6 md:px-12">
+      <div className="container mx-auto px-5 sm:px-8 md:px-12">
 
-        <div className="max-w-2xl mb-16">
+        <div className="max-w-2xl mb-10 md:mb-16">
           <motion.div
             initial={{ opacity: 0, y: 16 }}
             whileInView={{ opacity: 1, y: 0 }}
             viewport={{ once: true }}
-            className="section-badge mb-5"
+            className="section-badge mb-4 md:mb-5"
           >
             <svg width="10" height="10" viewBox="0 0 10 10" fill="currentColor"><path d="M5 0L6.12 3.38L9.75 3.45L7.02 5.57L8.09 9.05L5 7L1.91 9.05L2.98 5.57L0.25 3.45L3.88 3.38L5 0Z"/></svg>
             Our Services
@@ -104,7 +103,7 @@ export default function Services() {
             whileInView={{ opacity: 1, y: 0 }}
             viewport={{ once: true }}
             transition={{ delay: 0.05 }}
-            className="text-4xl md:text-5xl font-display font-bold mb-4 text-balance"
+            className="text-3xl sm:text-4xl md:text-5xl font-display font-bold mb-3 md:mb-4 text-balance"
           >
             What We Build
           </motion.h2>
@@ -113,13 +112,13 @@ export default function Services() {
             whileInView={{ opacity: 1, y: 0 }}
             viewport={{ once: true }}
             transition={{ delay: 0.1 }}
-            className="text-lg text-muted-foreground leading-relaxed"
+            className="text-base md:text-lg text-muted-foreground leading-relaxed"
           >
             Every project is a statement. Here's how we make yours impossible to ignore.
           </motion.p>
         </div>
 
-        <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-4">
+        <div className="grid grid-cols-2 md:grid-cols-2 lg:grid-cols-4 gap-3 md:gap-4">
           {services.map((service, index) => {
             const { Icon } = service;
             return (
@@ -128,34 +127,37 @@ export default function Services() {
                 initial={{ opacity: 0, y: 28 }}
                 whileInView={{ opacity: 1, y: 0 }}
                 viewport={{ once: true }}
-                transition={{ delay: index * 0.06, duration: 0.5, ease: [0.22, 1, 0.36, 1] }}
-                className="group relative glass p-6 rounded-2xl hover:-translate-y-2 hover:shadow-[0_8px_40px_rgba(108,99,255,0.18)] transition-all duration-300 overflow-hidden cursor-default"
+                transition={{ delay: index * 0.05, duration: 0.5, ease: [0.22, 1, 0.36, 1] }}
+                className="group relative glass p-4 md:p-6 rounded-2xl hover:-translate-y-1.5 md:hover:-translate-y-2 hover:shadow-[0_8px_40px_rgba(108,99,255,0.18)] active:scale-[0.98] transition-all duration-300 overflow-hidden cursor-default"
               >
                 {/* Top glow accent line */}
                 <div className="absolute top-0 left-0 right-0 h-px bg-gradient-to-r from-transparent via-primary/50 to-transparent opacity-0 group-hover:opacity-100 transition-opacity duration-400" />
 
                 {/* Background ghost watermark */}
-                <div className="absolute -bottom-2 -right-2 w-24 h-24 text-primary/[0.05] group-hover:text-primary/[0.12] transition-colors duration-400 pointer-events-none [&_svg]:w-full [&_svg]:h-full" aria-hidden>
+                <div className="absolute -bottom-2 -right-2 w-16 h-16 md:w-24 md:h-24 text-primary/[0.05] group-hover:text-primary/[0.12] transition-colors duration-400 pointer-events-none [&_svg]:w-full [&_svg]:h-full" aria-hidden>
                   <Icon />
                 </div>
 
                 {/* Icon */}
-                <div className="relative w-11 h-11 rounded-xl mb-5 flex items-center justify-center shrink-0 overflow-hidden group-hover:scale-110 transition-transform duration-300">
+                <div className="relative w-9 h-9 md:w-11 md:h-11 rounded-xl mb-3 md:mb-5 flex items-center justify-center shrink-0 overflow-hidden group-hover:scale-110 transition-transform duration-300">
                   <div className="absolute inset-0 bg-gradient-to-br from-primary/25 to-primary/5 rounded-xl border border-primary/20" />
-                  <span className="relative text-primary z-10">
+                  <span className="relative text-primary z-10 scale-[0.8] md:scale-100">
                     <Icon />
                   </span>
                 </div>
 
                 {/* Tag */}
-                <div className="mb-3">
-                  <span className="text-[10px] font-bold tracking-[0.1em] uppercase text-primary/60 bg-primary/8 px-2 py-1 rounded-md">
+                <div className="mb-2 md:mb-3">
+                  <span className={`text-[9px] md:text-[10px] font-bold tracking-[0.1em] uppercase px-2 py-1 rounded-md border ${service.tagColor}`}>
                     {service.tag}
                   </span>
                 </div>
 
-                <h3 className="text-[15px] font-bold font-display mb-2.5 text-foreground group-hover:text-primary/90 transition-colors duration-200">{service.title}</h3>
-                <p className="text-[13px] text-muted-foreground leading-relaxed">
+                <h3 className="text-[13px] md:text-[15px] font-bold font-display mb-1.5 md:mb-2.5 text-foreground group-hover:text-primary/90 transition-colors duration-200">{service.title}</h3>
+                <p className="text-[11px] md:text-[13px] text-muted-foreground leading-relaxed hidden sm:block">
+                  {service.desc}
+                </p>
+                <p className="text-[11px] text-muted-foreground leading-relaxed sm:hidden line-clamp-2">
                   {service.desc}
                 </p>
               </motion.div>

@@ -71,7 +71,6 @@ export default function Pricing() {
       features: ["Up to 5 pages", "Mobile-responsive", "Basic SEO", "Contact form", "1 revision round", "Deployment setup", "30-day support", "Analytics"],
       delivery: "7–10 business days",
       featured: false,
-      accentColor: "text-muted-foreground"
     },
     {
       name: "Growth",
@@ -81,7 +80,6 @@ export default function Pricing() {
       features: ["Up to 12 pages", "Advanced animations", "Full mobile+tablet", "Advanced SEO", "AI Chatbot integration", "Multi-language support", "Custom forms", "Telegram/WhatsApp alerts", "Social tracking", "3 revision rounds", "60-day support", "Analytics dashboard"],
       delivery: "10–14 business days",
       featured: true,
-      accentColor: "text-primary"
     },
     {
       name: "Enterprise",
@@ -91,7 +89,6 @@ export default function Pricing() {
       features: ["Unlimited pages", "Custom 3D scenes", "Full-stack apps", "E-commerce + payments", "Multi-region deployment", "Dedicated PM", "Weekly calls", "24/7 priority support", "Custom CMS", "Unlimited revisions", "6-month support", "Full docs"],
       delivery: "Custom timeline",
       featured: false,
-      accentColor: "text-muted-foreground"
     }
   ];
 
@@ -106,21 +103,18 @@ export default function Pricing() {
   ];
 
   return (
-    <section id="pricing" className="py-28 relative z-10">
-      {/* Section divider top */}
+    <section id="pricing" className="py-20 md:py-28 relative z-10">
       <div className="absolute top-0 inset-x-0 h-px bg-gradient-to-r from-transparent via-white/[0.06] to-transparent" />
-
-      {/* Subtle background */}
       <div className="absolute inset-0 bg-secondary/25 pointer-events-none" />
 
-      <div className="container mx-auto px-6 md:px-12 relative">
+      <div className="container mx-auto px-5 sm:px-8 md:px-12 relative">
 
-        <div className="text-center max-w-3xl mx-auto mb-16">
+        <div className="text-center max-w-3xl mx-auto mb-10 md:mb-16">
           <motion.div
             initial={{ opacity: 0, y: 16 }}
             whileInView={{ opacity: 1, y: 0 }}
             viewport={{ once: true }}
-            className="section-badge mb-5 mx-auto"
+            className="section-badge mb-4 md:mb-5 mx-auto"
           >
             <svg width="10" height="10" viewBox="0 0 10 10" fill="currentColor"><rect x="1" y="1" width="3.5" height="3.5" rx="0.5"/><rect x="5.5" y="1" width="3.5" height="3.5" rx="0.5"/><rect x="1" y="5.5" width="3.5" height="3.5" rx="0.5"/><rect x="5.5" y="5.5" width="3.5" height="3.5" rx="0.5"/></svg>
             Pricing
@@ -130,7 +124,7 @@ export default function Pricing() {
             whileInView={{ opacity: 1, y: 0 }}
             viewport={{ once: true }}
             transition={{ delay: 0.05 }}
-            className="text-4xl md:text-5xl font-display font-bold mb-4"
+            className="text-3xl sm:text-4xl md:text-5xl font-display font-bold mb-3 md:mb-4"
           >
             Investment, Not Cost
           </motion.h2>
@@ -139,90 +133,175 @@ export default function Pricing() {
             whileInView={{ opacity: 1, y: 0 }}
             viewport={{ once: true }}
             transition={{ delay: 0.1 }}
-            className="text-lg text-muted-foreground"
+            className="text-base md:text-lg text-muted-foreground"
           >
-            Every package is priced to deliver returns that dwarf the investment. Choose your level of ambition.
+            Every package is priced to deliver returns that dwarf the investment.
           </motion.p>
         </div>
 
-        <div className="grid lg:grid-cols-3 gap-5 max-w-6xl mx-auto items-center mb-14">
-          {tiers.map((tier, i) => (
-            <motion.div
-              key={tier.name}
-              initial={{ opacity: 0, y: 28 }}
-              whileInView={{ opacity: 1, y: 0 }}
-              viewport={{ once: true }}
-              transition={{ delay: i * 0.1, duration: 0.5, ease: [0.22, 1, 0.36, 1] }}
-              className={`relative glass rounded-3xl flex flex-col h-full overflow-hidden transition-all duration-300 ${
-                tier.featured
-                  ? 'border-primary/35 shadow-[0_0_60px_rgba(108,99,255,0.22)] lg:scale-[1.04] z-10'
-                  : 'hover:border-primary/15 hover:shadow-[0_4px_30px_rgba(108,99,255,0.1)]'
-              }`}
-            >
-              {/* Top gradient accent */}
-              {tier.featured && (
-                <div className="absolute top-0 inset-x-0 h-[2px] bg-gradient-to-r from-transparent via-primary to-transparent" />
-              )}
-
-              {/* Popular badge */}
-              {tier.featured && (
-                <div className="absolute -top-4 left-1/2 -translate-x-1/2 z-10">
-                  <div className="gradient-bg text-white text-[10px] font-bold tracking-[0.14em] uppercase px-5 py-1.5 rounded-full shadow-lg shadow-primary/40">
-                    ✦ Most Popular
+        {/* Mobile: horizontal scroll; Desktop: grid */}
+        <div className="mb-10 md:mb-14">
+          {/* Mobile scroll container */}
+          <div className="flex md:hidden gap-4 overflow-x-auto pb-4 snap-x snap-mandatory scrollbar-hide -mx-5 px-5" style={{ scrollbarWidth: 'none' }}>
+            {tiers.map((tier, i) => (
+              <motion.div
+                key={tier.name}
+                initial={{ opacity: 0, y: 24 }}
+                whileInView={{ opacity: 1, y: 0 }}
+                viewport={{ once: true }}
+                transition={{ delay: i * 0.08, duration: 0.5 }}
+                className={`relative glass rounded-3xl flex flex-col flex-shrink-0 snap-center overflow-hidden transition-all duration-300 ${
+                  tier.featured
+                    ? 'border-primary/35 shadow-[0_0_50px_rgba(108,99,255,0.2)]'
+                    : ''
+                }`}
+                style={{ width: 'calc(85vw)', maxWidth: '320px' }}
+              >
+                {tier.featured && (
+                  <div className="absolute top-0 inset-x-0 h-[2px] bg-gradient-to-r from-transparent via-primary to-transparent" />
+                )}
+                {tier.featured && (
+                  <div className="absolute -top-3.5 left-1/2 -translate-x-1/2 z-10">
+                    <div className="gradient-bg text-white text-[9px] font-bold tracking-[0.14em] uppercase px-4 py-1.5 rounded-full shadow-lg shadow-primary/40">
+                      ✦ Most Popular
+                    </div>
                   </div>
-                </div>
-              )}
-
-              <div className="p-8 flex flex-col h-full">
-                <div className={`text-[11px] font-bold tracking-[0.1em] uppercase mb-2 ${tier.featured ? 'text-primary' : 'text-muted-foreground/70'}`}>
-                  {tier.badge}
-                </div>
-                <h3 className="text-2xl font-display font-bold text-foreground mb-1">{tier.name}</h3>
-                <p className="text-sm text-muted-foreground mb-6 min-h-[38px] leading-relaxed">{tier.tagline}</p>
-
-                <div className="mb-7 pb-7 border-b border-border/30">
-                  <div className="flex items-baseline gap-2">
-                    <span className="text-[2.6rem] font-bold text-foreground font-display leading-none">{tier.price}</span>
-                    {tier.price !== 'Custom' && (
-                      <span className="text-sm text-muted-foreground">starting</span>
-                    )}
+                )}
+                <div className="p-6 flex flex-col h-full pt-8">
+                  <div className={`text-[10px] font-bold tracking-[0.1em] uppercase mb-1.5 ${tier.featured ? 'text-primary' : 'text-muted-foreground/70'}`}>
+                    {tier.badge}
                   </div>
-                  <div className="flex items-center gap-1.5 mt-3 text-xs text-muted-foreground">
-                    <svg width="12" height="12" viewBox="0 0 12 12" fill="none"><circle cx="6" cy="6" r="5" stroke="currentColor" strokeWidth="1"/><path d="M6 3.5V6L7.5 7.5" stroke="currentColor" strokeWidth="1" strokeLinecap="round"/></svg>
-                    {tier.delivery}
+                  <h3 className="text-xl font-display font-bold text-foreground mb-1">{tier.name}</h3>
+                  <p className="text-xs text-muted-foreground mb-5 leading-relaxed">{tier.tagline}</p>
+
+                  <div className="mb-5 pb-5 border-b border-border/30">
+                    <div className="flex items-baseline gap-2">
+                      <span className="text-[2.2rem] font-bold text-foreground font-display leading-none">{tier.price}</span>
+                      {tier.price !== 'Custom' && (
+                        <span className="text-xs text-muted-foreground">starting</span>
+                      )}
+                    </div>
+                    <div className="flex items-center gap-1.5 mt-2 text-xs text-muted-foreground">
+                      <svg width="12" height="12" viewBox="0 0 12 12" fill="none"><circle cx="6" cy="6" r="5" stroke="currentColor" strokeWidth="1"/><path d="M6 3.5V6L7.5 7.5" stroke="currentColor" strokeWidth="1" strokeLinecap="round"/></svg>
+                      {tier.delivery}
+                    </div>
                   </div>
+
+                  <ul className="space-y-2.5 mb-6 flex-grow">
+                    {tier.features.map(f => (
+                      <li key={f} className="flex items-start gap-2.5 text-xs text-foreground/85">
+                        <span className={tier.featured ? 'text-primary' : 'text-muted-foreground'}>
+                          <CheckIcon />
+                        </span>
+                        {f}
+                      </li>
+                    ))}
+                  </ul>
+
+                  <button
+                    onClick={() => {
+                      trackEvent('cta_click', { button: `pricing_${tier.name.toLowerCase()}` });
+                      scrollTo('contact');
+                    }}
+                    className={`group w-full py-3.5 rounded-xl font-semibold text-sm transition-all duration-200 outline-none flex items-center justify-center gap-2 active:scale-[0.98] ${
+                      tier.featured
+                        ? 'gradient-bg text-white hover:shadow-[0_0_24px_rgba(108,99,255,0.5)]'
+                        : 'bg-white/[0.04] text-foreground hover:bg-white/[0.08] border border-white/[0.08]'
+                    }`}
+                  >
+                    {tier.name === 'Enterprise' ? "Let's Talk" : "Select Package"}
+                    <span className="transition-transform duration-200 group-hover:translate-x-0.5">
+                      <ArrowRight />
+                    </span>
+                  </button>
                 </div>
+              </motion.div>
+            ))}
+          </div>
 
-                <ul className="space-y-3 mb-8 flex-grow">
-                  {tier.features.map(f => (
-                    <li key={f} className="flex items-start gap-3 text-sm text-foreground/85">
-                      <span className={tier.featured ? 'text-primary' : 'text-muted-foreground'}>
-                        <CheckIcon />
-                      </span>
-                      {f}
-                    </li>
-                  ))}
-                </ul>
+          {/* Desktop grid */}
+          <div className="hidden md:grid lg:grid-cols-3 gap-5 max-w-6xl mx-auto items-center">
+            {tiers.map((tier, i) => (
+              <motion.div
+                key={tier.name}
+                initial={{ opacity: 0, y: 28 }}
+                whileInView={{ opacity: 1, y: 0 }}
+                viewport={{ once: true }}
+                transition={{ delay: i * 0.1, duration: 0.5, ease: [0.22, 1, 0.36, 1] }}
+                className={`relative glass rounded-3xl flex flex-col h-full overflow-hidden transition-all duration-300 ${
+                  tier.featured
+                    ? 'border-primary/35 shadow-[0_0_60px_rgba(108,99,255,0.22)] lg:scale-[1.04] z-10'
+                    : 'hover:border-primary/15 hover:shadow-[0_4px_30px_rgba(108,99,255,0.1)]'
+                }`}
+              >
+                {tier.featured && (
+                  <div className="absolute top-0 inset-x-0 h-[2px] bg-gradient-to-r from-transparent via-primary to-transparent" />
+                )}
+                {tier.featured && (
+                  <div className="absolute -top-4 left-1/2 -translate-x-1/2 z-10">
+                    <div className="gradient-bg text-white text-[10px] font-bold tracking-[0.14em] uppercase px-5 py-1.5 rounded-full shadow-lg shadow-primary/40">
+                      ✦ Most Popular
+                    </div>
+                  </div>
+                )}
+                <div className="p-8 flex flex-col h-full">
+                  <div className={`text-[11px] font-bold tracking-[0.1em] uppercase mb-2 ${tier.featured ? 'text-primary' : 'text-muted-foreground/70'}`}>
+                    {tier.badge}
+                  </div>
+                  <h3 className="text-2xl font-display font-bold text-foreground mb-1">{tier.name}</h3>
+                  <p className="text-sm text-muted-foreground mb-6 min-h-[38px] leading-relaxed">{tier.tagline}</p>
 
-                <button
-                  onClick={() => {
-                    trackEvent('cta_click', { button: `pricing_${tier.name.toLowerCase()}` });
-                    scrollTo('contact');
-                  }}
-                  className={`group w-full py-3.5 rounded-xl font-semibold text-sm transition-all duration-200 outline-none flex items-center justify-center gap-2 ${
-                    tier.featured
-                      ? 'gradient-bg text-white hover:shadow-[0_0_24px_rgba(108,99,255,0.5)] hover:scale-[1.02]'
-                      : 'bg-white/[0.04] text-foreground hover:bg-white/[0.08] border border-white/[0.08] hover:border-white/[0.14]'
-                  }`}
-                >
-                  {tier.name === 'Enterprise' ? "Let's Talk" : "Select Package"}
-                  <span className="transition-transform duration-200 group-hover:translate-x-0.5">
-                    <ArrowRight />
-                  </span>
-                </button>
-              </div>
-            </motion.div>
-          ))}
+                  <div className="mb-7 pb-7 border-b border-border/30">
+                    <div className="flex items-baseline gap-2">
+                      <span className="text-[2.6rem] font-bold text-foreground font-display leading-none">{tier.price}</span>
+                      {tier.price !== 'Custom' && (
+                        <span className="text-sm text-muted-foreground">starting</span>
+                      )}
+                    </div>
+                    <div className="flex items-center gap-1.5 mt-3 text-xs text-muted-foreground">
+                      <svg width="12" height="12" viewBox="0 0 12 12" fill="none"><circle cx="6" cy="6" r="5" stroke="currentColor" strokeWidth="1"/><path d="M6 3.5V6L7.5 7.5" stroke="currentColor" strokeWidth="1" strokeLinecap="round"/></svg>
+                      {tier.delivery}
+                    </div>
+                  </div>
+
+                  <ul className="space-y-3 mb-8 flex-grow">
+                    {tier.features.map(f => (
+                      <li key={f} className="flex items-start gap-3 text-sm text-foreground/85">
+                        <span className={tier.featured ? 'text-primary' : 'text-muted-foreground'}>
+                          <CheckIcon />
+                        </span>
+                        {f}
+                      </li>
+                    ))}
+                  </ul>
+
+                  <button
+                    onClick={() => {
+                      trackEvent('cta_click', { button: `pricing_${tier.name.toLowerCase()}` });
+                      scrollTo('contact');
+                    }}
+                    className={`group w-full py-3.5 rounded-xl font-semibold text-sm transition-all duration-200 outline-none flex items-center justify-center gap-2 ${
+                      tier.featured
+                        ? 'gradient-bg text-white hover:shadow-[0_0_24px_rgba(108,99,255,0.5)] hover:scale-[1.02]'
+                        : 'bg-white/[0.04] text-foreground hover:bg-white/[0.08] border border-white/[0.08] hover:border-white/[0.14]'
+                    }`}
+                  >
+                    {tier.name === 'Enterprise' ? "Let's Talk" : "Select Package"}
+                    <span className="transition-transform duration-200 group-hover:translate-x-0.5">
+                      <ArrowRight />
+                    </span>
+                  </button>
+                </div>
+              </motion.div>
+            ))}
+          </div>
+
+          {/* Mobile scroll indicator */}
+          <div className="flex md:hidden justify-center gap-1.5 mt-4">
+            {tiers.map((_, i) => (
+              <div key={i} className={`w-1.5 h-1.5 rounded-full transition-colors ${i === 1 ? 'bg-primary' : 'bg-white/20'}`} />
+            ))}
+          </div>
         </div>
 
         {/* Design Styles accordion */}
@@ -234,26 +313,26 @@ export default function Pricing() {
         >
           <Accordion type="single" collapsible>
             <AccordionItem value="styles" className="border-none">
-              <AccordionTrigger className="hover:no-underline text-base font-display font-semibold px-7 py-5 hover:bg-white/[0.02] transition-colors [&[data-state=open]]:pb-4">
+              <AccordionTrigger className="hover:no-underline text-sm md:text-base font-display font-semibold px-5 md:px-7 py-4 md:py-5 hover:bg-white/[0.02] transition-colors [&[data-state=open]]:pb-4">
                 <span className="flex items-center gap-3">
-                  <span className="w-8 h-8 rounded-lg bg-primary/10 border border-primary/20 flex items-center justify-center text-primary shrink-0">
+                  <span className="w-7 h-7 md:w-8 md:h-8 rounded-lg bg-primary/10 border border-primary/20 flex items-center justify-center text-primary shrink-0">
                     <PaletteIcon />
                   </span>
                   Choose Your Visual Style
                 </span>
               </AccordionTrigger>
-              <AccordionContent className="pb-6 px-7">
-                <div className="grid sm:grid-cols-2 gap-3 pt-2">
+              <AccordionContent className="pb-5 md:pb-6 px-5 md:px-7">
+                <div className="grid grid-cols-1 sm:grid-cols-2 gap-2 md:gap-3 pt-2">
                   {designStyles.map((style, i) => {
                     const StyleIcon = styleIcons[style.name];
                     return (
-                      <div key={i} className="group flex items-start gap-3 bg-white/[0.03] hover:bg-white/[0.06] p-4 rounded-xl border border-white/[0.06] hover:border-primary/20 transition-all duration-200 cursor-default">
+                      <div key={i} className="group flex items-start gap-3 bg-white/[0.03] hover:bg-white/[0.06] p-3.5 md:p-4 rounded-xl border border-white/[0.06] hover:border-primary/20 transition-all duration-200 cursor-default">
                         <div className="w-7 h-7 rounded-lg bg-primary/10 border border-primary/15 flex items-center justify-center text-primary shrink-0 mt-0.5">
                           {StyleIcon ? <StyleIcon /> : null}
                         </div>
                         <div>
-                          <h4 className="text-sm font-semibold text-foreground mb-0.5 group-hover:text-primary transition-colors duration-200">{style.name}</h4>
-                          <p className="text-xs text-muted-foreground leading-relaxed">{style.desc}</p>
+                          <h4 className="text-xs md:text-sm font-semibold text-foreground mb-0.5 group-hover:text-primary transition-colors duration-200">{style.name}</h4>
+                          <p className="text-[11px] md:text-xs text-muted-foreground leading-relaxed">{style.desc}</p>
                         </div>
                       </div>
                     );

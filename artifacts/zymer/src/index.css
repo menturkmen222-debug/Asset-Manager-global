@@ -239,6 +239,9 @@
   .border.hover-elevate:not(.no-hover-interaction-elevate)::after { inset: -1px; }
 }
 
+.scrollbar-hide { -ms-overflow-style: none; scrollbar-width: none; }
+.scrollbar-hide::-webkit-scrollbar { display: none; }
+
 @keyframes float { 0%,100% { transform: translateY(0px); } 50% { transform: translateY(-18px); } }
 @keyframes float-slow { 0%,100% { transform: translateY(0px) rotate(0deg); } 50% { transform: translateY(-28px) rotate(4deg); } }
 @keyframes aurora { 0%,100% { opacity:0.5; transform:scale(1) translate(0,0); } 50% { opacity:0.85; transform:scale(1.25) translate(25px,-18px); } }

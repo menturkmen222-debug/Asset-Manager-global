@@ -31,7 +31,12 @@ const socials = [
   { name: 'Instagram', Icon: InstagramIcon, href: '#' },
 ];
 
-const navLinks = ['Services', 'Pricing', 'Tech Stack', 'Contact'];
+const navLinks = [
+  { label: 'Services', id: 'services' },
+  { label: 'Pricing', id: 'pricing' },
+  { label: 'Tech Stack', id: 'tech-stack' },
+  { label: 'Contact', id: 'contact' },
+];
 
 export default function Footer() {
   const scrollTo = (id: string) => {
@@ -41,21 +46,22 @@ export default function Footer() {
 
   return (
     <footer className="relative z-10">
-      {/* Top gradient line */}
       <div className="absolute top-0 inset-x-0 h-px bg-gradient-to-r from-transparent via-primary/25 to-transparent" />
 
-      <div className="container mx-auto px-6 md:px-12 pt-16 pb-10">
-        <div className="grid grid-cols-1 md:grid-cols-3 gap-12 mb-14">
+      <div className="container mx-auto px-5 sm:px-8 md:px-12 pt-12 md:pt-16 pb-8 md:pb-10">
+        
+        {/* Main footer grid */}
+        <div className="grid grid-cols-2 md:grid-cols-3 gap-8 md:gap-12 mb-10 md:mb-14">
 
-          {/* Col 1 — Brand */}
-          <div className="flex flex-col gap-5">
+          {/* Col 1 — Brand (full width on mobile) */}
+          <div className="col-span-2 md:col-span-1 flex flex-col gap-4 md:gap-5">
             <button
               onClick={() => window.scrollTo({ top: 0, behavior: 'smooth' })}
               className="outline-none w-fit"
             >
               <img src="/web-logo.png" alt="Zymer" className="h-7 w-auto object-contain opacity-90 hover:opacity-100 transition-opacity" />
             </button>
-            <p className="text-sm text-muted-foreground leading-relaxed max-w-[200px]">
+            <p className="text-sm text-muted-foreground leading-relaxed max-w-[240px]">
               Building digital empires since 2024. Trusted by 50+ businesses globally.
             </p>
             <div className="flex gap-2">
@@ -64,7 +70,7 @@ export default function Footer() {
                   key={name}
                   href={href}
                   aria-label={name}
-                  className="w-9 h-9 rounded-xl glass-light border-white/[0.07] flex items-center justify-center text-muted-foreground hover:text-primary hover:border-primary/25 hover:bg-primary/5 transition-all duration-200"
+                  className="w-10 h-10 rounded-xl glass-light border-white/[0.07] flex items-center justify-center text-muted-foreground hover:text-primary hover:border-primary/25 hover:bg-primary/5 active:scale-[0.94] transition-all duration-200"
                 >
                   <Icon />
                 </a>
@@ -73,25 +79,25 @@ export default function Footer() {
           </div>
 
           {/* Col 2 — Navigation */}
-          <div className="flex flex-col gap-3 md:items-center">
-            <h4 className="text-[11px] font-bold uppercase tracking-[0.16em] text-muted-foreground/60 mb-2">Navigation</h4>
+          <div className="flex flex-col gap-2.5 md:gap-3 md:items-center">
+            <h4 className="text-[10px] md:text-[11px] font-bold uppercase tracking-[0.16em] text-muted-foreground/60 mb-1.5 md:mb-2">Navigation</h4>
             {navLinks.map(link => (
               <button
-                key={link}
-                onClick={() => scrollTo(link.toLowerCase().replace(' ', '-'))}
-                className="text-sm text-muted-foreground hover:text-foreground transition-colors duration-200 outline-none text-left md:text-center"
+                key={link.label}
+                onClick={() => scrollTo(link.id)}
+                className="text-sm text-muted-foreground hover:text-foreground transition-colors duration-200 outline-none text-left md:text-center py-0.5"
               >
-                {link}
+                {link.label}
               </button>
             ))}
           </div>
 
           {/* Col 3 — Contact */}
-          <div className="flex flex-col gap-3 md:items-end">
-            <h4 className="text-[11px] font-bold uppercase tracking-[0.16em] text-muted-foreground/60 mb-2">Get in Touch</h4>
+          <div className="flex flex-col gap-2.5 md:gap-3 md:items-end">
+            <h4 className="text-[10px] md:text-[11px] font-bold uppercase tracking-[0.16em] text-muted-foreground/60 mb-1.5 md:mb-2">Get in Touch</h4>
             <a
               href="https://t.me/zymer"
-              className="group flex items-center gap-1.5 text-sm text-muted-foreground hover:text-primary transition-colors duration-200"
+              className="group flex items-center gap-1.5 text-sm text-muted-foreground hover:text-primary transition-colors duration-200 py-0.5"
             >
               @zymer on Telegram
               <span className="opacity-0 group-hover:opacity-100 transition-opacity">
@@ -100,31 +106,31 @@ export default function Footer() {
             </a>
             <a
               href="mailto:hello@zymer.com"
-              className="group flex items-center gap-1.5 text-sm text-muted-foreground hover:text-primary transition-colors duration-200"
+              className="group flex items-center gap-1.5 text-sm text-muted-foreground hover:text-primary transition-colors duration-200 py-0.5"
             >
               hello@zymer.com
               <span className="opacity-0 group-hover:opacity-100 transition-opacity">
                 <ArrowUpRight />
               </span>
             </a>
-            <span className="flex items-center gap-2 mt-2">
+            <span className="flex items-center gap-2 mt-1">
               <span className="relative flex h-2 w-2">
                 <span className="animate-ping absolute inline-flex h-full w-full rounded-full bg-emerald-400 opacity-60" />
                 <span className="relative inline-flex rounded-full h-2 w-2 bg-emerald-500" />
               </span>
-              <span className="text-xs text-emerald-500 font-medium">Available · Response within 6h</span>
+              <span className="text-xs text-emerald-500 font-medium">Available · 6h response</span>
             </span>
           </div>
         </div>
 
         {/* Bottom strip */}
-        <div className="pt-8 border-t border-white/[0.05] flex flex-col md:flex-row items-center justify-between gap-3">
-          <p className="text-[11px] text-muted-foreground/40 tracking-wide text-center md:text-left">
+        <div className="pt-6 md:pt-8 border-t border-white/[0.05] flex flex-col sm:flex-row items-center justify-between gap-3">
+          <p className="text-[10px] md:text-[11px] text-muted-foreground/40 tracking-wide text-center sm:text-left">
             © {new Date().getFullYear()} Zymer. All rights reserved. Designed & built with obsession.
           </p>
           <div className="flex items-center gap-2">
             <span className="w-1 h-1 rounded-full bg-primary/30" />
-            <span className="text-[11px] text-muted-foreground/35 tracking-wide">Premium Web Development</span>
+            <span className="text-[10px] md:text-[11px] text-muted-foreground/35 tracking-wide">Premium Web Development</span>
           </div>
         </div>
       </div>
