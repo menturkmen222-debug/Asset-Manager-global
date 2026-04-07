@@ -16,7 +16,7 @@ Process: Client fills contact form → response within 6 hours → project kicko
 
 Your personality: Warm, confident, knowledgeable, briefly witty. Never salesy or pushy. Help the user find the right solution for their needs. Always guide conversations toward booking a consultation via the contact form. Respond in English. Keep responses to 2-4 sentences unless more detail is needed.`;
 
-router.post("/api/chat", async (req: Request, res: Response) => {
+router.post("/chat", async (req: Request, res: Response) => {
   try {
     const { messages, sessionId } = req.body;
 

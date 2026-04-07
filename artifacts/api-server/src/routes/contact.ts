@@ -63,16 +63,31 @@ function formatAnalyticsMessage(event: {
 📋 <b>Details:</b> <pre>${JSON.stringify(event.data, null, 2).slice(0, 3000)}</pre>`;
 }
 
-router.post("/api/contact", async (req: Request, res: Response) => {
+router.post("/contact", async (req: Request, res: Response) => {
   try {
-    const body = req.body as {
+    let parsedBody: Record<string, unknown>;
+    if (typeof req.body === "string") {
+      try {
+        parsedBody = JSON.parse(req.body);
+      } catch {
+        res.status(400).json({ error: "Invalid JSON" });
+        return;
+      }
+    } else {
+      parsedBody = req.body as Record<string, unknown>;
+    }
+
+    if (!parsedBody || typeof parsedBody !== "object") {
+      res.status(400).json({ error: "Invalid request body" });
+      return;
+    }
+
+    const { type, sessionId, timestamp, data } = parsedBody as {
       type: string;
       sessionId: string;
       timestamp: string;
       data: Record<string, unknown>;
     };
-
-    const { type, sessionId, timestamp, data } = body;
 
     if (type === "form_submission") {
       const leadData = {
