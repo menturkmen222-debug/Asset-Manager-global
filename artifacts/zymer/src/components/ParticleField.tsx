@@ -1,113 +1,190 @@
+import { useEffect, useRef } from 'react';
+
+const NUM_STARS = 900;
+const SPEED = 2.2;
+const DEPTH = 1200;
+
+interface Star {
+  x: number;
+  y: number;
+  z: number;
+  px: number;
+  py: number;
+  size: number;
+  color: string;
+}
+
+const STAR_COLORS = [
+  'rgba(255,255,255,ALPHA)',
+  'rgba(200,220,255,ALPHA)',
+  'rgba(180,200,255,ALPHA)',
+  'rgba(255,240,220,ALPHA)',
+  'rgba(160,200,255,ALPHA)',
+  'rgba(108,99,255,ALPHA)',
+  'rgba(0,196,240,ALPHA)',
+];
+
+function createStar(w: number, h: number): Star {
+  const z = Math.random() * DEPTH;
+  return {
+    x: (Math.random() - 0.5) * w * 2.5,
+    y: (Math.random() - 0.5) * h * 2.5,
+    z,
+    px: 0,
+    py: 0,
+    size: Math.random() * 1.8 + 0.3,
+    color: STAR_COLORS[Math.floor(Math.random() * STAR_COLORS.length)],
+  };
+}
+
 export default function ParticleField() {
+  const canvasRef = useRef<HTMLCanvasElement>(null);
+
+  useEffect(() => {
+    const canvas = canvasRef.current;
+    if (!canvas) return;
+
+    const ctx = canvas.getContext('2d');
+    if (!ctx) return;
+
+    let animId: number;
+    let stars: Star[] = [];
+    let w = 0, h = 0;
+
+    function resize() {
+      w = canvas!.width = window.innerWidth;
+      h = canvas!.height = window.innerHeight;
+    }
+
+    function init() {
+      resize();
+      stars = Array.from({ length: NUM_STARS }, () => createStar(w, h));
+    }
+
+    function project(star: Star): { sx: number; sy: number; sr: number } {
+      const fov = DEPTH * 0.65;
+      const sx = (star.x / star.z) * fov + w / 2;
+      const sy = (star.y / star.z) * fov + h / 2;
+      const sr = ((1 - star.z / DEPTH) * star.size * 2.8) + 0.15;
+      return { sx, sy, sr };
+    }
+
+    function draw() {
+      ctx!.clearRect(0, 0, w, h);
+
+      ctx!.fillStyle = '#00000000';
+      ctx!.fillRect(0, 0, w, h);
+
+      for (let i = 0; i < stars.length; i++) {
+        const star = stars[i];
+
+        const prev = project(star);
+        star.px = prev.sx;
+        star.py = prev.sy;
+
+        star.z -= SPEED;
+        if (star.z <= 1) {
+          stars[i] = createStar(w, h);
+          stars[i].z = DEPTH;
+          continue;
+        }
+
+        const { sx, sy, sr } = project(star);
+
+        if (sx < -50 || sx > w + 50 || sy < -50 || sy > h + 50) {
+          stars[i] = createStar(w, h);
+          stars[i].z = DEPTH;
+          continue;
+        }
+
+        const alpha = Math.pow(1 - star.z / DEPTH, 1.1) * 0.92 + 0.08;
+        const colorWithAlpha = star.color.replace('ALPHA', alpha.toFixed(3));
+
+        const tailLength = Math.max(0.5, (1 - star.z / DEPTH) * 14);
+        const dx = sx - star.px;
+        const dy = sy - star.py;
+        const dist = Math.sqrt(dx * dx + dy * dy);
+
+        if (dist > 0.5 && sr > 0.5) {
+          const grad = ctx!.createLinearGradient(star.px, star.py, sx, sy);
+          grad.addColorStop(0, star.color.replace('ALPHA', '0'));
+          grad.addColorStop(1, colorWithAlpha);
+          ctx!.strokeStyle = grad;
+          ctx!.lineWidth = sr * 0.85;
+          ctx!.beginPath();
+          ctx!.moveTo(star.px, star.py);
+          ctx!.lineTo(sx, sy);
+          ctx!.stroke();
+        }
+
+        if (sr > 0.4) {
+          const glow = ctx!.createRadialGradient(sx, sy, 0, sx, sy, sr * 3.5);
+          glow.addColorStop(0, colorWithAlpha);
+          glow.addColorStop(0.4, star.color.replace('ALPHA', (alpha * 0.35).toFixed(3)));
+          glow.addColorStop(1, star.color.replace('ALPHA', '0'));
+          ctx!.fillStyle = glow;
+          ctx!.beginPath();
+          ctx!.arc(sx, sy, sr * 3.5, 0, Math.PI * 2);
+          ctx!.fill();
+        }
+
+        ctx!.fillStyle = colorWithAlpha;
+        ctx!.beginPath();
+        ctx!.arc(sx, sy, Math.max(0.3, sr), 0, Math.PI * 2);
+        ctx!.fill();
+      }
+
+      animId = requestAnimationFrame(draw);
+    }
+
+    init();
+    draw();
+
+    const onResize = () => {
+      resize();
+      stars = Array.from({ length: NUM_STARS }, () => createStar(w, h));
+    };
+    window.addEventListener('resize', onResize);
+
+    return () => {
+      cancelAnimationFrame(animId);
+      window.removeEventListener('resize', onResize);
+    };
+  }, []);
+
   return (
     <div className="fixed inset-0 z-0 pointer-events-none overflow-hidden">
-
-      {/* ── Base dark radial vignette ── */}
-      <div className="absolute inset-0"
-        style={{
-          background: 'radial-gradient(ellipse 110% 90% at 50% 0%, rgba(108,99,255,0.13) 0%, transparent 65%), radial-gradient(ellipse 80% 60% at 80% 100%, rgba(0,196,240,0.10) 0%, transparent 60%)',
-        }}
+      <canvas
+        ref={canvasRef}
+        className="absolute inset-0 w-full h-full"
+        style={{ opacity: 1 }}
       />
 
-      {/* ── Drifting aurora orbs ── */}
-      <div className="absolute rounded-full animate-aurora"
-        style={{
-          width: '900px', height: '900px',
-          top: '-260px', right: '-240px',
-          background: 'radial-gradient(circle, rgba(108,99,255,0.16) 0%, rgba(108,99,255,0.05) 45%, transparent 70%)',
-          filter: 'blur(80px)',
-        }}
-      />
-      <div className="absolute rounded-full animate-aurora"
-        style={{
-          width: '750px', height: '750px',
-          bottom: '-180px', left: '-160px',
-          background: 'radial-gradient(circle, rgba(0,196,240,0.12) 0%, rgba(0,196,240,0.04) 45%, transparent 70%)',
-          filter: 'blur(90px)',
-          animationDelay: '-9s',
-        }}
-      />
-      <div className="absolute rounded-full animate-float-slow"
-        style={{
-          width: '500px', height: '500px',
-          top: '25%', left: '5%',
-          background: 'radial-gradient(circle, rgba(124,116,255,0.09) 0%, transparent 70%)',
-          filter: 'blur(60px)',
-        }}
-      />
-      <div className="absolute rounded-full animate-float"
-        style={{
-          width: '350px', height: '350px',
-          top: '10%', left: '38%',
-          background: 'radial-gradient(circle, rgba(0,196,240,0.07) 0%, transparent 70%)',
-          filter: 'blur(70px)',
-          animationDelay: '-5s',
-        }}
-      />
-
-      {/* ── Flat top grid (standard overhead) ── */}
-      <div className="absolute inset-0"
-        style={{
-          backgroundImage: `
-            linear-gradient(rgba(108,99,255,0.045) 1px, transparent 1px),
-            linear-gradient(90deg, rgba(108,99,255,0.045) 1px, transparent 1px)
-          `,
-          backgroundSize: '72px 72px',
-          maskImage: 'radial-gradient(ellipse 90% 80% at 50% 40%, rgba(0,0,0,0.35) 0%, transparent 75%)',
-          WebkitMaskImage: 'radial-gradient(ellipse 90% 80% at 50% 40%, rgba(0,0,0,0.35) 0%, transparent 75%)',
-        }}
-      />
-
-      {/* ── Perspective grid — converging vanishing point at bottom ── */}
       <div
+        className="absolute inset-0"
         style={{
-          position: 'absolute',
-          bottom: 0,
-          left: '-15%',
-          width: '130%',
-          height: '55%',
-          backgroundImage: `
-            linear-gradient(rgba(108,99,255,0.12) 1px, transparent 1px),
-            linear-gradient(90deg, rgba(108,99,255,0.09) 1px, transparent 1px)
-          `,
-          backgroundSize: '88px 88px',
-          transform: 'perspective(520px) rotateX(62deg)',
-          transformOrigin: 'bottom center',
-          maskImage: 'linear-gradient(to top, rgba(0,0,0,0.5) 0%, rgba(0,0,0,0.15) 45%, transparent 80%)',
-          WebkitMaskImage: 'linear-gradient(to top, rgba(0,0,0,0.5) 0%, rgba(0,0,0,0.15) 45%, transparent 80%)',
+          background:
+            'radial-gradient(ellipse 120% 60% at 50% 0%, rgba(108,99,255,0.18) 0%, transparent 60%), ' +
+            'radial-gradient(ellipse 70% 50% at 80% 100%, rgba(0,196,240,0.12) 0%, transparent 55%), ' +
+            'radial-gradient(ellipse 80% 70% at 20% 60%, rgba(60,40,120,0.15) 0%, transparent 60%)',
         }}
       />
 
-      {/* ── Subtle noise grain overlay ── */}
-      <div className="absolute inset-0 opacity-[0.022]"
+      <div
+        className="absolute inset-0"
+        style={{
+          background:
+            'radial-gradient(ellipse 50% 40% at 30% 25%, rgba(0,196,240,0.06) 0%, transparent 70%), ' +
+            'radial-gradient(ellipse 60% 50% at 70% 70%, rgba(108,99,255,0.07) 0%, transparent 70%)',
+          filter: 'blur(40px)',
+        }}
+      />
+
+      <div
+        className="absolute inset-0 opacity-[0.018]"
         style={{
           backgroundImage: `url("data:image/svg+xml,%3Csvg viewBox='0 0 256 256' xmlns='http://www.w3.org/2000/svg'%3E%3Cfilter id='noise'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.9' numOctaves='4' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23noise)'/%3E%3C/svg%3E")`,
           backgroundSize: '180px 180px',
-        }}
-      />
-
-      {/* ── Floating glint dots (SVG, static) ── */}
-      <svg className="absolute inset-0 w-full h-full opacity-40" xmlns="http://www.w3.org/2000/svg" aria-hidden>
-        {[
-          [12, 22], [34, 64], [55, 18], [78, 45], [92, 8],
-          [8, 80], [25, 55], [45, 88], [68, 70], [85, 35],
-          [20, 40], [60, 30], [75, 85], [50, 60], [38, 12],
-        ].map(([cx, cy], i) => (
-          <circle key={i}
-            cx={`${cx}%`} cy={`${cy}%`}
-            r={i % 3 === 0 ? '1.4' : '0.9'}
-            fill={i % 4 === 0 ? 'rgba(108,99,255,0.7)' : i % 4 === 1 ? 'rgba(0,196,240,0.6)' : 'rgba(255,255,255,0.5)'}
-          />
-        ))}
-      </svg>
-
-      {/* ── Horizontal glow line accent ── */}
-      <div className="absolute left-0 right-0"
-        style={{
-          top: '38%',
-          height: '1px',
-          background: 'linear-gradient(90deg, transparent 0%, rgba(108,99,255,0.25) 30%, rgba(0,196,240,0.2) 70%, transparent 100%)',
-          maskImage: 'linear-gradient(90deg, transparent, white 20%, white 80%, transparent)',
         }}
       />
     </div>
