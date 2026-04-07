@@ -303,32 +303,34 @@ export default function Hero() {
         </div>
       </div>
 
-      {/* Full-width marquee — always at the very bottom */}
+      {/* Full-width marquee — seamless infinite loop */}
       <motion.div
         initial={{ opacity: 0 }} animate={{ opacity: 1 }}
         transition={{ duration: 0.8, delay: 0.8 }}
-        className="relative z-10 shrink-0 w-full border-t border-white/[0.07] py-3 bg-background/20 backdrop-blur-sm"
+        className="relative z-10 shrink-0 w-full border-t border-white/[0.07] py-3 bg-background/20 backdrop-blur-sm overflow-hidden"
       >
-        <div className="overflow-hidden w-full">
-          <div className="inline-flex items-center whitespace-nowrap animate-[marquee_28s_linear_infinite]">
-            {[...Array(2)].map((_, loop) => (
-              <span key={loop} className="inline-flex items-center">
-                {marqueeItems.map((item, j) => (
-                  <span key={`${loop}-${j}`} className="inline-flex items-center">
-                    <span className="text-[11px] font-medium text-muted-foreground/70 tracking-wide">{item}</span>
-                    <DiamondSep />
-                  </span>
-                ))}
-              </span>
-            ))}
-          </div>
+        {/* 6 copies: animates -1/6 of total = exactly 1 copy, always fills viewport */}
+        <div
+          className="flex items-center whitespace-nowrap will-change-transform"
+          style={{ animation: 'marquee-strip 32s linear infinite' }}
+        >
+          {[0, 1, 2, 3, 4, 5].map(loop => (
+            <span key={loop} className="flex items-center shrink-0">
+              {marqueeItems.map((item, j) => (
+                <span key={j} className="flex items-center shrink-0">
+                  <span className="text-[11px] font-medium text-muted-foreground/70 tracking-wide px-1">{item}</span>
+                  <DiamondSep />
+                </span>
+              ))}
+            </span>
+          ))}
         </div>
       </motion.div>
 
       <style>{`
-        @keyframes marquee {
-          0% { transform: translateX(0); }
-          100% { transform: translateX(-50%); }
+        @keyframes marquee-strip {
+          0%   { transform: translateX(0); }
+          100% { transform: translateX(-16.6667%); }
         }
       `}</style>
     </section>
