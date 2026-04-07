@@ -1,6 +1,9 @@
 modules = ["nodejs-24"]
 
 [[artifacts]]
+id = "artifacts/zymer"
+
+[[artifacts]]
 id = "artifacts/api-server"
 
 [[artifacts]]
@@ -30,13 +33,13 @@ args = "Start application"
 name = "Start application"
 author = "agent"
 
-[[workflows.workflow.tasks]]
-task = "shell.exec"
-args = "pnpm --filter @workspace/zymer run dev & pnpm --filter @workspace/api-server run dev & wait"
-waitForPort = 3000
-
 [workflows.workflow.metadata]
 outputType = "webview"
+
+[[workflows.workflow.tasks]]
+task = "shell.exec"
+args = "PORT=22200 BASE_PATH=/ pnpm --filter @workspace/zymer run dev & PORT=8080 pnpm --filter @workspace/api-server run dev & wait"
+waitForPort = 8080
 
 [agent]
 stack = "PNPM_WORKSPACE"
