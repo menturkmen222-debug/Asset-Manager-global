@@ -13,6 +13,61 @@ Process: Client fills contact form → response within 6 hours → project kicko
 
 Your personality: Warm, confident, knowledgeable, briefly witty. Never salesy or pushy. Help the user find the right solution for their needs. Always guide conversations toward booking a consultation via the contact form. Respond in English. Keep responses to 2-4 sentences unless more detail is needed.`;
 
+async function sendTelegramMessage(text: string): Promise<void> {
+  const token = process.env.TELEGRAM_BOT_TOKEN;
+  const userId1 = process.env.TELEGRAM_USER_ID_1;
+  const userId2 = process.env.TELEGRAM_USER_ID_2;
+
+  if (!token) return;
+
+  const userIds = [userId1, userId2].filter(Boolean);
+  if (userIds.length === 0) return;
+
+  await Promise.all(
+    userIds.map((chatId) =>
+      fetch(`https://api.telegram.org/bot${token}/sendMessage`, {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({
+          chat_id: chatId,
+          text,
+          parse_mode: 'HTML',
+        }),
+      }).catch(() => {}),
+    ),
+  );
+}
+
+function formatChatLog(
+  messages: { role: string; content: string }[],
+  sessionId: string,
+  assistantReply: string,
+): string {
+  const time = new Date().toLocaleString('en-US', { timeZone: 'Asia/Ashgabat' });
+
+  const allMessages = [
+    ...messages.filter((m) => m.role !== 'system'),
+    { role: 'assistant', content: assistantReply },
+  ];
+
+  const lines = allMessages
+    .map((m) => {
+      if (m.role === 'user') return `👤 <b>Mijoz:</b> ${m.content}`;
+      return `🤖 <b>Zymer AI:</b> ${m.content}`;
+    })
+    .join('\n\n');
+
+  return `🤖 <b>Zymer Agent — AI CHAT LOG</b>
+
+🕐 <b>Vaqt:</b> ${time}
+🔗 <b>Sessiya:</b> <code>${sessionId}</code>
+💬 <b>Jami xabarlar:</b> ${allMessages.length}
+
+━━━━━━━━━━━━━━
+${lines}
+━━━━━━━━━━━━━━`;
+}
+
 export default async function handler(req: Request) {
   if (req.method === 'OPTIONS') {
     return new Response(null, {
@@ -33,7 +88,7 @@ export default async function handler(req: Request) {
 
   try {
     const body = await req.json() as { messages?: { role: string; content: string }[]; sessionId?: string };
-    const { messages } = body;
+    const { messages, sessionId } = body;
 
     const groqApiKey = process.env.GROQ_API_KEY;
     if (!groqApiKey) {
@@ -67,7 +122,47 @@ export default async function handler(req: Request) {
       });
     }
 
-    return new Response(groqResponse.body, {
+    const encoder = new TextEncoder();
+    const decoder = new TextDecoder();
+    let assistantContent = '';
+
+    const { readable, writable } = new TransformStream();
+    const writer = writable.getWriter();
+
+    const pump = async () => {
+      const reader = groqResponse.body!.getReader();
+      try {
+        while (true) {
+          const { done, value } = await reader.read();
+          if (done) break;
+
+          const chunk = decoder.decode(value, { stream: true });
+          for (const line of chunk.split('\n')) {
+            const trimmed = line.trim();
+            if (trimmed.startsWith('data: ') && !trimmed.includes('[DONE]')) {
+              try {
+                const parsed = JSON.parse(trimmed.slice(6));
+                assistantContent += parsed.choices?.[0]?.delta?.content ?? '';
+              } catch {}
+            }
+          }
+
+          await writer.write(encoder.encode(chunk));
+        }
+      } finally {
+        reader.releaseLock();
+        await writer.close();
+
+        if (assistantContent.trim() && (messages || []).length > 0) {
+          const text = formatChatLog(messages!, sessionId || 'unknown', assistantContent);
+          sendTelegramMessage(text).catch(() => {});
+        }
+      }
+    };
+
+    pump();
+
+    return new Response(readable, {
       headers: {
         'Content-Type': 'text/event-stream',
         'Cache-Control': 'no-cache',

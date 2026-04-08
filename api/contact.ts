@@ -7,17 +7,17 @@ const TELEGRAM_WORTHY_EVENTS = new Set([
   'cta_click',
 ]);
 
-async function sendTelegramMessage(text: string): Promise<void> {
+async function sendTelegramMessage(text: string): Promise<{ ok: boolean; error?: string }> {
   const token = process.env.TELEGRAM_BOT_TOKEN;
   const userId1 = process.env.TELEGRAM_USER_ID_1;
   const userId2 = process.env.TELEGRAM_USER_ID_2;
 
-  if (!token) return;
+  if (!token) return { ok: false, error: 'TELEGRAM_BOT_TOKEN not set' };
 
   const userIds = [userId1, userId2].filter(Boolean);
-  if (userIds.length === 0) return;
+  if (userIds.length === 0) return { ok: false, error: 'No TELEGRAM_USER_ID set' };
 
-  await Promise.all(
+  const results = await Promise.all(
     userIds.map((chatId) =>
       fetch(`https://api.telegram.org/bot${token}/sendMessage`, {
         method: 'POST',
@@ -27,24 +27,33 @@ async function sendTelegramMessage(text: string): Promise<void> {
           text,
           parse_mode: 'HTML',
         }),
-      }).catch(() => {}),
+      })
+        .then((r) => r.json())
+        .catch((err) => ({ ok: false, error: String(err) })),
     ),
   );
+
+  const failed = results.filter((r: any) => !r.ok);
+  if (failed.length > 0) {
+    return { ok: false, error: JSON.stringify(failed) };
+  }
+
+  return { ok: true };
 }
 
 function formatLeadMessage(data: Record<string, string>): string {
   return `🚀 <b>NEW LEAD — ZYMER</b>
 
 👤 <b>Name:</b> ${data.name || 'N/A'}
-🏢 <b>Business:</b> ${data.businessName || 'N/A'}
+🏢 <b>Business:</b> ${data.businessName || data.business || 'N/A'}
 📞 <b>Phone:</b> ${data.phone || 'N/A'}
 📧 <b>Email:</b> ${data.email || 'N/A'}
 
-📦 <b>Package:</b> ${data.plan || 'N/A'}
-🎨 <b>Design Style:</b> ${data.designStyle || 'N/A'}
+📦 <b>Package:</b> ${data.plan || data.package || 'N/A'}
+🎨 <b>Design Style:</b> ${data.designStyle || data.style || 'N/A'}
 💬 <b>Message:</b> ${data.message || 'N/A'}
 
-${data.website ? `🌐 <b>Current Site:</b> ${data.website}` : ''}
+${data.website || data.url ? `🌐 <b>Current Site:</b> ${data.website || data.url}` : ''}
 ${data.budget ? `💰 <b>Budget:</b> ${data.budget}` : ''}
 ${data.deadline ? `⏱ <b>Deadline:</b> ${data.deadline}` : ''}
 ${data.source ? `📣 <b>Found us via:</b> ${data.source}` : ''}
@@ -136,7 +145,11 @@ export default async function handler(req: VercelRequest, res: VercelResponse) {
         sessionId,
       };
       const text = formatLeadMessage(leadData);
-      await sendTelegramMessage(text);
+      const result = await sendTelegramMessage(text);
+      if (!result.ok) {
+        console.error('[Zymer] Telegram send failed:', result.error);
+        return res.status(500).json({ error: 'Failed to deliver notification', detail: result.error });
+      }
       return res.json({ success: true, message: 'Lead submitted successfully' });
     } else if (TELEGRAM_WORTHY_EVENTS.has(type)) {
       const text = formatEventMessage({
@@ -145,12 +158,13 @@ export default async function handler(req: VercelRequest, res: VercelResponse) {
         timestamp: timestamp || new Date().toISOString(),
         data: data || {},
       });
-      sendTelegramMessage(text).catch(() => {});
+      sendTelegramMessage(text).catch((err) => console.error('[Zymer] Telegram event failed:', err));
       return res.json({ success: true });
     } else {
       return res.json({ success: true });
     }
-  } catch {
+  } catch (err) {
+    console.error('[Zymer] Contact handler error:', err);
     return res.status(500).json({ error: 'Internal server error' });
   }
 }

@@ -27,6 +27,7 @@ const inputClass = "w-full bg-white/[0.04] border border-white/[0.09] hover:bord
 export default function Contact() {
   const [isSuccess, setIsSuccess] = useState(false);
   const [isSubmitting, setIsSubmitting] = useState(false);
+  const [submitError, setSubmitError] = useState<string | null>(null);
   const { sessionId } = useAnalytics();
 
   const { register, handleSubmit, formState: { errors }, watch, setValue } = useForm<FormData>({
@@ -39,15 +40,20 @@ export default function Contact() {
 
   const onSubmit = async (data: FormData) => {
     setIsSubmitting(true);
+    setSubmitError(null);
     try {
-      await fetch('/api/contact', {
+      const res = await fetch('/api/contact', {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
         body: JSON.stringify({ type: 'form_submission', sessionId, data })
       });
+      if (!res.ok) {
+        const json = await res.json().catch(() => ({}));
+        throw new Error(json.error || 'Submission failed');
+      }
       setIsSuccess(true);
-    } catch {
-      setIsSuccess(true);
+    } catch (err) {
+      setSubmitError(err instanceof Error ? err.message : 'Something went wrong. Please try again.');
     } finally {
       setIsSubmitting(false);
     }
@@ -240,6 +246,11 @@ export default function Contact() {
                     Response within 6 hours · No commitment
                   </p>
                 </div>
+                {submitError && (
+                  <p className="text-sm text-destructive bg-destructive/10 border border-destructive/20 rounded-xl px-4 py-3">
+                    ⚠️ {submitError}
+                  </p>
+                )}
 
               </motion.form>
             ) : (
