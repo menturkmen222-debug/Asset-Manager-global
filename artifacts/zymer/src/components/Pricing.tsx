@@ -151,10 +151,10 @@ export default function Pricing() {
                 whileInView={{ opacity: 1, y: 0 }}
                 viewport={{ once: true }}
                 transition={{ delay: i * 0.08, duration: 0.5 }}
-                className={`relative glass rounded-3xl flex flex-col flex-shrink-0 snap-center overflow-hidden transition-all duration-300 ${
+                className={`relative glass rounded-3xl flex flex-col flex-shrink-0 snap-center transition-all duration-300 ${
                   tier.featured
-                    ? 'border-primary/35 shadow-[0_0_50px_rgba(108,99,255,0.2)]'
-                    : ''
+                    ? 'overflow-visible border-primary/35 shadow-[0_0_50px_rgba(108,99,255,0.2)]'
+                    : 'overflow-hidden'
                 }`}
                 style={{ width: 'calc(85vw)', maxWidth: '320px' }}
               >
