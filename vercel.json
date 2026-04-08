@@ -5,6 +5,9 @@
     { "source": "/((?!api/).*)", "destination": "/index.html" }
   ],
   "functions": {
+    "api/chat.ts": {
+      "runtime": "edge"
+    },
     "api/contact.ts": {
       "runtime": "@vercel/node@5.7.0"
     }

@@ -1,33 +1,39 @@
-import { defineConfig } from "vite";
+import { defineConfig, type PluginOption } from "vite";
 import react from "@vitejs/plugin-react";
 import tailwindcss from "@tailwindcss/vite";
 import path from "path";
-import runtimeErrorOverlay from "@replit/vite-plugin-runtime-error-modal";
 
-const rawPort = process.env.PORT;
-const port = rawPort ? Number(rawPort) : 3000;
-
+const port = Number(process.env.PORT) || 3000;
 const basePath = process.env.BASE_PATH ?? "/";
+const isReplit = process.env.REPL_ID !== undefined;
+const isProduction = process.env.NODE_ENV === "production";
+
+// Load Replit plugins only during development on Replit
+async function getReplitPlugins(): Promise<PluginOption[]> {
+  if (isProduction || !isReplit) return [];
+  
+  try {
+    const [runtimeErrorOverlay, cartographer, devBanner] = await Promise.all([
+      import("@replit/vite-plugin-runtime-error-modal").then((m) => m.default),
+      import("@replit/vite-plugin-cartographer").then((m) =>
+        m.cartographer({ root: path.resolve(import.meta.dirname, "..") })
+      ),
+      import("@replit/vite-plugin-dev-banner").then((m) => m.devBanner()),
+    ]);
+    return [runtimeErrorOverlay(), cartographer, devBanner];
+  } catch {
+    return [];
+  }
+}
+
+const replitPlugins = await getReplitPlugins();
 
 export default defineConfig({
   base: basePath,
   plugins: [
     react(),
     tailwindcss(),
-    runtimeErrorOverlay(),
-    ...(process.env.NODE_ENV !== "production" &&
-    process.env.REPL_ID !== undefined
-      ? [
-          await import("@replit/vite-plugin-cartographer").then((m) =>
-            m.cartographer({
-              root: path.resolve(import.meta.dirname, ".."),
-            }),
-          ),
-          await import("@replit/vite-plugin-dev-banner").then((m) =>
-            m.devBanner(),
-          ),
-        ]
-      : []),
+    ...replitPlugins,
   ],
   resolve: {
     alias: {
