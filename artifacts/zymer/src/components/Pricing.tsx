@@ -220,7 +220,7 @@ export default function Pricing() {
           </div>
 
           {/* Desktop grid */}
-          <div className="hidden md:grid lg:grid-cols-3 gap-5 max-w-6xl mx-auto items-center">
+          <div className="hidden md:grid lg:grid-cols-3 gap-5 max-w-6xl mx-auto items-center pt-6">
             {tiers.map((tier, i) => (
               <motion.div
                 key={tier.name}
@@ -228,10 +228,10 @@ export default function Pricing() {
                 whileInView={{ opacity: 1, y: 0 }}
                 viewport={{ once: true }}
                 transition={{ delay: i * 0.1, duration: 0.5, ease: [0.22, 1, 0.36, 1] }}
-                className={`relative glass rounded-3xl flex flex-col h-full overflow-hidden transition-all duration-300 ${
+                className={`relative glass rounded-3xl flex flex-col h-full transition-all duration-300 ${
                   tier.featured
-                    ? 'border-primary/35 shadow-[0_0_60px_rgba(108,99,255,0.22)] lg:scale-[1.04] z-10'
-                    : 'hover:border-primary/15 hover:shadow-[0_4px_30px_rgba(108,99,255,0.1)]'
+                    ? 'overflow-visible border-primary/35 shadow-[0_0_60px_rgba(108,99,255,0.22)] lg:scale-[1.04] z-10'
+                    : 'overflow-hidden hover:border-primary/15 hover:shadow-[0_4px_30px_rgba(108,99,255,0.1)]'
                 }`}
               >
                 {tier.featured && (
