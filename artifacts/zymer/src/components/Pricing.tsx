@@ -159,16 +159,16 @@ export default function Pricing() {
                 style={{ width: 'calc(85vw)', maxWidth: '320px' }}
               >
                 {tier.featured && (
-                  <div className="absolute top-0 inset-x-0 h-[2px] bg-gradient-to-r from-transparent via-primary to-transparent" />
+                  <div className="absolute top-0 inset-x-0 h-[2px] bg-gradient-to-r from-transparent via-primary to-transparent rounded-t-3xl" />
                 )}
                 {tier.featured && (
-                  <div className="absolute -top-3.5 left-1/2 -translate-x-1/2 z-10">
+                  <div className="absolute top-3 left-1/2 -translate-x-1/2 z-10 whitespace-nowrap">
                     <div className="gradient-bg text-white text-[9px] font-bold tracking-[0.14em] uppercase px-4 py-1.5 rounded-full shadow-lg shadow-primary/40">
                       ✦ Most Popular
                     </div>
                   </div>
                 )}
-                <div className="p-6 flex flex-col h-full pt-8">
+                <div className={`p-6 flex flex-col h-full ${tier.featured ? 'pt-11' : 'pt-6'}`}>
                   <div className={`text-[10px] font-bold tracking-[0.1em] uppercase mb-1.5 ${tier.featured ? 'text-primary' : 'text-muted-foreground/70'}`}>
                     {tier.badge}
                   </div>

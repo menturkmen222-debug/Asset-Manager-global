@@ -25,9 +25,15 @@ function randomBetween(a: number, b: number) {
 
 function makeVertices(r: number, count: number): { x: number; y: number }[] {
   const pts: { x: number; y: number }[] = [];
+  const angleStep = (Math.PI * 2) / count;
   for (let i = 0; i < count; i++) {
-    const angle = (i / count) * Math.PI * 2;
-    const jitter = randomBetween(0.55, 1.0);
+    // uneven angle spacing for non-uniform rock shape
+    const angleOffset = (Math.random() - 0.5) * angleStep * 0.7;
+    const angle = i * angleStep + angleOffset;
+    // wide jitter range: some spikes, some deep notches
+    const jitter = Math.random() < 0.25
+      ? randomBetween(0.22, 0.45)   // deep notch — sharp inward cut
+      : randomBetween(0.68, 1.08);  // normal to slightly protruding
     pts.push({ x: Math.cos(angle) * r * jitter, y: Math.sin(angle) * r * jitter });
   }
   return pts;
@@ -69,7 +75,7 @@ function spawnAsteroid(w: number, h: number, z?: number): Asteroid {
     radius: r,
     rotation: Math.random() * Math.PI * 2,
     rotSpeed: randomBetween(-0.004, 0.004),
-    vertices: makeVertices(r, Math.floor(randomBetween(9, 16))),
+    vertices: makeVertices(r, Math.floor(randomBetween(14, 22))),
     craters: makeCraters(r),
     shade,
     highlighted: Math.random() < 0.18,
