@@ -7,55 +7,78 @@ interface Asteroid {
   vx: number;
   vy: number;
   radius: number;
+  elongX: number;
+  elongY: number;
   rotation: number;
   rotSpeed: number;
   vertices: { x: number; y: number }[];
   craters: { cx: number; cy: number; r: number }[];
   shade: number;
-  highlighted: boolean;
+  lightAngle: number;
 }
 
 const DEPTH = 1800;
-const NUM_ASTEROIDS = 55;
+const NUM_ASTEROIDS = 48;
 const BASE_SPEED = 1.05;
 
 function randomBetween(a: number, b: number) {
   return a + Math.random() * (b - a);
 }
 
-function makeVertices(r: number, count: number): { x: number; y: number }[] {
+/* ─── Organic rock outline using sinusoidal bumps ─── */
+function makeVertices(
+  r: number,
+  count: number,
+  elongX: number,
+  elongY: number,
+): { x: number; y: number }[] {
   const pts: { x: number; y: number }[] = [];
-  const angleStep = (Math.PI * 2) / count;
+
+  // unique phase offsets so every rock looks different
+  const p1 = Math.random() * Math.PI * 2;
+  const p2 = Math.random() * Math.PI * 2;
+  const p3 = Math.random() * Math.PI * 2;
+  const p4 = Math.random() * Math.PI * 2;
+
   for (let i = 0; i < count; i++) {
-    // uneven angle spacing for non-uniform rock shape
-    const angleOffset = (Math.random() - 0.5) * angleStep * 0.7;
-    const angle = i * angleStep + angleOffset;
-    // wide jitter range: some spikes, some deep notches
-    const jitter = Math.random() < 0.25
-      ? randomBetween(0.22, 0.45)   // deep notch — sharp inward cut
-      : randomBetween(0.68, 1.08);  // normal to slightly protruding
-    pts.push({ x: Math.cos(angle) * r * jitter, y: Math.sin(angle) * r * jitter });
+    const t = i / count;
+    const angle = t * Math.PI * 2;
+
+    // layered sinusoidal bumps — coarse + fine detail
+    const b1 = Math.sin(t * Math.PI * 2 * 2 + p1) * 0.13;
+    const b2 = Math.sin(t * Math.PI * 2 * 4 + p2) * 0.08;
+    const b3 = Math.sin(t * Math.PI * 2 * 7 + p3) * 0.045;
+    const b4 = Math.sin(t * Math.PI * 2 * 13 + p4) * 0.022;
+    const noise = (Math.random() - 0.5) * 0.04;
+
+    const rad = r * (0.82 + b1 + b2 + b3 + b4 + noise);
+    pts.push({
+      x: Math.cos(angle) * rad * elongX,
+      y: Math.sin(angle) * rad * elongY,
+    });
   }
   return pts;
 }
 
 function makeCraters(r: number): { cx: number; cy: number; r: number }[] {
-  const count = Math.floor(randomBetween(2, 6));
+  const count = Math.floor(randomBetween(2, 7));
   const craters: { cx: number; cy: number; r: number }[] = [];
   for (let i = 0; i < count; i++) {
     const angle = Math.random() * Math.PI * 2;
-    const dist = randomBetween(0.1, 0.6) * r;
+    const dist = randomBetween(0.05, 0.52) * r;
     craters.push({
       cx: Math.cos(angle) * dist,
       cy: Math.sin(angle) * dist,
-      r: randomBetween(0.06, 0.22) * r,
+      r: randomBetween(0.07, 0.20) * r,
     });
   }
   return craters;
 }
 
 function spawnAsteroid(w: number, h: number, z?: number): Asteroid {
-  const r = randomBetween(14, 82);
+  const r = randomBetween(16, 88);
+  const elongX = randomBetween(0.62, 1.0);
+  const elongY = randomBetween(0.55, 0.92);
   const fromEdge = Math.random() < 0.3;
   let x: number, y: number;
   if (fromEdge) {
@@ -66,20 +89,42 @@ function spawnAsteroid(w: number, h: number, z?: number): Asteroid {
     x = (Math.random() - 0.5) * w * 3.5;
     y = (Math.random() - 0.5) * h * 3.5;
   }
-  const shade = Math.floor(randomBetween(28, 78));
   return {
     x, y,
     z: z ?? randomBetween(80, DEPTH),
     vx: randomBetween(-0.25, 0.25),
-    vy: randomBetween(-0.08, 0.08),
+    vy: randomBetween(-0.06, 0.06),
     radius: r,
+    elongX,
+    elongY,
     rotation: Math.random() * Math.PI * 2,
-    rotSpeed: randomBetween(-0.004, 0.004),
-    vertices: makeVertices(r, Math.floor(randomBetween(14, 22))),
+    rotSpeed: randomBetween(-0.003, 0.003),
+    vertices: makeVertices(r, 28, elongX, elongY),
     craters: makeCraters(r),
-    shade,
-    highlighted: Math.random() < 0.18,
+    shade: Math.floor(randomBetween(32, 82)),
+    lightAngle: randomBetween(-Math.PI * 0.6, -Math.PI * 0.1),
   };
+}
+
+/* ─── Draw path via quadratic bezier through midpoints ─── */
+function tracePath(
+  ctx: CanvasRenderingContext2D,
+  verts: { x: number; y: number }[],
+  scale: number,
+) {
+  const n = verts.length;
+  const sx = (verts[n - 1].x + verts[0].x) / 2 * scale;
+  const sy = (verts[n - 1].y + verts[0].y) / 2 * scale;
+  ctx.moveTo(sx, sy);
+  for (let i = 0; i < n; i++) {
+    const v = verts[i];
+    const nv = verts[(i + 1) % n];
+    ctx.quadraticCurveTo(
+      v.x * scale, v.y * scale,
+      (v.x + nv.x) / 2 * scale, (v.y + nv.y) / 2 * scale,
+    );
+  }
+  ctx.closePath();
 }
 
 function drawAsteroid(
@@ -91,65 +136,79 @@ function drawAsteroid(
   alpha: number,
 ) {
   const r = ast.radius * scale;
-  if (r < 1.2) return;
+  if (r < 1.5) return;
 
   ctx.save();
   ctx.translate(sx, sy);
   ctx.rotate(ast.rotation);
   ctx.globalAlpha = Math.min(1, alpha);
 
-  const base = ast.shade;
-  const highlight = Math.min(255, base + 38);
-  const shadow = Math.max(0, base - 18);
+  const b = ast.shade;
+  const lx = Math.cos(ast.lightAngle) * r * 0.38;
+  const ly = Math.sin(ast.lightAngle) * r * 0.38;
 
-  const grad = ctx.createRadialGradient(-r * 0.28, -r * 0.28, r * 0.05, 0, 0, r * 1.1);
-  grad.addColorStop(0, `rgb(${highlight},${highlight},${Math.max(0, highlight - 10)})`);
-  grad.addColorStop(0.45, `rgb(${base},${base},${Math.max(0, base - 8)})`);
-  grad.addColorStop(1, `rgb(${shadow},${shadow},${Math.max(0, shadow - 6)})`);
+  /* ── 1. Base rock body ── */
+  const bodyGrad = ctx.createRadialGradient(lx, ly, 0, lx * 0.2, ly * 0.2, r * 1.35);
+  bodyGrad.addColorStop(0,    `rgb(${Math.min(255,b+62)},${Math.min(255,b+55)},${Math.min(255,b+44)})`);
+  bodyGrad.addColorStop(0.25, `rgb(${Math.min(255,b+28)},${Math.min(255,b+22)},${Math.min(255,b+14)})`);
+  bodyGrad.addColorStop(0.55, `rgb(${b},${Math.max(0,b-6)},${Math.max(0,b-12)})`);
+  bodyGrad.addColorStop(0.82, `rgb(${Math.max(0,b-20)},${Math.max(0,b-24)},${Math.max(0,b-28)})`);
+  bodyGrad.addColorStop(1,    `rgb(${Math.max(0,b-32)},${Math.max(0,b-36)},${Math.max(0,b-40)})`);
 
   ctx.beginPath();
-  const verts = ast.vertices;
-  ctx.moveTo(verts[0].x * scale, verts[0].y * scale);
-  for (let i = 1; i < verts.length; i++) {
-    ctx.lineTo(verts[i].x * scale, verts[i].y * scale);
-  }
-  ctx.closePath();
-  ctx.fillStyle = grad;
+  tracePath(ctx, ast.vertices, scale);
+  ctx.fillStyle = bodyGrad;
   ctx.fill();
 
-  if (ast.highlighted && r > 5) {
-    ctx.strokeStyle = `rgba(180,180,200,${alpha * 0.22})`;
-    ctx.lineWidth = Math.max(0.4, r * 0.045);
-    ctx.stroke();
+  /* ── 2. Rim shadow (ambient occlusion) ── */
+  if (r > 4) {
+    const rimGrad = ctx.createRadialGradient(lx * 0.25, ly * 0.25, r * 0.42, 0, 0, r * 1.18);
+    rimGrad.addColorStop(0,   'rgba(0,0,0,0)');
+    rimGrad.addColorStop(0.6, 'rgba(0,0,0,0)');
+    rimGrad.addColorStop(1,   `rgba(0,0,0,${0.72 * alpha})`);
+    ctx.beginPath();
+    tracePath(ctx, ast.vertices, scale);
+    ctx.fillStyle = rimGrad;
+    ctx.fill();
   }
 
-  if (r > 5) {
+  /* ── 3. Craters ── */
+  if (r > 7) {
     for (const cr of ast.craters) {
       const cx = cr.cx * scale;
       const cy = cr.cy * scale;
       const cr2 = cr.r * scale;
-      if (cr2 < 0.8) continue;
-      const cg = ctx.createRadialGradient(cx - cr2 * 0.3, cy - cr2 * 0.3, 0, cx, cy, cr2);
-      cg.addColorStop(0, `rgba(${shadow - 10},${shadow - 10},${shadow - 14},${alpha * 0.55})`);
-      cg.addColorStop(0.7, `rgba(${shadow},${shadow},${shadow},${alpha * 0.3})`);
-      cg.addColorStop(1, `rgba(${base + 20},${base + 20},${base + 20},0)`);
+      if (cr2 < 1.2) continue;
+      // skip craters too close to edge
+      if (Math.sqrt(cx * cx + cy * cy) + cr2 > r * 0.88) continue;
+
+      // dark bowl
+      const bowl = ctx.createRadialGradient(
+        cx - cr2 * 0.28, cy - cr2 * 0.28, 0,
+        cx, cy, cr2 * 1.05,
+      );
+      bowl.addColorStop(0,    `rgba(${Math.max(0,b-38)},${Math.max(0,b-40)},${Math.max(0,b-44)},${alpha * 0.9})`);
+      bowl.addColorStop(0.55, `rgba(${Math.max(0,b-22)},${Math.max(0,b-24)},${Math.max(0,b-28)},${alpha * 0.6})`);
+      bowl.addColorStop(0.82, `rgba(${Math.min(255,b+22)},${Math.min(255,b+18)},${Math.min(255,b+12)},${alpha * 0.18})`);
+      bowl.addColorStop(1,    'rgba(0,0,0,0)');
       ctx.beginPath();
-      ctx.arc(cx, cy, cr2, 0, Math.PI * 2);
-      ctx.fillStyle = cg;
+      ctx.arc(cx, cy, cr2 * 1.05, 0, Math.PI * 2);
+      ctx.fillStyle = bowl;
       ctx.fill();
     }
   }
 
-  if (r > 8) {
-    const rimGrad = ctx.createRadialGradient(0, 0, r * 0.7, 0, 0, r * 1.05);
-    rimGrad.addColorStop(0, 'rgba(0,0,0,0)');
-    rimGrad.addColorStop(1, `rgba(0,0,0,${alpha * 0.45})`);
+  /* ── 4. Specular sheen on lit side ── */
+  if (r > 10) {
+    const sheenX = lx * 0.55;
+    const sheenY = ly * 0.55;
+    const sheen = ctx.createRadialGradient(sheenX, sheenY, 0, sheenX, sheenY, r * 0.45);
+    sheen.addColorStop(0,   `rgba(255,252,240,${alpha * 0.10})`);
+    sheen.addColorStop(0.5, `rgba(255,252,240,${alpha * 0.04})`);
+    sheen.addColorStop(1,   'rgba(255,252,240,0)');
     ctx.beginPath();
-    const verts2 = ast.vertices;
-    ctx.moveTo(verts2[0].x * scale, verts2[0].y * scale);
-    for (let i = 1; i < verts2.length; i++) ctx.lineTo(verts2[i].x * scale, verts2[i].y * scale);
-    ctx.closePath();
-    ctx.fillStyle = rimGrad;
+    tracePath(ctx, ast.vertices, scale);
+    ctx.fillStyle = sheen;
     ctx.fill();
   }
 
@@ -181,57 +240,49 @@ export default function ParticleField() {
 
     function projectObj(x: number, y: number, z: number) {
       const fov = DEPTH * 0.58;
-      const sx = (x / z) * fov + w / 2;
-      const sy = (y / z) * fov + h / 2;
-      const scale = fov / z;
-      return { sx, sy, scale };
+      return {
+        sx: (x / z) * fov + w / 2,
+        sy: (y / z) * fov + h / 2,
+        scale: fov / z,
+      };
     }
 
     function draw() {
       ctx!.clearRect(0, 0, w, h);
 
-      const sortedAst = [...asteroids].sort((a, b) => b.z - a.z);
+      const sorted = [...asteroids].sort((a, b) => b.z - a.z);
 
-      for (const ast of sortedAst) {
+      for (const ast of sorted) {
         ast.z -= BASE_SPEED;
         ast.rotation += ast.rotSpeed;
         ast.x += ast.vx;
         ast.y += ast.vy;
 
-        if (ast.z <= 2) {
-          Object.assign(ast, spawnAsteroid(w, h, DEPTH));
-          continue;
-        }
+        if (ast.z <= 2) { Object.assign(ast, spawnAsteroid(w, h, DEPTH)); continue; }
 
         const { sx, sy, scale } = projectObj(ast.x, ast.y, ast.z);
         const screenR = ast.radius * scale;
 
         if (sx < -screenR * 3 || sx > w + screenR * 3 || sy < -screenR * 3 || sy > h + screenR * 3) {
-          Object.assign(ast, spawnAsteroid(w, h, DEPTH));
-          continue;
+          Object.assign(ast, spawnAsteroid(w, h, DEPTH)); continue;
         }
 
         const depth = 1 - ast.z / DEPTH;
-        const alpha = Math.pow(depth, 0.6) * 0.96 + 0.04;
+        const alpha = Math.pow(depth, 0.55) * 0.94 + 0.04;
 
-        if (screenR > 5 && depth > 0.15) {
-          const glowR = screenR * 1.9;
-          const glow = ctx!.createRadialGradient(sx, sy, screenR * 0.5, sx, sy, glowR);
-          glow.addColorStop(0, `rgba(90,85,100,${(alpha * 0.12).toFixed(3)})`);
-          glow.addColorStop(1, 'rgba(0,0,0,0)');
+        // subtle halo to suggest space dust around larger rocks
+        if (screenR > 8 && depth > 0.18) {
+          const haloR = screenR * 2.1;
+          const halo = ctx!.createRadialGradient(sx, sy, screenR * 0.6, sx, sy, haloR);
+          halo.addColorStop(0, `rgba(70,65,90,${(alpha * 0.09).toFixed(3)})`);
+          halo.addColorStop(1, 'rgba(0,0,0,0)');
           ctx!.beginPath();
-          ctx!.arc(sx, sy, glowR, 0, Math.PI * 2);
-          ctx!.fillStyle = glow;
+          ctx!.arc(sx, sy, haloR, 0, Math.PI * 2);
+          ctx!.fillStyle = halo;
           ctx!.fill();
         }
 
         drawAsteroid(ctx!, ast, sx, sy, scale, alpha);
-      }
-
-      for (let i = 0; i < asteroids.length; i++) {
-        if ((asteroids[i] as Asteroid).z <= 2) {
-          asteroids[i] = spawnAsteroid(w, h, DEPTH);
-        }
       }
 
       animId = requestAnimationFrame(draw);
@@ -254,10 +305,7 @@ export default function ParticleField() {
 
   return (
     <div className="fixed inset-0 z-0 pointer-events-none overflow-hidden">
-      <canvas
-        ref={canvasRef}
-        className="absolute inset-0 w-full h-full"
-      />
+      <canvas ref={canvasRef} className="absolute inset-0 w-full h-full" />
 
       <div
         className="absolute inset-0"
