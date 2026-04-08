@@ -15,14 +15,8 @@ interface Asteroid {
   highlighted: boolean;
 }
 
-interface Dust {
-  x: number; y: number; z: number;
-  size: number; alpha: number;
-}
-
 const DEPTH = 1800;
 const NUM_ASTEROIDS = 55;
-const NUM_DUST = 320;
 const BASE_SPEED = 1.05;
 
 function randomBetween(a: number, b: number) {
@@ -79,16 +73,6 @@ function spawnAsteroid(w: number, h: number, z?: number): Asteroid {
     craters: makeCraters(r),
     shade,
     highlighted: Math.random() < 0.18,
-  };
-}
-
-function spawnDust(w: number, h: number): Dust {
-  return {
-    x: (Math.random() - 0.5) * w * 4,
-    y: (Math.random() - 0.5) * h * 4,
-    z: randomBetween(10, DEPTH),
-    size: randomBetween(0.4, 2.2),
-    alpha: randomBetween(0.15, 0.55),
   };
 }
 
@@ -177,7 +161,6 @@ export default function ParticleField() {
 
     let animId: number;
     let asteroids: Asteroid[] = [];
-    let dust: Dust[] = [];
     let w = 0, h = 0;
 
     function resize() {
@@ -188,7 +171,6 @@ export default function ParticleField() {
     function init() {
       resize();
       asteroids = Array.from({ length: NUM_ASTEROIDS }, () => spawnAsteroid(w, h));
-      dust = Array.from({ length: NUM_DUST }, () => spawnDust(w, h));
     }
 
     function projectObj(x: number, y: number, z: number) {
@@ -203,22 +185,6 @@ export default function ParticleField() {
       ctx!.clearRect(0, 0, w, h);
 
       const sortedAst = [...asteroids].sort((a, b) => b.z - a.z);
-
-      for (const d of dust) {
-        d.z -= BASE_SPEED * 0.6;
-        if (d.z <= 2) { Object.assign(d, spawnDust(w, h)); d.z = DEPTH; continue; }
-        const { sx, sy, scale } = projectObj(d.x, d.y, d.z);
-        if (sx < -10 || sx > w + 10 || sy < -10 || sy > h + 10) {
-          Object.assign(d, spawnDust(w, h)); d.z = DEPTH; continue;
-        }
-        const alpha = d.alpha * (1 - d.z / DEPTH) * 0.8;
-        const r = d.size * scale * 18;
-        if (r < 0.3) continue;
-        ctx!.beginPath();
-        ctx!.arc(sx, sy, Math.max(0.3, r), 0, Math.PI * 2);
-        ctx!.fillStyle = `rgba(160,160,180,${alpha.toFixed(3)})`;
-        ctx!.fill();
-      }
 
       for (const ast of sortedAst) {
         ast.z -= BASE_SPEED;
@@ -271,7 +237,6 @@ export default function ParticleField() {
     const onResize = () => {
       resize();
       asteroids = Array.from({ length: NUM_ASTEROIDS }, () => spawnAsteroid(w, h));
-      dust = Array.from({ length: NUM_DUST }, () => spawnDust(w, h));
     };
 
     window.addEventListener('resize', onResize);
