@@ -64,10 +64,20 @@ export default function FloatingWidget() {
   const [mounted, setMounted] = useState(false);
   const [activeIndex, setActiveIndex] = useState(0);
   const [reviewIndex, setReviewIndex] = useState(0);
+  const [inHero, setInHero] = useState(true);
 
   useEffect(() => {
     const timer = setTimeout(() => setMounted(true), 1800);
     return () => clearTimeout(timer);
+  }, []);
+
+  useEffect(() => {
+    const check = () => {
+      setInHero(window.scrollY < window.innerHeight * 0.85);
+    };
+    check();
+    window.addEventListener('scroll', check, { passive: true });
+    return () => window.removeEventListener('scroll', check);
   }, []);
 
   useEffect(() => {
@@ -80,6 +90,8 @@ export default function FloatingWidget() {
   }, [mounted]);
 
   const review = reviews[reviewIndex];
+
+  if (!inHero) return null;
 
   return (
     <div className="fixed bottom-28 right-6 md:bottom-32 md:right-8 z-40 hidden lg:block">
