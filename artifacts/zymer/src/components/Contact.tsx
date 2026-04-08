@@ -5,6 +5,7 @@ import { zodResolver } from '@hookform/resolvers/zod';
 import * as z from 'zod';
 import { Send, CheckCircle2 } from 'lucide-react';
 import { useAnalytics } from '@/hooks/useAnalytics';
+import PhoneInput from '@/components/PhoneInput';
 
 const formSchema = z.object({
   name: z.string().min(2, 'Name is required'),
@@ -141,12 +142,10 @@ export default function Contact() {
                   </div>
                   <div className="space-y-2">
                     <label className="text-[12px] md:text-[13px] font-semibold text-foreground/80">Phone Number <span className="text-primary/60">*</span></label>
-                    <input 
-                      {...register('phone')}
-                      type="tel"
-                      inputMode="tel"
-                      className={inputClass}
-                      placeholder="+1 (555) 000-0000"
+                    <PhoneInput
+                      value={watch('phone') || ''}
+                      onChange={(val) => setValue('phone', val, { shouldValidate: true })}
+                      error={errors.phone?.message}
                     />
                     {errors.phone && <p className="text-xs text-destructive mt-1">{errors.phone.message}</p>}
                   </div>

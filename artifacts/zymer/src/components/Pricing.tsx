@@ -1,3 +1,4 @@
+import React from 'react';
 import { motion } from 'framer-motion';
 import { useAnalytics } from '@/hooks/useAnalytics';
 import {
@@ -30,7 +31,7 @@ const PaletteIcon = () => (
   </svg>
 );
 
-const styleIcons: Record<string, () => JSX.Element> = {
+const styleIcons: Record<string, () => React.ReactElement> = {
   'Minimalist Clean': () => (
     <svg width="16" height="16" viewBox="0 0 16 16" fill="none"><rect x="2" y="4" width="12" height="1.5" rx="0.75" fill="currentColor" opacity="0.8"/><rect x="2" y="7.5" width="8" height="1.5" rx="0.75" fill="currentColor" opacity="0.5"/><rect x="2" y="11" width="10" height="1.5" rx="0.75" fill="currentColor" opacity="0.3"/></svg>
   ),
@@ -103,7 +104,7 @@ export default function Pricing() {
   ];
 
   return (
-    <section id="pricing" className="py-20 md:py-28 relative z-10">
+    <section id="pricing" className="py-20 md:py-28 relative z-10 overflow-x-hidden">
       <div className="absolute top-0 inset-x-0 h-px bg-gradient-to-r from-transparent via-white/[0.06] to-transparent" />
       <div className="absolute inset-0 bg-secondary/25 pointer-events-none" />
 
@@ -133,7 +134,7 @@ export default function Pricing() {
             whileInView={{ opacity: 1, y: 0 }}
             viewport={{ once: true }}
             transition={{ delay: 0.1 }}
-            className="text-base md:text-lg text-muted-foreground"
+            className="text-base md:text-lg text-muted-foreground text-balance px-2"
           >
             Every package is priced to deliver returns that dwarf the investment.
           </motion.p>
