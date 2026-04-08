@@ -1,6 +1,7 @@
 import { motion } from 'framer-motion';
 import { useState } from 'react';
 import { useAnalytics } from '@/hooks/useAnalytics';
+import AsteroidField from './AsteroidField';
 
 function HeroAvatar({ src, alt, index }: { src: string; alt: string; index: number }) {
   const [error, setError] = useState(false);
@@ -84,6 +85,7 @@ export default function Hero() {
 
       {/* Background */}
       <div className="absolute inset-0 z-0 pointer-events-none">
+        <AsteroidField />
         <div className="absolute top-0 right-[-10%] w-[600px] h-[600px] bg-primary/[0.13] rounded-full blur-[120px] animate-aurora" />
         <div className="absolute bottom-[-20%] left-[-10%] w-[500px] h-[500px] bg-[#00c4f0]/[0.09] rounded-full blur-[100px] animate-aurora" style={{ animationDelay: '-6s' }} />
         <div className="absolute inset-0 opacity-[0.018]" style={{
