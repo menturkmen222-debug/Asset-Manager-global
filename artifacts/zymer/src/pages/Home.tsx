@@ -10,6 +10,7 @@ import WhyZymer from '@/components/WhyZymer';
 import Contact from '@/components/Contact';
 import AIAssistant from '@/components/AIAssistant';
 import Footer from '@/components/Footer';
+import ParticleField from '@/components/ParticleField';
 import AsteroidField from '@/components/AsteroidField';
 import CustomCursor from '@/components/CustomCursor';
 import { useAnalytics } from '@/hooks/useAnalytics';
@@ -36,6 +37,7 @@ export default function Home() {
   return (
     <main className="bg-background text-foreground min-h-[100dvh] overflow-x-hidden relative">
       <CustomCursor />
+      <ParticleField />
       <AsteroidField />
       <div className="relative z-10">
         <Nav />

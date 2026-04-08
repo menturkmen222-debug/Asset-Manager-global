@@ -104,7 +104,7 @@ export default function Pricing() {
   ];
 
   return (
-    <section id="pricing" className="py-20 md:py-28 relative z-10 overflow-x-hidden">
+    <section id="pricing" className="py-20 md:py-28 relative z-10">
       <div className="absolute top-0 inset-x-0 h-px bg-gradient-to-r from-transparent via-white/[0.06] to-transparent" />
       <div className="absolute inset-0 bg-secondary/25 pointer-events-none" />
 

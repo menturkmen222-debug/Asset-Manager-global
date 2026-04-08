@@ -326,53 +326,26 @@ export default function AsteroidField() {
     setWebGL(detectWebGL());
   }, []);
 
+  /* Only render when WebGL is confirmed — no atmosphere here,
+     ParticleField handles the ambient background layer. */
+  if (webGL !== true) return null;
+
   return (
-    <div className="fixed inset-0 z-0 pointer-events-none overflow-hidden" aria-hidden>
-
-      {/* Three.js canvas — only mount when WebGL is confirmed available */}
-      {webGL === true && (
-        <WebGLErrorBoundary>
-          <Canvas
-            camera={{ position: [0, 0, 16], fov: 56, near: 0.1, far: 120 }}
-            gl={{ antialias: true, alpha: true, powerPreference: 'high-performance' }}
-            style={{ position: 'absolute', inset: 0, width: '100%', height: '100%', background: 'transparent' }}
-            dpr={[1, 1.5]}
-          >
-            <Scene />
-          </Canvas>
-        </WebGLErrorBoundary>
-      )}
-
-      {/* Space nebula atmosphere */}
-      <div
-        className="absolute inset-0 pointer-events-none"
-        style={{
-          background:
-            'radial-gradient(ellipse 110% 55% at 50% 0%,  rgba(80,55,150,0.24) 0%, transparent 65%),' +
-            'radial-gradient(ellipse 70%  45% at 88% 95%, rgba(0,140,190,0.14) 0%, transparent 55%),' +
-            'radial-gradient(ellipse 60%  50% at 8%  80%, rgba(50,28,110,0.18) 0%, transparent 60%)',
-        }}
-      />
-
-      {/* Soft colour blooms */}
-      <div
-        className="absolute inset-0 pointer-events-none"
-        style={{
-          background:
-            'radial-gradient(ellipse 45% 35% at 22% 18%, rgba(0,185,230,0.06) 0%, transparent 70%),' +
-            'radial-gradient(ellipse 55% 40% at 75% 68%, rgba(108,99,255,0.07) 0%, transparent 70%)',
-          filter: 'blur(55px)',
-        }}
-      />
-
-      {/* Film grain texture */}
-      <div
-        className="absolute inset-0 opacity-[0.018] pointer-events-none"
-        style={{
-          backgroundImage: `url("data:image/svg+xml,%3Csvg viewBox='0 0 256 256' xmlns='http://www.w3.org/2000/svg'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.85' numOctaves='4' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23n)'/%3E%3C/svg%3E")`,
-          backgroundSize: '200px 200px',
-        }}
-      />
+    <div
+      className="fixed inset-0 pointer-events-none"
+      style={{ zIndex: 1 }}
+      aria-hidden
+    >
+      <WebGLErrorBoundary>
+        <Canvas
+          camera={{ position: [0, 0, 16], fov: 56, near: 0.1, far: 120 }}
+          gl={{ antialias: true, alpha: true, powerPreference: 'high-performance' }}
+          style={{ position: 'absolute', inset: 0, width: '100%', height: '100%', background: 'transparent' }}
+          dpr={[1, 1.5]}
+        >
+          <Scene />
+        </Canvas>
+      </WebGLErrorBoundary>
     </div>
   );
 }
